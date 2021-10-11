@@ -1,8 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 import kotlinx.serialization.builtins.*
+import kotlinx.serialization.json.*
 
 @Serializable
 data class Request(

@@ -5,9 +5,9 @@ import kotlinx.serialization.json.*
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.lang.System.currentTimeMillis
 import java.net.HttpURLConnection
 import java.net.URL
-import java.lang.System.currentTimeMillis
 
 class SendRequest(val host: String = "localhost", val port: Int = 8080) {
     /**
@@ -23,20 +23,26 @@ class SendRequest(val host: String = "localhost", val port: Int = 8080) {
     /**
      * This action is not implemented
 
-    fun checkScript(script: List<String>) : Response? {
-    val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
-    val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-    return res
+     fun checkScript(script: List<String>) : Response? {
+     val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
+     val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+     return res
 
-    }
+     }
      */
 
-    fun cameraImage(cameraIndexes: List<Int>, mode: String = "normal",
-                    image_width : Int= 640, image_height: Int =320) : Response? {
-        val data = Request(currentTimeMillis().toInt(), "camera_image",
-            intParams= cameraIndexes,stringParams=listOf(format.encodeToString(ImageConfig())))
+    fun cameraImage(
+        cameraIndexes: List<Int>,
+        mode: String = "normal",
+        image_width: Int = 640,
+        image_height: Int = 320
+    ): Response? {
+        val data = Request(
+            currentTimeMillis().toInt(), "camera_image",
+            intParams = cameraIndexes, stringParams = listOf(format.encodeToString(ImageConfig()))
+        )
         println(format.encodeToString(data))
-        val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+        val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
         return res
     }
 
