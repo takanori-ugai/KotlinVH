@@ -48,10 +48,15 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
             currentTimeMillis().toInt(),
             "camera_image",
             intParams = cameraIndexes,
-            stringParams = listOf(format.encodeToString(ImageConfig(
-                mode = mode,
-                image_width = image_width.toString(),
-                image_height = image_height.toString())))
+            stringParams = listOf(
+                format.encodeToString(
+                    ImageConfig(
+                        mode = mode,
+                        image_width = image_width.toString(),
+                        image_height = image_height.toString()
+                    )
+                )
+            )
         )
         println(format.encodeToString(data))
         val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
@@ -131,11 +136,11 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
      * @param cameraIndex The index number of the camera.
      * @return The visible objects (map of id and the class name)
      */
-    fun visibleObjects(cameraIndex: Int = 0): Map<String,String> {
+    fun visibleObjects(cameraIndex: Int = 0): Map<String, String> {
         val data = VirtualHomeRequest(currentTimeMillis().toInt(), "observation", listOf(cameraIndex))
         val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-        if(res != null && res.success && res.message != null) {
-            return format.decodeFromString<Map<String,String>>(res.message)
+        if (res != null && res.success && res.message != null) {
+            return format.decodeFromString<Map<String, String>>(res.message)
         }
         return mapOf()
     }
