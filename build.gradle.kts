@@ -65,7 +65,12 @@ task("ktlint", JavaExec::class) {
     args = listOf("src/**/*.kt")
 }
 
-    detekt {
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+detekt {
         buildUponDefaultConfig = true // preconfigure defaults
         allRules = false // activate all available (even unstable) rules.
         config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
