@@ -3,7 +3,7 @@ package com.fujitsu.labs.virtualhome
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Response(
+data class VirtualHomeResponse(
     val id: Int,
     val success: Boolean,
     val message: String?,

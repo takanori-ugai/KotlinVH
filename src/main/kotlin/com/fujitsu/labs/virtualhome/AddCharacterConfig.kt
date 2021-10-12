@@ -1,9 +1,9 @@
 package com.fujitsu.labs.virtualhome
 
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 
 @Serializable
-data class AddCharacter(
+data class AddCharacterConfig(
     val character_resource: String = "Chars/Male1",
     val mode: String = "random",
     val character_position: Position? = null,

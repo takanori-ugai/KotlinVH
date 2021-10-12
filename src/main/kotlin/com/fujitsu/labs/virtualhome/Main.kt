@@ -16,16 +16,16 @@ fun main(args: Array<String>) {
         encodeDefaults = true
 //        explicitNulls = false
     }
-    val data = Request(currentTimeMillis().toInt(), "idle")
-    val sq = SendRequest(host = "localhost")
+    val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
+    val sq = VirtualHomeClient(host = "localhost")
     val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     println(res?.success)
     println("Check: " + sq.check()?.success)
     println(sq.reset(4)?.success)
-    println(sq.getVisibleObjects(0)?.success)
-    println(sq.getVisibleObjects(1)?.success)
-    println(sq.getVisibleObjects(2)?.success)
-    println(sq.getVisibleObjects(3)?.success)
+    println(sq.visibleObjects(0))
+    println(sq.visibleObjects(1).size)
+    println(sq.visibleObjects(2).size)
+    println(sq.visibleObjects(3).size)
     val graph = sq.environmentGraph()
     println(graph.nodes.get(0))
     println(graph.nodes.size)
