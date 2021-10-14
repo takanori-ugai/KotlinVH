@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
     val graph = sq.environmentGraph()
     println(graph.nodes[0])
     println(graph.nodes.size)
-    val sofa = graph.nodes.filter { it.class_name == "sofa" } [1]
+    val sofa = graph.nodes.filter { it.class_name == "sofa" }[1]
     println(sofa)
     graph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
     println(graph.nodes.filter { it.class_name == "cat" })

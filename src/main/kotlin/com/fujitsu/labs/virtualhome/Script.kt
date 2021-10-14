@@ -21,7 +21,7 @@ class Script(scriptList: List<String>) {
         script.forEach {
             val match = regex.find(it)
             val match2 = regex2.findAll(match?.groups?.get(4)?.value.toString())
-            val objects : MutableList<Obj> = mutableListOf()
+            val objects: MutableList<Obj> = mutableListOf()
             match2.forEach {
                 objects.add(Obj(it.groups.get(1)?.value.toString(), it.groups[2]?.value?.toInt()!!))
             }

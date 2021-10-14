@@ -2,11 +2,11 @@ package com.fujitsu.labs.virtualhome
 
 data class Action(
     val name: String,
-    val num : Int,
+    val num: Int,
     val properties: List<List<String>> = listOf(listOf())
 )
 
-val actionList: Map<String,Action> = mapOf(
+val actionList: Map<String, Action> = mapOf(
     "CLOSE" to Action("Close", 1, listOf(listOf("CAN_OPEN"))),
     "DRINK" to Action("Drink", 1, listOf(listOf("DRINKABLE", "RECIPIENT"))),
     "FIND" to Action("Find", 1, listOf(listOf())),
@@ -19,7 +19,7 @@ val actionList: Map<String,Action> = mapOf(
     "OPEN" to Action("Open", 1, listOf(listOf("CAN_OPEN"))),
     "POINTAT" to Action("Point at", 1, listOf(listOf())),
     "PUTBACK" to Action("Put", 2, listOf(listOf("GRABBABLE"), listOf())),
-    "PUTIN" to Action("Put in", 2, listOf(listOf("GRABBABLE"),listOf("CAN_OPEN"))),
+    "PUTIN" to Action("Put in", 2, listOf(listOf("GRABBABLE"), listOf("CAN_OPEN"))),
     "PUTOBJBACK" to Action("Put back", 1, listOf(listOf())),
     "RUN" to Action("Run", 1, listOf(listOf())),
     "SIT" to Action("Sit", 1, listOf(listOf("SITTABLE"))),
@@ -52,4 +52,4 @@ val actionList: Map<String,Action> = mapOf(
     "SLEEP" to Action("Sleep", 0),
     "WAKEUP" to Action("WakeUp", 0),
     "RELEASE" to Action("Release", 1, listOf(listOf()))
-    )
+)
