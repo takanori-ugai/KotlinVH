@@ -9,7 +9,7 @@ import java.lang.System.currentTimeMillis
 import java.net.HttpURLConnection
 import java.net.URL
 
-class VirtualHomeClient(private val host: String = "localhost", private val port: Int = 8080) {
+class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     /**
      * Configuration of Json converter
      */
@@ -27,7 +27,6 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
      val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
      val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
      return res
-
      }
      */
 
@@ -36,7 +35,7 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
      * @param cameraIndexes Identifiers of the cameras.
      * @param mode The mode of image ("normal", .. )
      * @param image_width The width of the created image.
-     * @param image_height The hight of the created image.
+     * @param image_height The height of the created image.
      */
     fun cameraImage(
         cameraIndexes: List<Int>,
@@ -59,8 +58,7 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
             )
         )
         println(format.encodeToString(data))
-        val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-        return res
+        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     }
 
     fun renderScript(script: List<String>, config: RenderParams = RenderParams()): VirtualHomeResponse? {
@@ -89,7 +87,7 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
         var ret = Graph()
         val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
         if (res?.message != null) {
-            ret = format.decodeFromString<Graph>(res.message)
+            ret = format.decodeFromString(res.message)
         }
         return ret
     }
@@ -140,7 +138,7 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
         val data = VirtualHomeRequest(currentTimeMillis().toInt(), "observation", listOf(cameraIndex))
         val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
         if (res != null && res.success && res.message != null) {
-            return format.decodeFromString<Map<String, String>>(res.message)
+            return format.decodeFromString(res.message)
         }
         return mapOf()
     }
@@ -149,7 +147,7 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         val responseBody = bufferedReader.use { it.readText() }
         bufferedReader.close()
-        return Json.decodeFromString<VirtualHomeResponse>(responseBody)
+        return Json.decodeFromString(responseBody)
     }
 
     fun sendRequest(req: ByteArray): VirtualHomeResponse? {
@@ -174,7 +172,7 @@ class VirtualHomeClient(private val host: String = "localhost", private val port
                 ret = readStream(connection.inputStream)
             }
         } catch (exception: Exception) {
-            println("Error: " + exception.toString())
+            println("Error: $exception")
         } finally {
             connection.disconnect()
         }

@@ -27,9 +27,9 @@ fun main(args: Array<String>) {
     println(sq.visibleObjects(2).size)
     println(sq.visibleObjects(3).size)
     val graph = sq.environmentGraph()
-    println(graph.nodes.get(0))
+    println(graph.nodes[0])
     println(graph.nodes.size)
-    val sofa = graph.nodes.filter { it.class_name == "sofa" }.get(1)
+    val sofa = graph.nodes.filter { it.class_name == "sofa" } [1]
     println(sofa)
     graph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
     println(graph.nodes.filter { it.class_name == "cat" })
@@ -49,6 +49,9 @@ fun main(args: Array<String>) {
         save_pose_data = true
     )
     val script = listOf("<char0> [WALK] <cat> (366)")
+    val scriptObj = Script(script)
+    val scriptObj2 = Script(listOf("<char0> [WALK] <cat> (366) <dog> (377)"))
+    val scriptObj3 = Script(listOf("[WALK] <cat> (366) <dog> (377)"))
     println(sq.renderScript(script, config))
     val res0 = sq.cameraImage(listOf(0))
 //    val image = Base64.getDecoder().decode(res0?.message_list?.get(0)?.toByteArray(Charsets.UTF_8))
