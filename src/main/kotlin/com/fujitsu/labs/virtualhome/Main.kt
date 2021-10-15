@@ -151,18 +151,17 @@ fun main(args: Array<String>) {
     */
 }
 
-
 class Main {
     val client = VirtualHomeClient(host = "localhost")
 
     fun testScripts(script: List<String>): Boolean {
-        if(! client.reset(4)!!.success) throw Exception("Reset Error")
+        if (! client.reset(4)!!.success) throw Exception("Reset Error")
         val initGraph = client.environmentGraph()
         val sofa = initGraph.nodes.filter { it.class_name == "sofa" }[1]
 //        initGraph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
 //        initGraph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
-        if(! client.expandScene(initGraph)!!.success) throw Exception("Expand Scene Error")
-        if(! client.addCharacter()!!.success) throw Exception("Add Character Error")
+        if (! client.expandScene(initGraph)!!.success) throw Exception("Expand Scene Error")
+        if (! client.addCharacter()!!.success) throw Exception("Add Character Error")
         val graph = client.environmentGraph()
 //        val catId = graph.nodes.filter { it.class_name == "cat"}[0]
 //        println("CATID: $catId")
@@ -180,32 +179,31 @@ class Main {
     }
 
     fun checkScripts(script: List<String>): Boolean {
-        if(! client.reset(4)!!.success) throw Exception("Reset Error")
+        if (! client.reset(4)!!.success) throw Exception("Reset Error")
         val initGraph = client.environmentGraph()
         val sofa = initGraph.nodes.filter { it.class_name == "sofa" }[1]
         initGraph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
         initGraph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
-        if(! client.expandScene(initGraph)!!.success) throw Exception("Expand Scene Error")
-        if(! client.addCharacter()!!.success) throw Exception("Add Character Error")
+        if (! client.expandScene(initGraph)!!.success) throw Exception("Expand Scene Error")
+        if (! client.addCharacter()!!.success) throw Exception("Add Character Error")
         val graph = client.environmentGraph()
-        val catId = graph.nodes.filter { it.class_name == "cat"}[0]
+        val catId = graph.nodes.filter { it.class_name == "cat" }[0]
         val config = RenderParams(
             processing_time_limit = 1, find_solution = false, skip_animation = false, recording = true,
             save_pose_data = false, skip_execution = true
         )
 //        val scriptObj = Script(script)
-        if(! client.renderScript(script, config)!!.success) throw Exception("Error in Rendering")
+        if (! client.renderScript(script, config)!!.success) throw Exception("Error in Rendering")
         return true
     }
 
-
-    fun findNodes(name: String) : List<Node> {
-        if(! client.reset(4)!!.success) throw Exception("Reset Error")
-        if(! client.addCharacter()!!.success) throw Exception("Add Character Error")
+    fun findNodes(name: String): List<Node> {
+        if (! client.reset(4)!!.success) throw Exception("Reset Error")
+        if (! client.addCharacter()!!.success) throw Exception("Add Character Error")
         val graph = client.environmentGraph()
         val regex = Regex(name)
         return graph.nodes.filter {
-            if(it.class_name != null) {
+            if (it.class_name != null) {
                 regex.containsMatchIn(it.class_name)
             } else {
                 false
@@ -213,22 +211,21 @@ class Main {
         }
     }
 
-    fun findNodesByProperty(property: String) : List<Node> {
-        if(! client.reset(4)!!.success) throw Exception("Reset Error")
-        if(! client.addCharacter()!!.success) throw Exception("Add Character Error")
+    fun findNodesByProperty(property: String): List<Node> {
+        if (! client.reset(4)!!.success) throw Exception("Reset Error")
+        if (! client.addCharacter()!!.success) throw Exception("Add Character Error")
         val graph = client.environmentGraph()
         return graph.nodes.filter {
             it.properties != null && it.properties.contains(property)
         }
     }
 
-    fun findNodesById(id: Int) : List<Node> {
-        if(! client.reset(4)!!.success) throw Exception("Reset Error")
-        if(! client.addCharacter()!!.success) throw Exception("Add Character Error")
+    fun findNodesById(id: Int): List<Node> {
+        if (! client.reset(4)!!.success) throw Exception("Reset Error")
+        if (! client.addCharacter()!!.success) throw Exception("Add Character Error")
         val graph = client.environmentGraph()
         return graph.nodes.filter {
             it.id != null && it.id == id
         }
     }
-
 }
