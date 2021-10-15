@@ -2,7 +2,6 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.io.InputStreamReader
 
 data class Action(
     val name: String,
@@ -11,17 +10,34 @@ data class Action(
 )
 
 object Commons {
-    val objectStates: Map<String, List<String>> = getJsonFromResource("/object_state.json")
-    val propertiesData: Map<String, List<String>> = getJsonFromResource("/properties_data_all.json")
+    private var objectStatesCache: Map<String, List<String>>? = null
+    private var propertiesDataCache: Map<String, List<String>>? = null
 
-    fun getJsonFromResource(jsonFileName : String): Map<String, List<String>> {
+    fun objectStates(): Map<String, List<String>> {
+        if (objectStatesCache == null) {
+            objectStatesCache = getJsonFromResource("object_states.json")
+        }
+        return objectStatesCache!!
+    }
+
+    fun propertiesData(): Map<String, List<String>> {
+        if(propertiesDataCache == null) {
+            propertiesDataCache = getJsonFromResource("properties_data_all.json")
+        }
+        return propertiesDataCache!!
+    }
+
+    private fun getJsonFromResource(jsonFileName: String): Map<String, List<String>>? {
         val resource = this.javaClass
             .classLoader
             .getResourceAsStream(jsonFileName)
             ?.bufferedReader()
             ?.use { it.readText() }
-            return Json.decodeFromString<Map<String, List<String>>>(resource!!)
+        if (resource == null) {
+            return null
         }
+        return Json.decodeFromString<Map<String, List<String>>>(resource)
+    }
 
     val actionList: Map<String, Action> = mapOf(
         "CLOSE" to Action("Close", 1, listOf(listOf("CAN_OPEN"))),
@@ -48,7 +64,7 @@ object Commons {
         "WATCH" to Action("Watch", 1, listOf(listOf())),
         "WIPE" to Action("Wipe", 1, listOf(listOf())),
         "PUTON" to Action("PutOn", 1, listOf(listOf("CLOTHES"))),
-        "PUTOFF" to Action("PutOff", 1, listOf(listOf("CLOHES"))),
+        "PUTOFF" to Action("PutOff", 1, listOf(listOf("CLOTHES"))),
         "GREET" to Action("Greet", 1, listOf(listOf("PERSON"))),
         "DROP" to Action("Drop", 1, listOf(listOf())),
         "READ" to Action("Read", 1, listOf(listOf("READABLE"))),
@@ -71,4 +87,5 @@ object Commons {
         "RELEASE" to Action("Release", 1, listOf(listOf()))
     )
 }
+
 

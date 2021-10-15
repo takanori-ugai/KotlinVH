@@ -16,6 +16,9 @@ fun main(args: Array<String>) {
         encodeDefaults = true
 //        explicitNulls = false
     }
+    val commons = Commons
+    println(commons.objectStates())
+    System.exit(1)
     val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
     val sq = VirtualHomeClient(host = "localhost")
     val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
