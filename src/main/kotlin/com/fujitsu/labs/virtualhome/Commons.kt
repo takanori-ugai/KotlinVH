@@ -21,7 +21,7 @@ object Commons {
     }
 
     fun propertiesData(): Map<String, List<String>> {
-        if(propertiesDataCache == null) {
+        if (propertiesDataCache == null) {
             propertiesDataCache = getJsonFromResource("properties_data_all.json")
         }
         return propertiesDataCache!!
@@ -87,5 +87,3 @@ object Commons {
         "RELEASE" to Action("Release", 1, listOf(listOf()))
     )
 }
-
-
