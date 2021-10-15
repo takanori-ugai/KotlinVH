@@ -37,5 +37,8 @@ class ScriptTest {
 
         line = ScriptLine("char0", "POUR", listOf(Obj("juice", 365), Obj("glass", 366)))
         Assertions.assertTrue(script.checkLine(line))
+
+        line = ScriptLine("char0", "READ", listOf(Obj("addressbook", 365)))
+        Assertions.assertTrue(script.checkLine(line))
     }
 }

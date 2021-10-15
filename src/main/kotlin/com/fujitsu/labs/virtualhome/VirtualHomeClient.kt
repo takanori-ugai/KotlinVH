@@ -156,7 +156,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         val connection = url.openConnection() as HttpURLConnection
         try {
             connection.connectTimeout = 30000
-            connection.readTimeout = 30000
+            connection.readTimeout = 60000
             connection.doOutput = true
             connection.setChunkedStreamingMode(0)
             connection.setRequestProperty("Content-type", "application/json; charset=utf-8")

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class RenderParams(
     val randomize_execution: Boolean = false,
     val random_seed: Int = -1,
-    val processing_time_limit: Int = 10,
+    val processing_time_limit: Int = 20,
     val skip_execution: Boolean = false,
     val output_folder: String = "Output/",
     val file_name_prefix: String = "script",
