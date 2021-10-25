@@ -67,9 +67,9 @@ fun main(args: Array<String>) {
      **  WATCH
      */
     val script0 = listOf(
-//        "<char0> [WALK] <wine> (93)",
-//        "<char0> [GRAB] <wine> (93)",
-//        "<char0> [DRINK] <wine> (93)",
+        "<char0> [WALK] <wine> (93)",
+        "<char0> [GRAB] <wine> (93)",
+        "<char0> [DRINK] <wine> (93)",
 //        "<char0> [WALK] <washingmachine> (365)",
 //        "<char0> [PUTIN] <washingmachine> (365)  <wine> (93)",
 //        "<char0> [CLOSE] <door> (128)",
@@ -89,15 +89,15 @@ fun main(args: Array<String>) {
         "<char0> [WALK] <tablelamp> (76)",
 //        "<char0> [PUTON] <clothesshirt> (36)"
 //        "<char0> [GRAB] <book> (86)",
-        "<char0> [PLUGIN] <tablelamp> (76)"
+//        "<char0> [PLUGIN] <tablelamp> (76)"
     )
     val main = Main()
 //    main.checkScripts(script0)
-    main.testScripts(script0)
-    println(main.findNodes("tv"))
-    println(main.findNodesByProperty("HAS_PLUG"))
-    println(main.findNodesById(1))
-    System.exit(0)
+//    main.testScripts(script0)
+//    println(main.findNodes("tv"))
+//    println(main.findNodesByProperty("HAS_PLUG"))
+//    println(main.findNodesById(1))
+//    System.exit(0)
 
     val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
     val sq = VirtualHomeClient(host = "localhost")

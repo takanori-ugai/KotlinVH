@@ -1,5 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
+import mu.KotlinLogging
+private val logger = KotlinLogging.logger {}
+
 data class Obj(val name: String, val id: Int, var status: List<String> = listOf())
 
 data class ScriptLine(
@@ -47,12 +50,12 @@ class Script(scriptList: List<String>) {
     fun checkLine(line: ScriptLine): Boolean {
         val actions = Commons.actionList
         val action = actions[line.action]
-        println("Action Properties : $action.properties")
+        logger.info { "Action Properties : $action.properties" }
         if (action == null) return false
         val properties = Commons.propertiesData()
         line.objects.forEachIndexed { index, obj ->
             val objProperties = properties[obj.name]
-            println("Object Properties: $objProperties")
+            logger.info { "Object Properties: $objProperties" }
             if (objProperties == null) return false
             action.properties[index].forEach {
                 if (!objProperties.contains(it)) return false
