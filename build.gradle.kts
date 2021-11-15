@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
@@ -37,6 +38,10 @@ dependencies {
 }
 
 tasks {
+    withType<KotlinCompile>() {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
     getByName<Test>("test") {
         useJUnitPlatform()
     }
@@ -87,6 +92,3 @@ detekt {
 //        sarif.enabled = true // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
     }
 }
-
-val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
