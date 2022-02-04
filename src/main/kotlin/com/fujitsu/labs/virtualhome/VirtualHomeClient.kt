@@ -1,7 +1,7 @@
 package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

@@ -1,6 +1,6 @@
 package com.fujitsu.labs.virtualhome
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddCharacterConfig(

@@ -1,7 +1,6 @@
 package com.fujitsu.labs.virtualhome
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Position(

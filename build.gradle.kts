@@ -1,17 +1,17 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.serialization") version "1.6.10"
     java
-    id("org.jetbrains.dokka") version "1.5.30"
-    id("io.gitlab.arturbosch.detekt") version "1.18.1"
+    id("org.jetbrains.dokka") version "1.6.10"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
 }
 
 group = "com.fujitsu"
-version = "0.1"
+version = "0.3"
 
 repositories {
     mavenCentral()
@@ -21,10 +21,10 @@ val ktlint: Configuration by configurations.creating
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 //    implementation("org.jetbrains.kotlinx:kotlin-jupyter-api:0.10.1-8")
 //    implementation("org.jetbrains.kotlinx:kotlin-jupyter-api-annotations:0.10.1-8")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     ktlint("com.pinterest:ktlint:0.42.1") {
         attributes {
