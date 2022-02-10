@@ -68,9 +68,9 @@ fun main(args: Array<String>) {
      **  WATCH
      */
     val script0 = listOf(
-//        "<char0> [WALK] <wine> (93)",
-//        "<char0> [GRAB] <wine> (93)",
-//        "<char0> [DRINK] <wine> (93)",
+        "<char0> [WALK] <wine> (93)",
+        "<char0> [GRAB] <wine> (93)",
+        "<char0> [DRINK] <wine> (93)",
 //        "<char0> [WALK] <washingmachine> (365)",
 //        "<char0> [PUTIN] <washingmachine> (365)  <wine> (93)",
 //        "<char0> [CLOSE] <door> (128)",
@@ -85,12 +85,13 @@ fun main(args: Array<String>) {
 //        "<char0> [TURNTO] <tv> (106)",
 //        "<char0> [WIPE] <tv> (106)",
 //        "<char0> [FIND] <sofa> (139)",
+//        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)",
 //        "<char0> [STANDUP] <sofa> (139)",
         "<char0> [WALK] <tablelamp> (76)",
 //        "<char0> [PUTON] <clothesshirt> (36)"
 //        "<char0> [GRAB] <book> (86)",
-        "<char0> [PLUGIN] <tablelamp> (76)"
+//        "<char0> [PLUGIN] <tablelamp> (76)"
     )
     val main = Main()
 //    main.checkScripts(script0)
@@ -105,7 +106,7 @@ fun main(args: Array<String>) {
     val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     println(res?.success)
     println("Check: " + sq.check()?.success)
-    println(sq.reset(0)?.success)
+    println(sq.reset(4)?.success)
     println(sq.visibleObjects(0))
     println(sq.visibleObjects(1).size)
     println(sq.visibleObjects(2).size)
@@ -113,7 +114,7 @@ fun main(args: Array<String>) {
     val graph = sq.environmentGraph()
     println(graph.nodes[0])
     println(graph.nodes.size)
-    val sofa = graph.nodes.filter { it.class_name == "chair" }[1]
+    val sofa = graph.nodes.filter { it.class_name == "sofa" }[1]
     println(sofa)
     graph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
     println("ADDRESSBOOK: " + graph.nodes.filter { it.class_name == "book" })
@@ -128,6 +129,7 @@ fun main(args: Array<String>) {
     println(graph2.nodes.size)
     // キャラクターを追加するのはシーンを作った後、キャラクターを追加してからシーンを作成するとサーバが止まる
     println(sq.addCharacter())
+    println(sq.cameraCount())
     val config = RenderParams(
         processing_time_limit = 60, find_solution = false, skip_animation = false, recording = true,
         save_pose_data = true
@@ -141,7 +143,7 @@ fun main(args: Array<String>) {
         "<char0> [RUN] <book> (86)",
         "<char0> [FIND] <book> (86)",
         "<char0> [READ] <book> (86)",
-        "<char0> [WALK] <sofa> (139)"
+//        "<char0> [WALK] <sofa> (139)"
     )
     val scriptObj = Script(script)
 //    val scriptObj2 = Script(listOf("<char0> [WALK] <cat> (366) <dog> (377)"))
@@ -150,8 +152,9 @@ fun main(args: Array<String>) {
         "<char0> [RUN] <book> (86)",
         "<char0> [FIND] <book> (86)",
         "<char0> [READ] <book> (86)",
-        "<char0> [LIFT] <book> (86)",
-        "<char0> [WALK] <sofa> (139)"
+//        "<char0> [LIFT] <book> (86)",
+        "<char0> [WALK] <sofa> (139)",
+        "<char0> [SIT] <sofa> (139)"
     )
     println(sq.renderScript(script2, config))
     val res0 = sq.cameraImage(listOf(0))
@@ -165,7 +168,7 @@ fun main(args: Array<String>) {
 }
 
 class Main {
-    val client = VirtualHomeClient(host = "localhost")
+    private val client = VirtualHomeClient(host = "localhost")
 
     fun testScripts(script: List<String>): Boolean {
         if (! client.reset(4)!!.success) throw VHException("Reset Error")

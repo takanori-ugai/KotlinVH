@@ -145,6 +145,15 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return mapOf()
     }
 
+    /**
+     * Returns the number of cameras in the scene, including static cameras, and cameras for each character.
+     * @return The number of cameras in the scene, including static cameras, and cameras for each character.
+     */
+    fun cameraCount(): VirtualHomeResponse? {
+        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "camera_count")
+        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+    }
+
     private fun readStream(inputStream: InputStream): VirtualHomeResponse {
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         val responseBody = bufferedReader.use { it.readText() }
