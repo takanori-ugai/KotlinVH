@@ -3,9 +3,9 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("plugin.serialization") version "1.6.10"
     java
-    id("org.jetbrains.dokka") version "1.6.0"
+    id("org.jetbrains.dokka") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "com.fujitsu"
-version = "0.2"
+version = "0.3"
 
 repositories {
     mavenCentral()
