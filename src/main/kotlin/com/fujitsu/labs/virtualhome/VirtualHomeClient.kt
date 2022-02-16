@@ -25,12 +25,12 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
 
     /**
      * This action is not implemented
-
-     fun checkScript(script: List<String>) : Response? {
-     val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
-     val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-     return res
-     }
+     *
+     * fun checkScript(script: List<String>) : Response? {
+     * val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
+     * val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+     * return res
+     * }
      */
 
     /**
