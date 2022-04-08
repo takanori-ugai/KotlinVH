@@ -2,15 +2,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("jvm") version "1.6.20"
+    kotlin("plugin.serialization") version "1.6.20"
     java
+    jacoco
     id("org.jetbrains.dokka") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
     id("com.github.jk1.dependency-license-report") version "2.0"
-//    id("com.github.spotbugs") version "5.0.3"
+    id("com.github.spotbugs") version "5.0.6"
 }
 
 group = "com.fujitsu"
@@ -31,7 +32,7 @@ dependencies {
 //    implementation("org.jetbrains.kotlinx:kotlin-jupyter-api-annotations:0.10.1-8")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    ktlint("com.pinterest:ktlint:0.44.0") {
+    ktlint("com.pinterest:ktlint:0.45.2") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }
@@ -62,6 +63,14 @@ tasks {
         dependsOn("ktlint")
     }
 
+    test {
+        finalizedBy(jacocoTestReport) // report is always generated after tests run
+    }
+
+    jacocoTestReport {
+        dependsOn(test) // tests are required to run before generating the report
+    }
+
 }
 
 task("ktlint", JavaExec::class) {
@@ -90,4 +99,13 @@ detekt {
     config =
         files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+}
+
+spotbugs {
+    ignoreFailures.set(true)
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+//    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
