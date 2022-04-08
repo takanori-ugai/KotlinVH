@@ -10,6 +10,7 @@ import java.lang.System.currentTimeMillis
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.math.abs
+
 private val logger = KotlinLogging.logger {}
 
 class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
@@ -111,21 +112,42 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     }
 
+    val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
+
     /**
      * Add a character.
      * @param characterResource The resource of character to add. (default value is "Chars/Male1"
+     * @param initialRoom The palace to put the character, which must be kitchen, bedroom, livingroom or bathroom.
      */
-    fun addCharacter(characterResource: String = "Chars/Male1", mode: String = "random"): VirtualHomeResponse? {
+    fun addCharacter(
+        characterResource: String = "Chars/Male1",
+        position: Position? = null,
+        initialRoom: String = ""
+    ): VirtualHomeResponse? {
+        val addCharacterConfig =
+            if (position != null) {
+                AddCharacterConfig(
+                    character_resource = characterResource,
+                    mode = "fix_position",
+                    character_position = position
+                )
+            } else if (initialRooms.contains(initialRoom)) {
+                AddCharacterConfig(
+                    character_resource = characterResource,
+                    mode = "fix_position",
+                    initial_room = initialRoom
+                )
+            } else {
+                AddCharacterConfig(
+                    character_resource = characterResource,
+                    mode = "random"
+                )
+            }
         val data = VirtualHomeRequest(
             abs(currentTimeMillis().toInt()),
             "add_character",
             stringParams = listOf(
-                format.encodeToString(
-                    AddCharacterConfig(
-                        character_resource = characterResource,
-                        mode = mode
-                    )
-                )
+                format.encodeToString(addCharacterConfig)
             )
         )
         return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
