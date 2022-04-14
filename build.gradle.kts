@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.Detekt
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("jvm") version "1.6.20"
+    kotlin("plugin.serialization") version "1.6.20"
     java
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jetbrains.dokka") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.sherter.google-java-format") version "0.9"
@@ -31,7 +33,7 @@ dependencies {
 //    implementation("org.jetbrains.kotlinx:kotlin-jupyter-api-annotations:0.10.1-8")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    ktlint("com.pinterest:ktlint:0.44.0") {
+    ktlint("com.pinterest:ktlint:0.45.2") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }
@@ -91,3 +93,18 @@ detekt {
         files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 }
+
+tasks.withType<ShadowJar>() {
+    manifest {
+        attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
+    }
+}
+
+/*
+jar {
+    manifest {
+        attributes "Main-Class": "com.github.keyno63.app.Main"
+    }
+}
+
+ */
