@@ -7,12 +7,13 @@ plugins {
     kotlin("plugin.serialization") version "1.6.20"
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    jacoco
     id("org.jetbrains.dokka") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
     id("com.github.jk1.dependency-license-report") version "2.0"
-//    id("com.github.spotbugs") version "5.0.3"
+    id("com.github.spotbugs") version "5.0.6"
 }
 
 group = "com.fujitsu"
@@ -64,6 +65,14 @@ tasks {
         dependsOn("ktlint")
     }
 
+    test {
+        finalizedBy(jacocoTestReport) // report is always generated after tests run
+    }
+
+    jacocoTestReport {
+        dependsOn(test) // tests are required to run before generating the report
+    }
+
 }
 
 task("ktlint", JavaExec::class) {
@@ -92,6 +101,15 @@ detekt {
     config =
         files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+}
+
+spotbugs {
+    ignoreFailures.set(true)
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+//    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
 
 tasks.withType<ShadowJar>() {
