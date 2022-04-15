@@ -158,7 +158,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param cameraIndex The index number of the camera.
      * @return The visible objects (map of id and the class name)
      */
-    fun visibleObjects(cameraIndex: Int = 0): Map<String, String> {
+    fun visibleObjects(val cameraIndex: Int = 0): Map<String, String> {
         val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "observation", listOf(cameraIndex))
         val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
         if (res != null && res.success && res.message != null) {
