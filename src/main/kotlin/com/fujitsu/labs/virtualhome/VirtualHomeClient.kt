@@ -127,19 +127,19 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         val addCharacterConfig =
             if (position != null) {
                 AddCharacterConfig(
-                    character_resource = characterResource,
+                    characterResource = characterResource,
                     mode = "fix_position",
-                    character_position = position
+                    characterPosition = position
                 )
             } else if (initialRooms.contains(initialRoom)) {
                 AddCharacterConfig(
-                    character_resource = characterResource,
+                    characterResource = characterResource,
                     mode = "fix_position",
-                    initial_room = initialRoom
+                    initialRoom = initialRoom
                 )
             } else {
                 AddCharacterConfig(
-                    character_resource = characterResource,
+                    characterResource = characterResource,
                     mode = "random"
                 )
             }

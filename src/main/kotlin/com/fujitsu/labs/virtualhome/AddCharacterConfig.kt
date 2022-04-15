@@ -1,11 +1,15 @@
 package com.fujitsu.labs.virtualhome
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddCharacterConfig(
-    val character_resource: String = "Chars/Male1",
+    @SerialName("character_resource")
+    val characterResource: String = "Chars/Male1",
     val mode: String = "random",
-    val character_position: Position? = null,
-    val initial_room: String? = null
+    @SerialName("character_position")
+    val characterPosition: Position? = null,
+    @SerialName("initial_room")
+    val initialRoom: String? = null
 )

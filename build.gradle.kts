@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.Detekt
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("jvm") version "1.6.20"
     kotlin("plugin.serialization") version "1.6.20"
     java
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
     id("org.jetbrains.dokka") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
@@ -109,3 +111,18 @@ jacoco {
     toolVersion = "0.8.8"
 //    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
+
+tasks.withType<ShadowJar>() {
+    manifest {
+        attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
+    }
+}
+
+/*
+jar {
+    manifest {
+        attributes "Main-Class": "com.github.keyno63.app.Main"
+    }
+}
+
+ */
