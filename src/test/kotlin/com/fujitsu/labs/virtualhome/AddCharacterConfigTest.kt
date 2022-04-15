@@ -3,7 +3,6 @@ package com.fujitsu.labs.virtualhome
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 private val logger = KotlinLogging.logger {}
@@ -20,18 +19,18 @@ class AddCharacterConfigTest {
         println(
             format.encodeToString(
                 AddCharacterConfig(
-                    character_resource = "Chars/Male1",
+                    characterResource = "Chars/Male1",
                     mode = "fix_position",
-                    character_position = position
+                    characterPosition = position
                 )
             )
         )
         println(
             format.encodeToString(
                 AddCharacterConfig(
-                    character_resource = "Chars/Male1",
+                    characterResource = "Chars/Male1",
                     mode = "fix_position",
-                    initial_room = "kitchen"
+                    initialRoom = "kitchen"
                 )
             )
         )
