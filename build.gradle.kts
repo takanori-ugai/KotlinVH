@@ -3,8 +3,8 @@ import io.gitlab.arturbosch.detekt.Detekt
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.6.20"
-    kotlin("plugin.serialization") version "1.6.20"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.21"
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco

@@ -118,14 +118,14 @@ fun main(args: Array<String>) {
     println(sofa)
     graph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
     println("ADDRESSBOOK: " + graph.nodes.filter { it.class_name == "book" })
-    graph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
+    graph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
     println(sq.expandScene(graph))
     val graph2 = sq.environmentGraph()
     // expandSceneのあとオブジェクトのIDが変化する
     println(graph2.nodes.filter { it.id == 1000 })
     println("CAT: " + graph2.nodes.filter { it.class_name == "cat" })
     // edgeは適切に修正される
-    println(graph2.edges.filter { it.to_id == sofa.id })
+    println(graph2.edges.filter { it.toId == sofa.id })
     println(graph2.nodes.size)
     // キャラクターを追加するのはシーンを作った後、キャラクターを追加してからシーンを作成するとサーバが止まる
     println(sq.addCharacter())
@@ -207,7 +207,7 @@ class Main {
                 states = listOf()
             )
         )
-        initGraph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
+        initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
         if (! client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
         if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()

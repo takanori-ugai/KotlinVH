@@ -1,12 +1,16 @@
 package com.fujitsu.labs.virtualhome
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Edge(
-    val from_id: Int,
-    val to_id: Int,
-    val relation_type: String
+    @SerialName("from_id")
+    val fromId: Int,
+    @SerialName("to_id")
+    val toId: Int,
+    @SerialName("relation_type")
+    val relationType: String
 )
 
 @Serializable
