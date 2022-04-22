@@ -168,16 +168,22 @@ fun main(args: Array<String>) {
 }
 
 class Main {
+    val sceneNum = 4
     private val client = VirtualHomeClient(host = "localhost")
 
     fun testScripts(script: List<String>): Boolean {
-        if (! client.reset(4)!!.success) throw VHException("Reset Error")
+        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofa = initGraph.nodes.filter { it.class_name == "sofa" }[1]
+        val sofas = initGraph.nodes.filter { it.class_name == "sofa" }
+        println(sofas)
+        val sofa = sofas[sofas.size - 1]
+        println(sofa)
 //        initGraph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
 //        initGraph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
-        if (! client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
+//        if (! client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
+//        println("Sucess : Expend Scene")
         if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
+        println("Success : Add Character")
         val graph = client.environmentGraph()
 //        val catId = graph.nodes.filter { it.class_name == "cat"}[0]
 //        println("CATID: $catId")
@@ -195,7 +201,7 @@ class Main {
     }
 
     fun checkScripts(script: List<String>): Boolean {
-        if (! client.reset(4)!!.success) throw VHException("Reset Error")
+        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
         val sofa = initGraph.nodes.filter { it.class_name == "sofa" }[1]
         initGraph.nodes.add(
@@ -222,7 +228,7 @@ class Main {
     }
 
     fun findNodes(name: String): List<Node> {
-        if (! client.reset(4)!!.success) throw VHException("Reset Error")
+        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         val regex = Regex(name)
@@ -236,7 +242,7 @@ class Main {
     }
 
     fun findNodesByProperty(property: String): List<Node> {
-        if (! client.reset(4)!!.success) throw VHException("Reset Error")
+        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         return graph.nodes.filter {
@@ -245,7 +251,7 @@ class Main {
     }
 
     fun findNodesById(id: Int): List<Node> {
-        if (! client.reset(4)!!.success) throw VHException("Reset Error")
+        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         return graph.nodes.filter {

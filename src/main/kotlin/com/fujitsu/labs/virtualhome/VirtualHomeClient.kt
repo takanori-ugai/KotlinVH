@@ -61,7 +61,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
                 )
             )
         )
-        logger.info { format.encodeToString(data) }
+//        logger.info { format.encodeToString(data) }
         return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     }
 
@@ -110,6 +110,11 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     fun reset(sceneIndex: Int = 0): VirtualHomeResponse? {
         val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "reset", listOf(sceneIndex))
         return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+//        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "clear", listOf(4))
+//        println(format.encodeToString(data))
+//        println(sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8)))
+//        val data0 = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "environment", listOf(sceneIndex))
+//        return sendRequest(format.encodeToString(data0).toByteArray(Charsets.UTF_8))
     }
 
     val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
@@ -171,9 +176,9 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * Returns the number of cameras in the scene, including static cameras, and cameras for each character.
      * @return The number of cameras in the scene, including static cameras, and cameras for each character.
      */
-    fun cameraCount(): VirtualHomeResponse? {
+    fun cameraCount(): Int {
         val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "camera_count")
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))!!.value
     }
 
     private fun readStream(inputStream: InputStream): VirtualHomeResponse {
