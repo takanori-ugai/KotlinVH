@@ -1,11 +1,9 @@
 package com.fujitsu.labs.virtualhome
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.lang.System.currentTimeMillis
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
+import java.util.Base64
 
 fun main(args: Array<String>) {
     val format = Json {
@@ -173,9 +171,9 @@ class MainTest {
             val cameraA = client.cameraCount()
             client.addCharacter()
             if (cameraA < client.cameraCount()) {
-                println("Camera Count on $it Succeed (${cameraA} : ${client.cameraCount()})")
+                println("Camera Count on $it Succeed ($cameraA : ${client.cameraCount()})")
             } else {
-                println("Camera Count on $it Failed (${cameraA} : ${client.cameraCount()})")
+                println("Camera Count on $it Failed ($cameraA : ${client.cameraCount()})")
             }
         }
     }
@@ -228,7 +226,9 @@ class MainTest {
     }
 
     fun testRendering(
-        script: List<String>, scene: Int, config: RenderParams = RenderParams(
+        script: List<String>,
+        scene: Int,
+        config: RenderParams = RenderParams(
             processing_time_limit = 1, find_solution = true, skip_animation = false, recording = true,
             save_pose_data = false, skip_execution = false
         )
@@ -271,5 +271,4 @@ class MainTest {
         if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
         return true
     }
-
 }
