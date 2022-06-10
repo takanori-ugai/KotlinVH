@@ -1,16 +1,11 @@
 package com.fujitsu.labs.virtualhome
 
-import kotlinx.serialization.json.Json
+// import kotlinx.serialization.json.Json
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Base64
 
-fun main(args: Array<String>) {
-    val format = Json {
-        encodeDefaults = true
-//        explicitNulls = false
-    }
-
+fun main() {
     /**
      * Not supported action in Unity Simulater
      **  EAT
@@ -87,13 +82,13 @@ fun main(args: Array<String>) {
 //        "<char0> [PLUGIN] <tablelamp> (76)"
     )
     val main = MainTest()
-//    main.testReset()
-//    main.testEnvironmentGraph()
+    main.testReset()
+    main.testEnvironmentGraph()
 //    main.testExpandScene()
-//    main.testAddCharacter()
-//    main.testCameraCount()
-//    main.testVisibleObjects()
-//    main.testRendering()
+    main.testAddCharacter()
+    main.testCameraCount()
+    main.testVisibleObjects()
+    main.testRendering()
 //    System.exit(0)
 
     val script = listOf(

@@ -1,10 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.Detekt
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("jvm") version "1.7.0"
+    kotlin("plugin.serialization") version "1.7.0"
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
@@ -26,12 +25,9 @@ repositories {
 val ktlint by configurations.creating
 
 dependencies {
-    implementation(kotlin("stdlib"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.+")
     implementation("io.github.microutils:kotlin-logging:1.+")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
-//    implementation("org.jetbrains.kotlinx:kotlin-jupyter-api:0.10.1-8")
-//    implementation("org.jetbrains.kotlinx:kotlin-jupyter-api-annotations:0.10.1-8")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     ktlint("com.pinterest:ktlint:0.45.2") {
@@ -42,12 +38,29 @@ dependencies {
 }
 
 tasks {
-    withType<KotlinCompile>() {
+    compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
 
-    getByName<Test>("test") {
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    compileJava {
+        options.encoding = "UTF-8"
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+    }
+
+    compileTestJava {
+        options.encoding = "UTF-8"
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+    }
+
+    test {
         useJUnitPlatform()
+        finalizedBy(jacocoTestReport) // report is always generated after tests run
     }
 
     withType<Detekt>().configureEach {
@@ -65,14 +78,15 @@ tasks {
         dependsOn("ktlint")
     }
 
-    test {
-        finalizedBy(jacocoTestReport) // report is always generated after tests run
-    }
-
     jacocoTestReport {
         dependsOn(test) // tests are required to run before generating the report
     }
 
+    withType<ShadowJar>() {
+        manifest {
+            attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
+        }
+    }
 }
 
 task("ktlint", JavaExec::class) {
@@ -90,11 +104,6 @@ val ktlintFormat by tasks.creating(JavaExec::class) {
     args = listOf("-F", "src/**/*.kt")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
@@ -110,12 +119,6 @@ spotbugs {
 jacoco {
     toolVersion = "0.8.8"
 //    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
-}
-
-tasks.withType<ShadowJar>() {
-    manifest {
-        attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
-    }
 }
 
 /*
