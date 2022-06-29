@@ -7,7 +7,7 @@ plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
-    id("org.jetbrains.dokka") version "1.6.21"
+    id("org.jetbrains.dokka") version "1.7.0"
     id("io.gitlab.arturbosch.detekt") version "1.20.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
