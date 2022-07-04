@@ -55,8 +55,8 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
                 format.encodeToString(
                     ImageConfig(
                         mode = mode,
-                        image_width = image_width.toString(),
-                        image_height = image_height.toString()
+                        imageWidth = image_width.toString(),
+                        imageHeight = image_height.toString()
                     )
                 )
             )

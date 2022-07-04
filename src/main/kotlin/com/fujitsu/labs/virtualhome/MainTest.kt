@@ -132,7 +132,7 @@ class MainTest {
         (0..6).forEach {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
-            if (initGraph.nodes.filter { it.class_name == "sofa" }.size > 0) {
+            if (initGraph.nodes.filter { it.className == "sofa" }.size > 0) {
                 println("Scene $it succeeded")
             } else {
                 println("Sceone $it Failed")
@@ -195,7 +195,7 @@ class MainTest {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (client.addCharacter()!!.success) {
-                val sofa = initGraph.nodes.filter { it.class_name == "book" }.last()
+                val sofa = initGraph.nodes.filter { it.className == "book" }.last()
                 val script = listOf(
                     "<char0> [WALK] <book> (${sofa.id})",
                     "<char0> [FIND] <book> (${sofa.id})",
@@ -215,7 +215,7 @@ class MainTest {
                     println("Rendering on Scene $it Failed")
                 }
                 val res0 = client.cameraImage(listOf(0))
-                val image = Base64.getDecoder().decode(res0?.message_list?.get(0))
+                val image = Base64.getDecoder().decode(res0?.messageList?.get(0))
                 Files.write(Paths.get("bfo.png"), image)
                 println("  >> Size of Image is ${image.size} : Camera Image Succeeded")
             } else {
@@ -251,10 +251,10 @@ class MainTest {
     fun checkScripts(script: List<String>): Boolean {
         if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofa = initGraph.nodes.filter { it.class_name == "sofa" }[1]
+        val sofa = initGraph.nodes.filter { it.className == "sofa" }[1]
         initGraph.nodes.add(
             Node(
-                class_name = "cat",
+                className = "cat",
                 category = "Animals",
                 id = 1000,
                 properties = listOf(),
@@ -265,7 +265,7 @@ class MainTest {
         if (!client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
         if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
-        val catId = graph.nodes.filter { it.class_name == "cat" }[0]
+        val catId = graph.nodes.filter { it.className == "cat" }[0]
         val config = RenderParams(
             processing_time_limit = 1,
             find_solution = false,
