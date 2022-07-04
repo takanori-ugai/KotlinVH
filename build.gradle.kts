@@ -11,7 +11,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.20.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
-    id("com.github.jk1.dependency-license-report") version "2.0"
+    id("com.github.jk1.dependency-license-report") version "2.1"
     id("com.github.spotbugs") version "5.0.6"
 }
 
@@ -30,7 +30,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    ktlint("com.pinterest:ktlint:0.45.2") {
+    ktlint("com.pinterest:ktlint:0.46.1") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }
