@@ -12,7 +12,7 @@ import java.util.*
 // import org.jetbrains.kotlinx.jupyter.api.*
 // import org.jetbrains.kotlinx.jupyter.api.libraries.*
 
-fun main(args: Array<String>) {
+fun main() {
     val format = Json {
         encodeDefaults = true
 //        explicitNulls = false
@@ -88,7 +88,7 @@ fun main(args: Array<String>) {
 //        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)",
 //        "<char0> [STANDUP] <sofa> (139)",
-        "<char0> [WALK] <tablelamp> (76)",
+        "<char0> [WALK] <tablelamp> (76)"
 //        "<char0> [PUTON] <clothesshirt> (36)"
 //        "<char0> [GRAB] <book> (86)",
 //        "<char0> [PLUGIN] <tablelamp> (76)"
@@ -114,16 +114,16 @@ fun main(args: Array<String>) {
     val graph = sq.environmentGraph()
     println(graph.nodes[0])
     println(graph.nodes.size)
-    val sofa = graph.nodes.filter { it.class_name == "sofa" }[1]
+    val sofa = graph.nodes.filter { it.className == "sofa" }[1]
     println(sofa)
-    graph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
-    println("ADDRESSBOOK: " + graph.nodes.filter { it.class_name == "book" })
+    graph.nodes.add(Node(className = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
+    println("ADDRESSBOOK: " + graph.nodes.filter { it.className == "book" })
     graph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
     println(sq.expandScene(graph))
     val graph2 = sq.environmentGraph()
     // expandSceneのあとオブジェクトのIDが変化する
     println(graph2.nodes.filter { it.id == 1000 })
-    println("CAT: " + graph2.nodes.filter { it.class_name == "cat" })
+    println("CAT: " + graph2.nodes.filter { it.className == "cat" })
     // edgeは適切に修正される
     println(graph2.edges.filter { it.toId == sofa.id })
     println(graph2.nodes.size)
@@ -131,7 +131,10 @@ fun main(args: Array<String>) {
     println(sq.addCharacter())
     println(sq.cameraCount())
     val config = RenderParams(
-        processing_time_limit = 60, find_solution = false, skip_animation = false, recording = true,
+        processing_time_limit = 60,
+        find_solution = false,
+        skip_animation = false,
+        recording = true,
         save_pose_data = true
     )
 //    val config = RenderParams(
@@ -142,7 +145,7 @@ fun main(args: Array<String>) {
     val script = listOf(
         "<char0> [RUN] <book> (86)",
         "<char0> [FIND] <book> (86)",
-        "<char0> [READ] <book> (86)",
+        "<char0> [READ] <book> (86)"
 //        "<char0> [WALK] <sofa> (139)"
     )
     val scriptObj = Script(script)
@@ -159,7 +162,7 @@ fun main(args: Array<String>) {
     println(sq.renderScript(script2, config))
     val res0 = sq.cameraImage(listOf(0))
 //    val image = Base64.getDecoder().decode(res0?.message_list?.get(0)?.toByteArray(Charsets.UTF_8))
-    val image = Base64.getDecoder().decode(res0?.message_list?.get(0))
+    val image = Base64.getDecoder().decode(res0?.messageList?.get(0))
     Files.write(Paths.get("bfo.png"), image)
     /*
     val imag = ImageIO.read(ByteArrayInputStream(image))
@@ -172,9 +175,9 @@ class Main {
     private val client = VirtualHomeClient(host = "localhost")
 
     fun testScripts(script: List<String>): Boolean {
-        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+        if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofas = initGraph.nodes.filter { it.class_name == "sofa" }
+        val sofas = initGraph.nodes.filter { it.className == "sofa" }
         println(sofas)
         val sofa = sofas[sofas.size - 1]
         println(sofa)
@@ -182,14 +185,18 @@ class Main {
 //        initGraph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
 //        if (! client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
 //        println("Sucess : Expend Scene")
-        if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
+        if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         println("Success : Add Character")
         val graph = client.environmentGraph()
 //        val catId = graph.nodes.filter { it.class_name == "cat"}[0]
 //        println("CATID: $catId")
         val config = RenderParams(
-            processing_time_limit = 1, find_solution = false, skip_animation = false, recording = true,
-            save_pose_data = false, skip_execution = false
+            processing_time_limit = 1,
+            find_solution = false,
+            skip_animation = false,
+            recording = true,
+            save_pose_data = false,
+            skip_execution = false
         )
 //    val config = RenderParams(
 //        processing_time_limit = 60, find_solution = false, skip_animation = true, recording = false,
@@ -201,12 +208,12 @@ class Main {
     }
 
     fun checkScripts(script: List<String>): Boolean {
-        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+        if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofa = initGraph.nodes.filter { it.class_name == "sofa" }[1]
+        val sofa = initGraph.nodes.filter { it.className == "sofa" }[1]
         initGraph.nodes.add(
             Node(
-                class_name = "cat",
+                className = "cat",
                 category = "Animals",
                 id = 1000,
                 properties = listOf(),
@@ -214,27 +221,31 @@ class Main {
             )
         )
         initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
-        if (! client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
-        if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
+        if (!client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
+        if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
-        val catId = graph.nodes.filter { it.class_name == "cat" }[0]
+        val catId = graph.nodes.filter { it.className == "cat" }[0]
         val config = RenderParams(
-            processing_time_limit = 1, find_solution = false, skip_animation = false, recording = true,
-            save_pose_data = false, skip_execution = true
+            processing_time_limit = 1,
+            find_solution = false,
+            skip_animation = false,
+            recording = true,
+            save_pose_data = false,
+            skip_execution = true
         )
 //        val scriptObj = Script(script)
-        if (! client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
+        if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
         return true
     }
 
     fun findNodes(name: String): List<Node> {
-        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
-        if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
+        if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+        if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         val regex = Regex(name)
         return graph.nodes.filter {
-            if (it.class_name != null) {
-                regex.containsMatchIn(it.class_name)
+            if (it.className != null) {
+                regex.containsMatchIn(it.className)
             } else {
                 false
             }
@@ -242,8 +253,8 @@ class Main {
     }
 
     fun findNodesByProperty(property: String): List<Node> {
-        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
-        if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
+        if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+        if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         return graph.nodes.filter {
             it.properties != null && it.properties.contains(property)
@@ -251,8 +262,8 @@ class Main {
     }
 
     fun findNodesById(id: Int): List<Node> {
-        if (! client.reset(sceneNum)!!.success) throw VHException("Reset Error")
-        if (! client.addCharacter()!!.success) throw VHException("Add Character Error")
+        if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+        if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         return graph.nodes.filter {
             it.id != null && it.id == id

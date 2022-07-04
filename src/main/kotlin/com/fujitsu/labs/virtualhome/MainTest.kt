@@ -76,7 +76,7 @@ fun main() {
 //        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)",
 //        "<char0> [STANDUP] <sofa> (139)",
-        "<char0> [WALK] <tablelamp> (76)",
+        "<char0> [WALK] <tablelamp> (76)"
 //        "<char0> [PUTON] <clothesshirt> (36)"
 //        "<char0> [GRAB] <book> (86)",
 //        "<char0> [PLUGIN] <tablelamp> (76)"
@@ -94,7 +94,7 @@ fun main() {
     val script = listOf(
         "<char0> [RUN] <book> (86)",
         "<char0> [FIND] <book> (86)",
-        "<char0> [READ] <book> (86)",
+        "<char0> [READ] <book> (86)"
 //        "<char0> [WALK] <sofa> (139)"
     )
     val scriptObj = Script(script)
@@ -199,11 +199,15 @@ class MainTest {
                 val script = listOf(
                     "<char0> [WALK] <book> (${sofa.id})",
                     "<char0> [FIND] <book> (${sofa.id})",
-                    "<char0> [READ] <book> (${sofa.id})",
+                    "<char0> [READ] <book> (${sofa.id})"
                 )
                 val config = RenderParams(
-                    processing_time_limit = 1, find_solution = false, skip_animation = false, recording = true,
-                    save_pose_data = false, skip_execution = false
+                    processing_time_limit = 1,
+                    find_solution = false,
+                    skip_animation = false,
+                    recording = true,
+                    save_pose_data = false,
+                    skip_execution = false
                 )
                 if (client.renderScript(script, config)?.success == true) {
                     println("Rendering on Scene $it Succeeded")
@@ -224,8 +228,12 @@ class MainTest {
         script: List<String>,
         scene: Int,
         config: RenderParams = RenderParams(
-            processing_time_limit = 1, find_solution = true, skip_animation = false, recording = true,
-            save_pose_data = false, skip_execution = false
+            processing_time_limit = 1,
+            find_solution = true,
+            skip_animation = false,
+            recording = true,
+            save_pose_data = false,
+            skip_execution = false
         )
     ) {
         if (!client.reset(scene)!!.success) throw VHException("Reset Error")
@@ -259,8 +267,12 @@ class MainTest {
         val graph = client.environmentGraph()
         val catId = graph.nodes.filter { it.class_name == "cat" }[0]
         val config = RenderParams(
-            processing_time_limit = 1, find_solution = false, skip_animation = false, recording = true,
-            save_pose_data = false, skip_execution = true
+            processing_time_limit = 1,
+            find_solution = false,
+            skip_animation = false,
+            recording = true,
+            save_pose_data = false,
+            skip_execution = true
         )
 //        val scriptObj = Script(script)
         if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")

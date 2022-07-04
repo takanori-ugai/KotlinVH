@@ -1,5 +1,6 @@
 package com.fujitsu.labs.virtualhome
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,5 +9,6 @@ data class VirtualHomeResponse(
     val success: Boolean,
     val message: String?,
     val value: Int,
-    val message_list: List<String>?
+    @SerialName("message_list")
+    val messageList: List<String>?
 )

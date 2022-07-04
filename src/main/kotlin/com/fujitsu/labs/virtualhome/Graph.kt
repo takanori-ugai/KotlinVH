@@ -17,10 +17,14 @@ data class Edge(
 data class Node(
     val id: Int? = null,
     val category: String? = null,
-    val class_name: String? = null,
-    val prefab_name: String? = null,
-    val obj_transform: Map<String, List<Float>>? = null,
-    val bounding_box: Map<String, List<Float>>? = null,
+    @SerialName("class_name")
+    val className: String? = null,
+    @SerialName("prefab_name")
+    val prefabName: String? = null,
+    @SerialName("obj_transform")
+    val objTransform: Map<String, List<Float>>? = null,
+    @SerialName("bounding_box")
+    val boundingBox: Map<String, List<Float>>? = null,
     val properties: List<String>? = null,
     val states: List<String>? = null
 )
