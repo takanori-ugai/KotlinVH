@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class AddCharacterConfig(
     @SerialName("character_resource")
     val characterResource: String = "Chars/Male1",
-    val mode: String = "random",
+    val mode: String = AddCharacterMode.Random.toString(),
     @SerialName("character_position")
     val characterPosition: Position? = null,
     @SerialName("initial_room")

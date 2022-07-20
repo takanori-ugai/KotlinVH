@@ -8,13 +8,15 @@ import org.junit.jupiter.api.Test
 private val logger = KotlinLogging.logger {}
 
 class AddCharacterConfigTest {
+    @kotlinx.serialization.ExperimentalSerializationApi
     private val format = Json {
         encodeDefaults = true
         explicitNulls = false
     }
 
     @Test
-    fun Test1() {
+    @kotlinx.serialization.ExperimentalSerializationApi
+    fun test1() {
         val position = Position(1, 2, 3)
         println(
             format.encodeToString(
