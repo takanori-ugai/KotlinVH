@@ -2,12 +2,12 @@ import io.gitlab.arturbosch.detekt.Detekt
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.7.0"
-    kotlin("plugin.serialization") version "1.7.0"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
-    id("org.jetbrains.dokka") version "1.7.0"
+    id("org.jetbrains.dokka") version "1.7.10"
     id("io.gitlab.arturbosch.detekt") version "1.20.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
