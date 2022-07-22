@@ -84,12 +84,14 @@ fun main() {
     val main = MainTest()
     main.testReset()
     main.testEnvironmentGraph()
-//    main.testExpandScene()
+    main.testExpandScene()
+    main.testExpandScene2()
+    System.exit(0)
     main.testAddCharacter()
     main.testCameraCount()
     main.testVisibleObjects()
     main.testRendering()
-//    System.exit(0)
+    System.exit(0)
 
     val script = listOf(
         "<char0> [RUN] <book> (86)",
@@ -149,6 +151,30 @@ class MainTest {
         }
     }
 
+    fun testExpandScene2() {
+        if (!client.reset(4)!!.success) throw VHException("Reset Error")
+        val graph = client.environmentGraph()
+        println(graph.nodes[0])
+        println(graph.nodes.size)
+        val sofa = graph.nodes.filter { it.className == "sofa" }[0]
+        println(sofa)
+        graph.nodes.add(Node(className = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
+//        println("ADDRESSBOOK: " + graph.nodes.filter { it.className == "book" })
+        graph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
+        println(client.expandScene(graph))
+        val graph2 = client.environmentGraph()
+        // expandSceneのあとオブジェクトのIDが変化する
+        println(graph2.nodes.filter { it.id == 1000 })
+        val cat = graph2.nodes.filter { it.className == "cat" }
+        println("CAT: " + cat)
+        // edgeは適切に修正される
+        println(graph2.edges.filter { it.toId == sofa.id })
+        println(graph2.edges.filter { it.fromId == sofa.id })
+        println(graph2.edges.filter { it.fromId == cat[0].id })
+
+        println(graph2.nodes.size)
+    }
+
     fun testAddCharacter() {
         (0..6).forEach {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -191,7 +217,7 @@ class MainTest {
     }
 
     fun testRendering() {
-        (0..6).forEach {
+        (0..5).forEach {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (client.addCharacter()!!.success) {
