@@ -131,7 +131,7 @@ class MainTest {
     }
 
     fun testEnvironmentGraph() {
-        (0..6).forEach {
+        for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (initGraph.nodes.filter { it.className == "sofa" }.size > 0) {
@@ -143,7 +143,7 @@ class MainTest {
     }
 
     fun testExpandScene() {
-        (0..6).forEach {
+        for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             println(client.expandScene(initGraph)?.success)
@@ -176,7 +176,7 @@ class MainTest {
     }
 
     fun testAddCharacter() {
-        (0..6).forEach {
+        for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             if (client.addCharacter()?.success == true) {
                 println("AddCharacter on Scene $it Succeeded")
@@ -187,7 +187,7 @@ class MainTest {
     }
 
     fun testCameraCount() {
-        (0..6).forEach {
+        for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val cameraA = client.cameraCount()
             client.addCharacter()
@@ -200,7 +200,7 @@ class MainTest {
     }
 
     fun testVisibleObjects() {
-        (0..6).forEach {
+        for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             client.addCharacter()
             val cameraN = client.cameraCount()
@@ -217,7 +217,7 @@ class MainTest {
     }
 
     fun testRendering() {
-        (0..5).forEach {
+        for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (client.addCharacter()!!.success) {

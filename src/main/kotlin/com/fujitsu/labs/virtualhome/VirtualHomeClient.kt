@@ -38,14 +38,14 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * Make images from cameras.
      * @param cameraIndexes Identifiers of the cameras.
      * @param mode The mode of image ("normal", .. )
-     * @param image_width The width of the created image.
-     * @param image_height The height of the created image.
+     * @param imageWidth The width of the created image.
+     * @param imageHeight The height of the created image.
      */
     fun cameraImage(
         cameraIndexes: List<Int>,
         mode: String = "normal",
-        image_width: Int = 640,
-        image_height: Int = 320
+        imageWidth: Int = 640,
+        imageHeight: Int = 320
     ): VirtualHomeResponse? {
         val data = VirtualHomeRequest(
             abs(currentTimeMillis().toInt()),
@@ -55,8 +55,8 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
                 format.encodeToString(
                     ImageConfig(
                         mode = mode,
-                        imageWidth = image_width.toString(),
-                        imageHeight = image_height.toString()
+                        imageWidth = imageWidth.toString(),
+                        imageHeight = imageHeight.toString()
                     )
                 )
             )
@@ -133,19 +133,19 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
             if (position != null) {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = "fix_position",
+                    mode = AddCharacterMode.FixPosition.toString(),
                     characterPosition = position
                 )
             } else if (initialRooms.contains(initialRoom)) {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = "fix_position",
+                    mode = AddCharacterMode.FixPosition.toString(),
                     initialRoom = initialRoom
                 )
             } else {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = "random"
+                    mode = AddCharacterMode.Random.toString()
                 )
             }
         val data = VirtualHomeRequest(

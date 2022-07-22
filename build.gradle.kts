@@ -8,11 +8,11 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
     id("org.jetbrains.dokka") version "1.7.10"
-    id("io.gitlab.arturbosch.detekt") version "1.20.0"
+    id("io.gitlab.arturbosch.detekt") version "1.21.0"
     id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
     id("com.github.jk1.dependency-license-report") version "2.1"
-    id("com.github.spotbugs") version "5.0.6"
+    id("com.github.spotbugs") version "5.0.9"
 }
 
 group = "com.fujitsu"
@@ -82,7 +82,7 @@ tasks {
         dependsOn(test) // tests are required to run before generating the report
     }
 
-    withType<ShadowJar>() {
+    withType<ShadowJar> {
         manifest {
             attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
         }
