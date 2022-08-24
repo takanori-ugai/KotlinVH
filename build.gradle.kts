@@ -26,11 +26,11 @@ val ktlint by configurations.creating
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.+")
-    implementation("io.github.microutils:kotlin-logging:1.+")
+    implementation("io.github.microutils:kotlin-logging:2.+")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    ktlint("com.pinterest:ktlint:0.46.1") {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    ktlint("com.pinterest:ktlint:0.47.0") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }
@@ -67,10 +67,15 @@ tasks {
         // Target version of the generated JVM bytecode. It is used for type resolution.
         jvmTarget = "1.8"
         reports {
-            html.required.set(true) // observe findings in your browser with structure and code snippets
-            xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
-            txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
-            sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+            // observe findings in your browser with structure and code snippets
+            html.required.set(true)
+            // checkstyle like format mainly for integrations like Jenkins
+            xml.required.set(true)
+            // similar to the console output, contains issue signature to manually edit baseline files
+            txt.required.set(true)
+            // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations
+            // with Github Code Scanning
+            sarif.required.set(true)
         }
     }
 
@@ -107,8 +112,8 @@ val ktlintFormat by tasks.creating(JavaExec::class) {
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
-    config =
-        files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    // point to your custom config defining rules to run, overwriting default behavior
+    config = files("$projectDir/config/detekt.yml")
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 }
 
