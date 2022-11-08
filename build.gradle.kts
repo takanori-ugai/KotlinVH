@@ -14,7 +14,7 @@ plugins {
 //    kotlin("jupyter.api") version "0.10.1-8"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("com.github.jk1.dependency-license-report") version "2.1"
-    id("com.github.spotbugs") version "5.0.9"
+    id("com.github.spotbugs") version "5.0.13"
     id("com.diffplug.spotless") version "6.11.0"
 }
 
@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.+")
-    implementation("io.github.microutils:kotlin-logging:3.0.2")
+    implementation("io.github.microutils:kotlin-logging:3.0.3")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
