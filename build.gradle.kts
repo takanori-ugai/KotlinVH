@@ -9,13 +9,13 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
     id("org.jetbrains.dokka") version "1.7.20"
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
+    id("io.gitlab.arturbosch.detekt") version "1.22.0"
 //    id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("com.github.jk1.dependency-license-report") version "2.1"
     id("com.github.spotbugs") version "5.0.13"
-    id("com.diffplug.spotless") version "6.11.0"
+    id("com.diffplug.spotless") version "6.12.0"
 }
 
 group = "com.fujitsu"
@@ -127,7 +127,7 @@ spotless {
         removeUnusedImports()
 
         // Choose one of these formatters.
-        googleJavaFormat("1.15.0") // has its own section below
-        formatAnnotations() // fixes formatting of type annotations, see below
+        googleJavaFormat("1.15.0")
+        formatAnnotations()
     }
 }
