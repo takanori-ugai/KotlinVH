@@ -3,19 +3,19 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm") version "1.8.0"
-    kotlin("plugin.serialization") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.10"
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
     jacoco
-    id("org.jetbrains.dokka") version "1.7.20"
+    id("org.jetbrains.dokka") version "1.8.10"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
 //    id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     id("com.github.jk1.dependency-license-report") version "2.1"
-    id("com.github.spotbugs") version "5.0.13"
-    id("com.diffplug.spotless") version "6.12.0"
+    id("com.github.spotbugs") version "5.0.14"
+    id("com.diffplug.spotless") version "6.17.0"
 }
 
 group = "com.fujitsu"
@@ -32,6 +32,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.+")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks {
@@ -131,5 +132,3 @@ spotless {
         formatAnnotations()
     }
 }
-
- */
