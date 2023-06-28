@@ -21,30 +21,25 @@ class Script(scriptList: List<String>) {
 //    <char0> [WALK] <cat> (366)
 
     fun findObj(name: String, id: Int): Obj {
-        val find = objectPool.find { it.name == name && it.id == id }
-        if (find == null) {
-            val newObj = Obj(name, id)
-            objectPool.add(newObj)
-            return newObj
-        } else {
-            return find
-        }
+        return objectPool.firstOrNull { it.name == name && it.id == id }
+            ?: Obj(name, id).also { objectPool.add(it) }
     }
 
     private fun parseScript(script: List<String>): List<ScriptLine> {
-        val linesTmp: MutableList<ScriptLine> = mutableListOf()
-        script.forEach {
-            val objects: MutableList<Obj> = mutableListOf()
-            val match = regex.find(it)
-            val match2 = regex2.findAll(match?.groups?.get(4)?.value.toString())
-            match2.forEach {
-                objects.add(findObj(it.groups.get(1)?.value.toString(), it.groups[2]?.value?.toInt()!!))
-            }
-            val scriptLine = ScriptLine(match?.groups?.get(2)?.value, match?.groups?.get(3)?.value.toString(), objects)
+        return script.map { line ->
+            val objects = regex2.findAll(regex.find(line)?.groups?.get(4)?.value.toString())
+                .map { findObj(it.groups[1]?.value.toString(), it.groups[2]?.value!!.toInt()) }
+                .toList()
+
+            val scriptLine = ScriptLine(
+                regex.find(line)?.groups?.get(2)?.value,
+                regex.find(line)?.groups?.get(3)?.value.toString(),
+                objects
+            )
+
             if (!checkLine(scriptLine)) throw Exception("Error in Script: $scriptLine")
-            linesTmp.add(scriptLine)
+            scriptLine
         }
-        return linesTmp
     }
 
     fun checkLine(line: ScriptLine): Boolean {
