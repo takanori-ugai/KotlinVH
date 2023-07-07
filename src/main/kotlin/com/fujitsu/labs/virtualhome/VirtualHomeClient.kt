@@ -19,6 +19,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      */
     private val format = Json {
         encodeDefaults = true
+        @kotlinx.serialization.ExperimentalSerializationApi
         explicitNulls = false
     }
 
