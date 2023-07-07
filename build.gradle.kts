@@ -3,10 +3,10 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
     java
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     jacoco
     id("org.jetbrains.dokka") version "1.8.10"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.+")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.+")
     implementation("io.github.microutils:kotlin-logging:3.0.4")
 //    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
     implementation("ch.qos.logback:logback-classic:1.+")
@@ -130,5 +130,13 @@ spotless {
         // Choose one of these formatters.
         googleJavaFormat("1.15.0")
         formatAnnotations()
+    }
+}
+
+kotlin {
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
     }
 }
