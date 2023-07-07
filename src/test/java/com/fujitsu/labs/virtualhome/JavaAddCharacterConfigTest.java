@@ -1,16 +1,9 @@
 package com.fujitsu.labs.virtualhome;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class JavaAddCharacterConfigTest {
-
-  /*
-  @kotlinx.serialization.ExperimentalSerializationApi
-  private Json format = Json.Default. {
-      encodeDefaults = true
-      explicitNulls = false
-  }
-  */
 
   @Test
   public void test1() {
@@ -19,5 +12,12 @@ public class JavaAddCharacterConfigTest {
     System.out.println(new AddCharacterConfig("Chars/Male1", "fix_position", null, "kitchen"));
     //        VirtualHomeClient client = new VirtualHomeClient();
     //        VirtualHomeResponse res = client.cameraImage(Arrays.asList(1), "normal", 640, 320) ;
+  }
+
+  @Test
+  public void test2() {
+    List<String> commons = Commons.INSTANCE.objectStates().get("razor");
+    System.out.println(commons);
+    new VirtualHomeClient("localhost", 8080);
   }
 }

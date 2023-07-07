@@ -24,6 +24,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     }
 
     private val url = URL("http://$host:$port")
+    private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
     /**
      * This action is not implemented
@@ -118,8 +119,6 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
 //        return sendRequest(format.encodeToString(data0).toByteArray(Charsets.UTF_8))
     }
 
-    val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
-
     /**
      * Add a character.
      * @param characterResource The resource of character to add. (default value is "Chars/Male1"
@@ -212,6 +211,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
             }
         } catch (exception: Exception) {
             println("Error: $exception")
+            return VirtualHomeResponse(0, false, "$exception", 0, null)
         } finally {
             connection.disconnect()
         }

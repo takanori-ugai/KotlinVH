@@ -8,18 +8,18 @@ plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
     jacoco
-    id("org.jetbrains.dokka") version "1.8.10"
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    id("org.jetbrains.dokka") version "1.8.20"
+    id("io.gitlab.arturbosch.detekt") version "1.23.0"
 //    id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.4.0"
     id("com.github.jk1.dependency-license-report") version "2.1"
     id("com.github.spotbugs") version "5.0.14"
-    id("com.diffplug.spotless") version "6.17.0"
+    id("com.diffplug.spotless") version "6.19.0"
 }
 
 group = "com.fujitsu"
-version = "0.3"
+version = "0.4"
 
 repositories {
     mavenCentral()
@@ -30,30 +30,30 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:3.0.4")
 //    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
     implementation("ch.qos.logback:logback-classic:1.+")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks {
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
     compileJava {
         options.encoding = "UTF-8"
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
 
     compileTestJava {
         options.encoding = "UTF-8"
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
 
     test {
@@ -63,7 +63,7 @@ tasks {
 
     withType<Detekt>().configureEach {
         // Target version of the generated JVM bytecode. It is used for type resolution.
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         reports {
             // observe findings in your browser with structure and code snippets
             html.required.set(true)
@@ -106,7 +106,7 @@ detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
     // point to your custom config defining rules to run, overwriting default behavior
-    config = files("$projectDir/config/detekt.yml")
+    config.setFrom("$projectDir/config/detekt.yml")
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 }
 
@@ -115,7 +115,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.10"
 //    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
 
@@ -128,7 +128,7 @@ spotless {
         removeUnusedImports()
 
         // Choose one of these formatters.
-        googleJavaFormat("1.15.0")
+        googleJavaFormat("1.17.0")
         formatAnnotations()
     }
 }
