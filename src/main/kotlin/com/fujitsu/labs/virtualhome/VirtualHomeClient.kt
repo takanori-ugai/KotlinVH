@@ -13,6 +13,12 @@ import kotlin.math.abs
 
 private val logger = KotlinLogging.logger {}
 
+/**
+ * A client for interacting with the VirtualHome server.
+ *
+ * @property host The host of the VirtualHome server. (Default value is "localhost")
+ * @property port The port of the VirtualHome server. (Default value is 8080)
+ */
 class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     /**
      * Configuration of Json converter
@@ -67,6 +73,13 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     }
 
+    /**
+     * Renders a script with the given list of strings.
+     *
+     * @param script The list of strings representing the script to render.
+     * @param config The RenderParams configuration (optional).
+     * @return A VirtualHomeResponse or null if the request fails.
+     */
     fun renderScript(script: List<String>, config: RenderParams = RenderParams()): VirtualHomeResponse? {
         val stringParams = mutableListOf(format.encodeToString(config))
         stringParams.addAll(script)
@@ -76,6 +89,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
 
     /**
      * Expand the scene with the graph.
+     *
      * @param config  Configuration
      * @param graph   The graph for expanding the scene.
      */
@@ -107,16 +121,13 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
 
     /**
      * Reset the scene.
-     * @param sceneIndex the index number of the scene. (default value is 0)
+     *
+     * @param sceneIndex The index number of the scene (default value is 0).
+     * @return A VirtualHomeResponse or null if the request fails.
      */
     fun reset(sceneIndex: Int = 0): VirtualHomeResponse? {
         val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "reset", listOf(sceneIndex))
         return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-//        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "clear", listOf(4))
-//        println(format.encodeToString(data))
-//        println(sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8)))
-//        val data0 = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "environment", listOf(sceneIndex))
-//        return sendRequest(format.encodeToString(data0).toByteArray(Charsets.UTF_8))
     }
 
     /**
@@ -188,6 +199,12 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return Json.decodeFromString(responseBody)
     }
 
+    /**
+     * Sends a request to the VirtualHome server.
+     *
+     * @param req The request to send as a byte array.
+     * @return A VirtualHomeResponse or null if the request fails.
+     */
     fun sendRequest(req: ByteArray): VirtualHomeResponse? {
         // HttpURLConnectionの作成
         var ret: VirtualHomeResponse? = null
