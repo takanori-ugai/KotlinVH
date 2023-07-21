@@ -2,7 +2,6 @@ $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.fujitsu.labs.virtualhome////PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/index.html
 $dokka.location:com.fujitsu.labs.virtualhome//main/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/main.html
-$dokka.location:com.fujitsu.labs.virtualhome//main/#kotlin.Array[kotlin.String]/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/main.html
 $dokka.location:com.fujitsu.labs.virtualhome/Action///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-action/index.html
 $dokka.location:com.fujitsu.labs.virtualhome/Action/Action/#kotlin.String#kotlin.Int#kotlin.collections.List[kotlin.collections.List[kotlin.String]]/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-action/-action.html
 $dokka.location:com.fujitsu.labs.virtualhome/Action/name/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-action/name.html
@@ -14,6 +13,13 @@ $dokka.location:com.fujitsu.labs.virtualhome/AddCharacterConfig/characterPositio
 $dokka.location:com.fujitsu.labs.virtualhome/AddCharacterConfig/characterResource/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-config/character-resource.html
 $dokka.location:com.fujitsu.labs.virtualhome/AddCharacterConfig/initialRoom/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-config/initial-room.html
 $dokka.location:com.fujitsu.labs.virtualhome/AddCharacterConfig/mode/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-config/mode.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode.FixPosition///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/-fix-position/index.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode.Random///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/-random/index.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/index.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode/toString/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/to-string.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode/value/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/value.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode/valueOf/#kotlin.String/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/value-of.html
+$dokka.location:com.fujitsu.labs.virtualhome/AddCharacterMode/values/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-add-character-mode/values.html
 $dokka.location:com.fujitsu.labs.virtualhome/Commons///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-commons/index.html
 $dokka.location:com.fujitsu.labs.virtualhome/Commons/actionList/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-commons/action-list.html
 $dokka.location:com.fujitsu.labs.virtualhome/Commons/objectStates/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-commons/object-states.html
@@ -30,14 +36,16 @@ $dokka.location:com.fujitsu.labs.virtualhome/ExpandSceneConfig/ignoreObstacles/#
 $dokka.location:com.fujitsu.labs.virtualhome/ExpandSceneConfig/randomSeed/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-expand-scene-config/random-seed.html
 $dokka.location:com.fujitsu.labs.virtualhome/ExpandSceneConfig/randomize/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-expand-scene-config/randomize.html
 $dokka.location:com.fujitsu.labs.virtualhome/ExpandSceneConfig/transferTransform/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-expand-scene-config/transfer-transform.html
+$dokka.location:com.fujitsu.labs.virtualhome/GetObjects///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-get-objects/index.html
+$dokka.location:com.fujitsu.labs.virtualhome/GetObjects/GetObjects/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-get-objects/-get-objects.html
 $dokka.location:com.fujitsu.labs.virtualhome/Graph///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-graph/index.html
 $dokka.location:com.fujitsu.labs.virtualhome/Graph/Graph/#kotlin.collections.MutableList[com.fujitsu.labs.virtualhome.Node]#kotlin.collections.MutableList[com.fujitsu.labs.virtualhome.Edge]/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-graph/-graph.html
 $dokka.location:com.fujitsu.labs.virtualhome/Graph/edges/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-graph/edges.html
 $dokka.location:com.fujitsu.labs.virtualhome/Graph/nodes/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-graph/nodes.html
 $dokka.location:com.fujitsu.labs.virtualhome/ImageConfig///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/index.html
 $dokka.location:com.fujitsu.labs.virtualhome/ImageConfig/ImageConfig/#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/-image-config.html
-$dokka.location:com.fujitsu.labs.virtualhome/ImageConfig/image_height/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/image_height.html
-$dokka.location:com.fujitsu.labs.virtualhome/ImageConfig/image_width/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/image_width.html
+$dokka.location:com.fujitsu.labs.virtualhome/ImageConfig/imageHeight/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/image-height.html
+$dokka.location:com.fujitsu.labs.virtualhome/ImageConfig/imageWidth/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/image-width.html
 $dokka.location:com.fujitsu.labs.virtualhome/ImageConfig/mode/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-image-config/mode.html
 $dokka.location:com.fujitsu.labs.virtualhome/Main///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main/index.html
 $dokka.location:com.fujitsu.labs.virtualhome/Main/Main/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main/-main.html
@@ -55,18 +63,19 @@ $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testAddCharacter/#/Pointin
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testCameraCount/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-camera-count.html
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testEnvironmentGraph/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-environment-graph.html
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testExpandScene/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-expand-scene.html
+$dokka.location:com.fujitsu.labs.virtualhome/MainTest/testExpandScene2/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-expand-scene2.html
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testRendering/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-rendering.html
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testRendering/#kotlin.collections.List[kotlin.String]#kotlin.Int#com.fujitsu.labs.virtualhome.RenderParams/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-rendering.html
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testReset/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-reset.html
 $dokka.location:com.fujitsu.labs.virtualhome/MainTest/testVisibleObjects/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-main-test/test-visible-objects.html
 $dokka.location:com.fujitsu.labs.virtualhome/Node///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/index.html
 $dokka.location:com.fujitsu.labs.virtualhome/Node/Node/#kotlin.Int?#kotlin.String?#kotlin.String?#kotlin.String?#kotlin.collections.Map[kotlin.String,kotlin.collections.List[kotlin.Float]]?#kotlin.collections.Map[kotlin.String,kotlin.collections.List[kotlin.Float]]?#kotlin.collections.List[kotlin.String]?#kotlin.collections.List[kotlin.String]?/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/-node.html
-$dokka.location:com.fujitsu.labs.virtualhome/Node/bounding_box/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/bounding_box.html
+$dokka.location:com.fujitsu.labs.virtualhome/Node/boundingBox/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/bounding-box.html
 $dokka.location:com.fujitsu.labs.virtualhome/Node/category/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/category.html
-$dokka.location:com.fujitsu.labs.virtualhome/Node/class_name/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/class_name.html
+$dokka.location:com.fujitsu.labs.virtualhome/Node/className/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/class-name.html
 $dokka.location:com.fujitsu.labs.virtualhome/Node/id/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/id.html
-$dokka.location:com.fujitsu.labs.virtualhome/Node/obj_transform/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/obj_transform.html
-$dokka.location:com.fujitsu.labs.virtualhome/Node/prefab_name/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/prefab_name.html
+$dokka.location:com.fujitsu.labs.virtualhome/Node/objTransform/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/obj-transform.html
+$dokka.location:com.fujitsu.labs.virtualhome/Node/prefabName/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/prefab-name.html
 $dokka.location:com.fujitsu.labs.virtualhome/Node/properties/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/properties.html
 $dokka.location:com.fujitsu.labs.virtualhome/Node/states/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-node/states.html
 $dokka.location:com.fujitsu.labs.virtualhome/Obj///PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-obj/index.html
@@ -121,7 +130,6 @@ $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/cameraImage/#kotl
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/check/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/check.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/environmentGraph/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/environment-graph.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/expandScene/#com.fujitsu.labs.virtualhome.Graph#com.fujitsu.labs.virtualhome.ExpandSceneConfig/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/expand-scene.html
-$dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/initialRooms/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/initial-rooms.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/renderScript/#kotlin.collections.List[kotlin.String]#com.fujitsu.labs.virtualhome.RenderParams/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/render-script.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/reset/#kotlin.Int/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/reset.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeClient/sendRequest/#kotlin.ByteArray/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-client/send-request.html
@@ -136,7 +144,7 @@ $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse///PointingToDec
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/VirtualHomeResponse/#kotlin.Int#kotlin.Boolean#kotlin.String?#kotlin.Int#kotlin.collections.List[kotlin.String]?/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/-virtual-home-response.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/id/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/id.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/message/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/message.html
-$dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/message_list/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/message_list.html
+$dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/messageList/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/message-list.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/success/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/success.html
 $dokka.location:com.fujitsu.labs.virtualhome/VirtualHomeResponse/value/#/PointingToDeclaration/-virtual-home/com.fujitsu.labs.virtualhome/-virtual-home-response/value.html
 com.fujitsu.labs.virtualhome
