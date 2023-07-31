@@ -10,6 +10,7 @@ enum class AddCharacterMode(val value: String) {
      * Represents a fixed position mode.
      */
     FixPosition("fix_position"),
+
     /**
      * Represents a random mode.
      */

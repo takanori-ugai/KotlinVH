@@ -7,11 +7,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Base64
 
-// import javax.imageio.ImageIO
-// import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
-// import org.jetbrains.kotlinx.jupyter.api.*
-// import org.jetbrains.kotlinx.jupyter.api.libraries.*
-
 fun main() {
     val format = Json {
         encodeDefaults = true
@@ -96,21 +91,14 @@ fun main() {
     val main = Main()
 //    main.checkScripts(script0)
     main.testScripts(script0)
-    println(main.findNodes("tv"))
-    println(main.findNodesByProperty("HAS_PLUG"))
-    println(main.findNodesById(1))
+    printNodeInformation(main)
 //    System.exit(0)
 
     val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
     val sq = VirtualHomeClient(host = "localhost")
     val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     println(res?.success)
-    println("Check: " + sq.check()?.success)
-    println(sq.reset(4)?.success)
-    println(sq.visibleObjects(0))
-    println(sq.visibleObjects(1).size)
-    println(sq.visibleObjects(2).size)
-    println(sq.visibleObjects(3).size)
+    executeResetAndEnvironmentGraphRequests(sq)
     val graph = sq.environmentGraph()
     println(graph.nodes[0])
     println(graph.nodes.size)
@@ -160,14 +148,26 @@ fun main() {
         "<char0> [SIT] <sofa> (139)"
     )
     println(sq.renderScript(script2, config))
+    saveCameraImage(sq)
+}
+
+private fun executeResetAndEnvironmentGraphRequests(sq: VirtualHomeClient) {
+    println("Check: " + sq.check()?.success)
+    println(sq.reset(4)?.success)
+    println(sq.visibleObjects(0))
+    println(sq.visibleObjects(1).size)
+    println(sq.visibleObjects(2).size)
+    println(sq.visibleObjects(3).size)
+}
+private fun printNodeInformation(main: Main) {
+    println(main.findNodes("tv"))
+    println(main.findNodesByProperty("HAS_PLUG"))
+    println(main.findNodesById(1))
+}
+private fun saveCameraImage(sq: VirtualHomeClient) {
     val res0 = sq.cameraImage(listOf(0))
-//    val image = Base64.getDecoder().decode(res0?.message_list?.get(0)?.toByteArray(Charsets.UTF_8))
     val image = Base64.getDecoder().decode(res0?.messageList?.get(0))
     Files.write(Paths.get("bfo.png"), image)
-    /*
-    val imag = ImageIO.read(ByteArrayInputStream(image))
-    ImageIO.write(imag, "png", File(".", "snap.png"))
-    */
 }
 
 class Main {
@@ -181,15 +181,26 @@ class Main {
         println(sofas)
         val sofa = sofas[sofas.size - 1]
         println(sofa)
-//        initGraph.nodes.add(Node(class_name = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
-//        initGraph.edges.add(Edge(from_id = 1000, to_id = sofa.id!!, relation_type = "ON"))
-//        if (! client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
-//        println("Sucess : Expend Scene")
+        initGraph.nodes.add(
+            Node(
+                className = "cat",
+                category = "Animals",
+                id = 1000,
+                properties = listOf(),
+                states = listOf()
+            )
+        )
+        initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
+        if (client.expandScene(initGraph)!!.success) {
+            println("Sucess : Expend Scene")
+            val graph = client.environmentGraph()
+            val catId = graph.nodes.filter { it.className == "cat" }[0]
+            println("CATID: $catId")
+        } else {
+            println("Failed : Expend Scene")
+        }
         if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         println("Success : Add Character")
-        val graph = client.environmentGraph()
-//        val catId = graph.nodes.filter { it.class_name == "cat"}[0]
-//        println("CATID: $catId")
         val config = RenderParams(
             processing_time_limit = 1,
             find_solution = false,
