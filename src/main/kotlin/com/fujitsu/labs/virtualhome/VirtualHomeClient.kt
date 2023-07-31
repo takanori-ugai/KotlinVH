@@ -80,7 +80,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     fun renderScript(script: List<String>, config: RenderParams = RenderParams()): VirtualHomeResponse {
         val stringParams = mutableListOf(format.encodeToString(config))
         stringParams.addAll(script)
-        val data = VirtualHomeRequest(action= "render_script", stringParams = stringParams)
+        val data = VirtualHomeRequest(action = "render_script", stringParams = stringParams)
         return sendRequest(data)
     }
 
