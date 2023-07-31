@@ -5,7 +5,13 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 private val logger = KotlinLogging.logger {}
 
+/**
+ * This class contains tests for the Commons class.
+ */
 class CommonsTest {
+    /**
+     * Tests the objectStates method of the Commons class.
+     */
     @Test
     fun objectStatesTest() {
         val razor = Commons.objectStates()["razor"]
@@ -14,6 +20,9 @@ class CommonsTest {
         Assertions.assertTrue(razor?.contains("grabbed")!!)
     }
 
+    /**
+     * Tests the propertiesData method of the Commons class.
+     */
     @Test
     fun propertiesDataTest() {
         val properties = Commons.propertiesData()

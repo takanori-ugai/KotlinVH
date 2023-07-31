@@ -9,15 +9,24 @@ import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
+/**
+ * This class contains tests for the VirtualHomeClient's request methods.
+ */
 @WireMockTest
 class RequestTest {
 
+    /**
+     * Configuration of Json converter
+     */
     private val format = Json {
         encodeDefaults = true
         @ExperimentalSerializationApi
         explicitNulls = false
     }
 
+    /**
+     * Tests the check method of the VirtualHomeClient class.
+     */
     @Test
     fun checkTest(info: WireMockRuntimeInfo) {
         val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
@@ -28,9 +37,12 @@ class RequestTest {
         )
         val port = info.httpPort
         val vh = VirtualHomeClient(port = port)
-        assertTrue(vh.check()?.success!!)
+        assertTrue(vh.check().success)
     }
 
+    /**
+     * Tests the reset method of the VirtualHomeClient class.
+     */
     @Test
     fun resetTest(info: WireMockRuntimeInfo) {
         val sceneIndex = 0
@@ -45,10 +57,13 @@ class RequestTest {
         )
         val port = info.httpPort
         val vh = VirtualHomeClient(port = port)
-        assertTrue(vh.reset(sceneIndex)?.success!!)
-        assertTrue(vh.reset()?.success!!)
+        assertTrue(vh.reset(sceneIndex).success)
+        assertTrue(vh.reset().success)
     }
 
+    /**
+     * Tests the cameraCount method of the VirtualHomeClient class.
+     */
     @Test
     fun cameraCountTest(info: WireMockRuntimeInfo) {
         val value = 1
@@ -63,12 +78,18 @@ class RequestTest {
         assertEquals(value, vh.cameraCount())
     }
 
+    /**
+     * Tests the error handling of the VirtualHomeClient class.
+     */
     @Test
     fun errorTest(info: WireMockRuntimeInfo) {
         val vh = VirtualHomeClient(port = info.httpPort + 100)
-        assertFalse(vh.check()!!.success)
+        assertFalse(vh.check().success)
     }
 
+    /**
+     * Tests the visibleObjects method of the VirtualHomeClient class.
+     */
     @Test
     fun visibleObjectTest(info: WireMockRuntimeInfo) {
         val value = 1
