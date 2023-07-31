@@ -6,10 +6,8 @@ import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.lang.System.currentTimeMillis
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.math.abs
 
 private val logger = KotlinLogging.logger {}
 
@@ -25,7 +23,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      */
     private val format = Json {
         encodeDefaults = true
-        @kotlinx.serialization.ExperimentalSerializationApi
+        @ExperimentalSerializationApi
         explicitNulls = false
     }
 
@@ -54,10 +52,9 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         mode: String = "normal",
         imageWidth: Int = 640,
         imageHeight: Int = 320
-    ): VirtualHomeResponse? {
+    ): VirtualHomeResponse {
         val data = VirtualHomeRequest(
-            abs(currentTimeMillis().toInt()),
-            "camera_image",
+            action = "camera_image",
             intParams = cameraIndexes,
             stringParams = listOf(
                 format.encodeToString(
@@ -70,7 +67,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
             )
         )
 //        logger.info { format.encodeToString(data) }
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+        return sendRequest(data)
     }
 
     /**
@@ -80,11 +77,11 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param config The RenderParams configuration (optional).
      * @return A VirtualHomeResponse or null if the request fails.
      */
-    fun renderScript(script: List<String>, config: RenderParams = RenderParams()): VirtualHomeResponse? {
+    fun renderScript(script: List<String>, config: RenderParams = RenderParams()): VirtualHomeResponse {
         val stringParams = mutableListOf(format.encodeToString(config))
         stringParams.addAll(script)
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "render_script", stringParams = stringParams)
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+        val data = VirtualHomeRequest(action= "render_script", stringParams = stringParams)
+        return sendRequest(data)
     }
 
     /**
@@ -93,19 +90,19 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param config  Configuration
      * @param graph   The graph for expanding the scene.
      */
-    fun expandScene(graph: Graph, config: ExpandSceneConfig = ExpandSceneConfig()): VirtualHomeResponse? {
+    fun expandScene(graph: Graph, config: ExpandSceneConfig = ExpandSceneConfig()): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(config), format.encodeToString(graph))
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "expand_scene", stringParams = stringParams)
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+        val data = VirtualHomeRequest(action = "expand_scene", stringParams = stringParams)
+        return sendRequest(data)
     }
 
     /**
      * Get the environment graph
      */
     fun environmentGraph(): Graph {
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "environment_graph")
-        val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-        if (res?.message != null) {
+        val data = VirtualHomeRequest(action = "environment_graph")
+        val res = sendRequest(data)
+        if (res.message != null) {
             return format.decodeFromString(res.message)
         }
         return Graph()
@@ -114,9 +111,9 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     /**
      * Check the server's status
      */
-    fun check(): VirtualHomeResponse? {
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "idle")
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+    fun check(): VirtualHomeResponse {
+        val data = VirtualHomeRequest(action = "idle")
+        return sendRequest(data)
     }
 
     /**
@@ -125,9 +122,9 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param sceneIndex The index number of the scene (default value is 0).
      * @return A VirtualHomeResponse or null if the request fails.
      */
-    fun reset(sceneIndex: Int = 0): VirtualHomeResponse? {
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "reset", listOf(sceneIndex))
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+    fun reset(sceneIndex: Int = 0): VirtualHomeResponse {
+        val data = VirtualHomeRequest(action = "reset", intParams = listOf(sceneIndex))
+        return sendRequest(data)
     }
 
     /**
@@ -139,7 +136,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         characterResource: String = "Chars/Male1",
         position: Position? = null,
         initialRoom: String = ""
-    ): VirtualHomeResponse? {
+    ): VirtualHomeResponse {
         val addCharacterConfig =
             if (position != null) {
                 AddCharacterConfig(
@@ -160,13 +157,12 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
                 )
             }
         val data = VirtualHomeRequest(
-            abs(currentTimeMillis().toInt()),
-            "add_character",
+            action = "add_character",
             stringParams = listOf(
                 format.encodeToString(addCharacterConfig)
             )
         )
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+        return sendRequest(data)
     }
 
     /**
@@ -175,9 +171,9 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @return The visible objects (map of id and the class name)
      */
     fun visibleObjects(cameraIndex: Int = 0): Map<String, String> {
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "observation", listOf(cameraIndex))
-        val res = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-        if (res != null && res.success && res.message != null) {
+        val data = VirtualHomeRequest(action = "observation", intParams = listOf(cameraIndex))
+        val res = sendRequest(data)
+        if (res.success && res.message != null) {
             return format.decodeFromString(res.message)
         }
         return mapOf()
@@ -188,8 +184,8 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @return The number of cameras in the scene, including static cameras, and cameras for each character.
      */
     fun cameraCount(): Int {
-        val data = VirtualHomeRequest(abs(currentTimeMillis().toInt()), "camera_count")
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))!!.value
+        val data = VirtualHomeRequest(action = "camera_count")
+        return sendRequest(data).value
     }
 
     private fun readStream(inputStream: InputStream): VirtualHomeResponse {
@@ -199,15 +195,19 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return Json.decodeFromString(responseBody)
     }
 
+    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse {
+        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+    }
+
     /**
      * Sends a request to the VirtualHome server.
      *
      * @param req The request to send as a byte array.
      * @return A VirtualHomeResponse or null if the request fails.
      */
-    fun sendRequest(req: ByteArray): VirtualHomeResponse? {
+    fun sendRequest(req: ByteArray): VirtualHomeResponse {
         // HttpURLConnectionの作成
-        var ret: VirtualHomeResponse? = null
+        var ret = VirtualHomeResponse(0, false, "", 0, null)
         val connection = url.openConnection() as HttpURLConnection
         try {
             connection.connectTimeout = 30000

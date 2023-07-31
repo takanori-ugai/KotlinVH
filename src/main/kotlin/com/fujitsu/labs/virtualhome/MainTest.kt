@@ -84,12 +84,12 @@ fun main() {
     val main = MainTest()
     main.testReset()
     main.testEnvironmentGraph()
-//    main.testExpandScene()
-//    main.testExpandScene2()
+    main.testExpandScene()
+    main.testExpandScene2()
 //    System.exit(0)
-//    main.testAddCharacter()
-//    main.testCameraCount()
-//    main.testVisibleObjects()
+    main.testAddCharacter()
+    main.testCameraCount()
+    main.testVisibleObjects()
     main.testRendering()
 //    System.exit(0)
 
@@ -112,24 +112,27 @@ fun main() {
     main.testRendering(script2, 4)
 }
 
+/**
+ * This class contains various test methods for the VirtualHomeClient.
+ */
 class MainTest {
-    val sceneNum = 3
+    private val sceneNum = 3
     private val client = VirtualHomeClient(host = "localhost")
 
+    /**
+     * Tests the reset functionality of the client.
+     */
     fun testReset() {
         println("Check : " + client.check()?.success)
-        println("Reset 0 " + client.reset(0)?.success)
-        println("Reset 1 " + client.reset(1)?.success)
-        println("Reset 2 " + client.reset(2)?.success)
-        println("Reset 3 " + client.reset(3)?.success)
-        println("Reset 4 " + client.reset(4)?.success)
-        println("Reset 5 " + client.reset(5)?.success)
-        println("Reset 6 " + client.reset(6)?.success)
-        println("Reset 7 " + client.reset(7)?.success)
-        println("Reset 8 " + client.reset(8)?.success)
+        for (index in 0..8) {
+            println("Reset $index " + client.reset(index)?.success)
+        }
         println("Test Reset() Succeeded")
     }
 
+    /**
+     * Tests the environment graph functionality of the client.
+     */
     fun testEnvironmentGraph() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -142,6 +145,9 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the expand scene functionality of the client.
+     */
     fun testExpandScene() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -151,6 +157,9 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the expand scene functionality of the client with a modified graph.
+     */
     fun testExpandScene2() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -178,6 +187,9 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the add character functionality of the client.
+     */
     fun testAddCharacter() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -189,6 +201,9 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the camera count functionality of the client.
+     */
     fun testCameraCount() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -202,6 +217,9 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the visible objects functionality of the client.
+     */
     fun testVisibleObjects() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -219,6 +237,9 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the rendering functionality of the client.
+     */
     fun testRendering() {
         for (it in 0..6) {
             if (!client.reset(it)!!.success) throw VHException("Reset Error")
@@ -253,6 +274,13 @@ class MainTest {
         }
     }
 
+    /**
+     * Tests the rendering functionality of the client with a provided script and scene.
+     *
+     * @param script The script to be rendered.
+     * @param scene The scene to be used.
+     * @param config The render parameters.
+     */
     fun testRendering(
         script: List<String>,
         scene: Int,
@@ -277,6 +305,12 @@ class MainTest {
         }
     }
 
+    /**
+     * Checks the scripts for errors.
+     *
+     * @param script The script to be checked.
+     * @return True if no errors are found, false otherwise.
+     */
     fun checkScripts(script: List<String>): Boolean {
         if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()

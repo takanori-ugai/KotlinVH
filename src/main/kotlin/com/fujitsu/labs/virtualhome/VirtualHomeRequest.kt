@@ -3,6 +3,8 @@ package com.fujitsu.labs.virtualhome
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.*
 import kotlinx.serialization.json.*
+import java.lang.System.currentTimeMillis
+import kotlin.math.abs
 
 /**
  * Represents a request to the VirtualHome server.
@@ -14,7 +16,7 @@ import kotlinx.serialization.json.*
  */
 @Serializable
 data class VirtualHomeRequest(
-    val id: Int = System.currentTimeMillis().toInt(),
+    val id: Int = abs(currentTimeMillis().toInt()),
     val action: String,
     val intParams: List<Int>? = null,
     val stringParams: List<String>? = null
