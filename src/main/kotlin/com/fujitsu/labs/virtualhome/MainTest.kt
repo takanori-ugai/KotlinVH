@@ -123,9 +123,9 @@ class MainTest {
      * Tests the reset functionality of the client.
      */
     fun testReset() {
-        println("Check : " + client.check()?.success)
+        println("Check : " + client.check().success)
         for (index in 0..8) {
-            println("Reset $index " + client.reset(index)?.success)
+            println("Reset $index " + client.reset(index).success)
         }
         println("Test Reset() Succeeded")
     }
@@ -135,7 +135,7 @@ class MainTest {
      */
     fun testEnvironmentGraph() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
+            if (!client.reset(it).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (initGraph.nodes.any { it.className == "sofa" }) {
                 println("Scene $it succeeded")
@@ -150,9 +150,9 @@ class MainTest {
      */
     fun testExpandScene() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
+            if (!client.reset(it).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
-            println(client.expandScene(initGraph)?.success)
+            println(client.expandScene(initGraph).success)
             println("Expand Scene $it Succeeded")
         }
     }
@@ -162,7 +162,7 @@ class MainTest {
      */
     fun testExpandScene2() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
+            if (!client.reset(it).success) throw VHException("Reset Error")
             val graph = client.environmentGraph()
             val sofa = graph.nodes.last { it.className == "sofa" }
             println("Sofa: ${sofa.id}")
@@ -192,8 +192,8 @@ class MainTest {
      */
     fun testAddCharacter() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
-            if (client.addCharacter()?.success == true) {
+            if (!client.reset(it).success) throw VHException("Reset Error")
+            if (client.addCharacter().success) {
                 println("AddCharacter on Scene $it Succeeded")
             } else {
                 println("Add Character on Scene $it Failed")
@@ -206,7 +206,7 @@ class MainTest {
      */
     fun testCameraCount() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
+            if (!client.reset(it).success) throw VHException("Reset Error")
             val cameraA = client.cameraCount()
             client.addCharacter()
             if (cameraA < client.cameraCount()) {
@@ -222,7 +222,7 @@ class MainTest {
      */
     fun testVisibleObjects() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
+            if (!client.reset(it).success) throw VHException("Reset Error")
             client.addCharacter()
             val cameraN = client.cameraCount()
             if (client.visibleObjects(0).isNotEmpty()) {
@@ -242,9 +242,9 @@ class MainTest {
      */
     fun testRendering() {
         for (it in 0..6) {
-            if (!client.reset(it)!!.success) throw VHException("Reset Error")
+            if (!client.reset(it).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
-            if (client.addCharacter()!!.success) {
+            if (client.addCharacter().success) {
                 val sofa = initGraph.nodes.last { it.className == "book" }
                 val script = listOf(
                     "<char0> [WALK] <book> (${sofa.id})",
@@ -259,13 +259,13 @@ class MainTest {
                     save_pose_data = false,
                     skip_execution = false
                 )
-                if (client.renderScript(script, config)?.success == true) {
+                if (client.renderScript(script, config).success) {
                     println("Rendering on Scene $it Succeeded")
                 } else {
                     println("Rendering on Scene $it Failed")
                 }
                 val res0 = client.cameraImage(listOf(0))
-                val image = Base64.getDecoder().decode(res0?.messageList?.get(0))
+                val image = Base64.getDecoder().decode(res0.messageList?.get(0))
                 Files.write(Paths.get("bfo.png"), image)
                 println("  >> Size of Image is ${image.size} : Camera Image Succeeded")
             } else {
@@ -293,8 +293,8 @@ class MainTest {
             skip_execution = false
         )
     ) {
-        if (!client.reset(scene)!!.success) throw VHException("Reset Error")
-        if (client.addCharacter()!!.success) {
+        if (!client.reset(scene).success) throw VHException("Reset Error")
+        if (client.addCharacter().success) {
             if (client.renderScript(script, config)?.success == true) {
                 println("Rendering on Scene $scene Succeeded")
             } else {
@@ -312,7 +312,7 @@ class MainTest {
      * @return True if no errors are found, false otherwise.
      */
     fun checkScripts(script: List<String>): Boolean {
-        if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+        if (!client.reset(sceneNum).success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
         val sofa = initGraph.nodes.last { it.className == "sofa" }
         initGraph.nodes.add(
@@ -325,8 +325,8 @@ class MainTest {
             )
         )
         initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
-        if (!client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
-        if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
+        if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
+        if (!client.addCharacter().success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         val catId = graph.nodes.last { it.className == "cat" }
         val config = RenderParams(
@@ -338,7 +338,7 @@ class MainTest {
             skip_execution = true
         )
 //        val scriptObj = Script(script)
-        if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
+        if (!client.renderScript(script, config).success) throw VHException("Error in Rendering")
         return true
     }
 }
