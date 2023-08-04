@@ -3,16 +3,31 @@ package com.fujitsu.labs.virtualhome
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
+/**
+ * Data class representing an action.
+ *
+ * @property name The name of the action.
+ * @property num The number associated with the action.
+ * @property properties A list of properties related to the action.
+ */
 data class Action(
     val name: String,
     val num: Int,
     val properties: List<List<String>> = listOf(listOf())
 )
 
+/**
+ * Singleton object that provides common functionality.
+ */
 object Commons {
     private var objectStatesCache: Map<String, List<String>>? = null
     private var propertiesDataCache: Map<String, List<String>>? = null
 
+    /**
+     * Returns a map of object states. If the cache is null, it fetches the data from a JSON file.
+     *
+     * @return A map of object states.
+     */
     fun objectStates(): Map<String, List<String>> {
         if (objectStatesCache == null) {
             objectStatesCache = getJsonFromResource("object_states.json")
@@ -20,6 +35,11 @@ object Commons {
         return objectStatesCache!!
     }
 
+    /**
+     * Returns a map of properties data. If the cache is null, it fetches the data from a JSON file.
+     *
+     * @return A map of properties data.
+     */
     fun propertiesData(): Map<String, List<String>> {
         if (propertiesDataCache == null) {
             propertiesDataCache = getJsonFromResource("properties_data_all.json")
@@ -27,6 +47,12 @@ object Commons {
         return propertiesDataCache!!
     }
 
+    /**
+     * Fetches a JSON file from resources and decodes it into a map.
+     *
+     * @param jsonFileName The name of the JSON file.
+     * @return A map decoded from the JSON file, or null if the resource could not be found.
+     */
     private fun getJsonFromResource(jsonFileName: String): Map<String, List<String>>? {
         val resource = this.javaClass
             .classLoader
@@ -39,6 +65,9 @@ object Commons {
         return Json.decodeFromString<Map<String, List<String>>>(resource)
     }
 
+    /**
+     * A map of actions.
+     */
     val actionList: Map<String, Action> = mapOf(
         "CLOSE" to Action("Close", 1, listOf(listOf("CAN_OPEN"))),
         "DRINK" to Action("Drink", 1, listOf(listOf("DRINKABLE", "RECIPIENT"))),
