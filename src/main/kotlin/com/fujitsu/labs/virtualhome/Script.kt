@@ -4,12 +4,20 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 /**
- * Data class representing an object with a name, id and status.
+ * Data class representing an object.
+ *
+ * @property name The name of the object.
+ * @property id The id of the object.
+ * @property status The status of the object, default is an empty list.
  */
 data class Obj(val name: String, val id: Int, var status: List<String> = listOf())
 
 /**
- * Data class representing a line in a script with a character, action and list of objects.
+ * Data class representing a script line.
+ *
+ * @property character The character performing the action, default is null.
+ * @property action The action being performed.
+ * @property objects The list of objects involved in the action.
  */
 data class ScriptLine(
     var character: String? = null,
@@ -18,7 +26,12 @@ data class ScriptLine(
 )
 
 /**
- * Class representing a script with a list of lines and an object pool.
+ * Class representing a script.
+ *
+ * @property regex Regular expression used to parse the script.
+ * @property regex2 Another regular expression used to parse the script.
+ * @property objectPool A set of objects used in the script.
+ * @property lines The list of script lines parsed from the script.
  */
 class Script(scriptList: List<String>) {
 
@@ -32,7 +45,11 @@ class Script(scriptList: List<String>) {
 //    <char0> [WALK] <cat> (366)
 
     /**
-     * Function to find an object in the object pool or create a new one if it doesn't exist.
+     * Finds an object in the object pool or creates a new one if it doesn't exist.
+     *
+     * @param name The name of the object.
+     * @param id The id of the object.
+     * @return The found or created object.
      */
     fun findObj(name: String, id: Int): Obj {
         return objectPool.firstOrNull { it.name == name && it.id == id }
@@ -40,7 +57,10 @@ class Script(scriptList: List<String>) {
     }
 
     /**
-     * Function to parse a list of strings into a list of script lines.
+     * Parses the script into a list of script lines.
+     *
+     * @param script The script to parse.
+     * @return The list of script lines.
      */
     private fun parseScript(script: List<String>): List<ScriptLine> {
         return script.map { line ->
@@ -60,7 +80,10 @@ class Script(scriptList: List<String>) {
     }
 
     /**
-     * Function to check if a script line is valid.
+     * Checks if a script line is valid.
+     *
+     * @param line The script line to check.
+     * @return True if the line is valid, false otherwise.
      */
     fun checkLine(line: ScriptLine): Boolean {
         val actions = Commons.actionList

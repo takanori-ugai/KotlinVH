@@ -3,6 +3,27 @@ package com.fujitsu.labs.virtualhome
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Data class representing rendering parameters.
+ *
+ * @property randomize_execution Boolean flag to randomize execution, default is false.
+ * @property random_seed Seed for random number generator, default is -1.
+ * @property processing_time_limit Time limit for processing, default is 20.
+ * @property skip_execution Boolean flag to skip execution, default is false.
+ * @property output_folder The folder to output the results, default is "Output/".
+ * @property file_name_prefix The prefix for the output file name, default is "script".
+ * @property frame_rate The frame rate for rendering, default is 5.
+ * @property image_synthesis The list of image synthesis modes, default is ["normal"].
+ * @property find_solution Boolean flag to find a solution, default is false.
+ * @property save_pose_data Boolean flag to save pose data, default is false.
+ * @property save_scene_status Boolean flag to save scene status, default is false.
+ * @property camera_mode The list of camera modes, default is ["AUTO"].
+ * @property recording Boolean flag to enable recording, default is false.
+ * @property image_width The width of the image, default is 640.
+ * @property image_height The height of the image, default is 480.
+ * @property time_scale The scale for time, default is 1.0.
+ * @property skip_animation Boolean flag to skip animation, default is false.
+ */
 @Serializable
 data class RenderParams(
     @SerialName("randomize_execution")
