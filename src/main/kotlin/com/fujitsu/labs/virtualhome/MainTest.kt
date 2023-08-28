@@ -252,12 +252,12 @@ class MainTest {
                     "<char0> [READ] <book> (${sofa.id})"
                 )
                 val config = RenderParams(
-                    processing_time_limit = 1,
+                    processingTimeLimit = 1,
                     find_solution = false,
                     skip_animation = false,
                     recording = true,
                     save_pose_data = false,
-                    skip_execution = false
+                    skipExecution = false
                 )
                 if (client.renderScript(script, config).success) {
                     println("Rendering on Scene $it Succeeded")
@@ -285,12 +285,12 @@ class MainTest {
         script: List<String>,
         scene: Int,
         config: RenderParams = RenderParams(
-            processing_time_limit = 1,
+            processingTimeLimit = 1,
             find_solution = true,
             skip_animation = false,
             recording = true,
             save_pose_data = false,
-            skip_execution = false
+            skipExecution = false
         )
     ) {
         if (!client.reset(scene).success) throw VHException("Reset Error")
@@ -330,12 +330,12 @@ class MainTest {
         val graph = client.environmentGraph()
         val catId = graph.nodes.last { it.className == "cat" }
         val config = RenderParams(
-            processing_time_limit = 1,
+            processingTimeLimit = 1,
             find_solution = false,
             skip_animation = false,
             recording = true,
             save_pose_data = false,
-            skip_execution = true
+            skipExecution = true
         )
 //        val scriptObj = Script(script)
         if (!client.renderScript(script, config).success) throw VHException("Error in Rendering")
