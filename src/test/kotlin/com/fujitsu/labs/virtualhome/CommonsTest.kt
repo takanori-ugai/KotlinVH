@@ -16,8 +16,9 @@ class CommonsTest {
     fun objectStatesTest() {
         val razor = Commons.objectStates()["razor"]
         logger.info { razor }
+        Assertions.assertNotNull(razor, "Razor should not be null")
         Assertions.assertEquals(3, razor?.size)
-        Assertions.assertTrue(razor?.contains("grabbed")!!)
+        Assertions.assertTrue(razor?.contains("grabbed") ?: false, "Razor should contain 'grabbed'")
     }
 
     /**
@@ -27,7 +28,9 @@ class CommonsTest {
     fun propertiesDataTest() {
         val properties = Commons.propertiesData()
         Assertions.assertEquals(390, properties.size)
-        Assertions.assertEquals(6, properties["addressbook"]!!.size)
+        val addressbook = properties["addressbook"]
+        Assertions.assertNotNull(addressbook, "Addressbook should not be null")
+        Assertions.assertEquals(6, addressbook?.size)
         logger.info { properties["addressbook"] }
     }
 }

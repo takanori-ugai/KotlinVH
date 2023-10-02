@@ -7,6 +7,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 /**
@@ -24,6 +25,14 @@ class RequestTest {
         explicitNulls = false
     }
 
+    private lateinit var vh: VirtualHomeClient
+
+    @BeforeEach
+    fun setup(info: WireMockRuntimeInfo) {
+        val port = info.httpPort
+        vh = VirtualHomeClient(port = port)
+    }
+
     /**
      * Tests the check method of the VirtualHomeClient class.
      */
@@ -35,8 +44,6 @@ class RequestTest {
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'idle')]"))
                 .willReturn(okJson(format.encodeToString(res)))
         )
-        val port = info.httpPort
-        val vh = VirtualHomeClient(port = port)
         assertTrue(vh.check().success)
     }
 
@@ -55,8 +62,6 @@ class RequestTest {
                 )
                 .willReturn(okJson(format.encodeToString(res)))
         )
-        val port = info.httpPort
-        val vh = VirtualHomeClient(port = port)
         assertTrue(vh.reset(sceneIndex).success)
         assertTrue(vh.reset().success)
     }
@@ -73,8 +78,6 @@ class RequestTest {
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'camera_count')]"))
                 .willReturn(okJson(format.encodeToString(res)))
         )
-        val port = info.httpPort
-        val vh = VirtualHomeClient(port = port)
         assertEquals(value, vh.cameraCount())
     }
 
@@ -103,8 +106,6 @@ class RequestTest {
                 )
                 .willReturn(okJson(format.encodeToString(res)))
         )
-        val port = info.httpPort
-        val vh = VirtualHomeClient(port = port)
         assertEquals(map, vh.visibleObjects(value))
     }
 }
