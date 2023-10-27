@@ -35,10 +35,14 @@ data class ScriptLine(
  */
 class Script(scriptList: List<String>) {
 
-    //    val regex = Regex("""<(.+)>\w*<[.+]>\w*<(.+)>\w*\((.+)\)""")
+    // Regular expressions for parsing the script
     val regex = Regex("""\s*(<(\w+)>)?\s*\[(\w+)\]((\s*<\w+>\s*\(\d+\))*)""")
     val regex2 = Regex("""<(\w+)>\s*\((\d+)\)""")
+
+    // Pool of objects used in the script
     val objectPool: MutableSet<Obj> = mutableSetOf()
+
+    // List of lines in the script
     var lines: List<ScriptLine> = parseScript(scriptList)
 //    <char0> [WALK] <cat> (366)
 

@@ -3,19 +3,19 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("jvm") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.10"
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
     jacoco
-    id("org.jetbrains.dokka") version "1.8.20"
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    id("org.jetbrains.dokka") version "1.9.10"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
 //    id("com.github.sherter.google-java-format") version "0.9"
 //    kotlin("jupyter.api") version "0.10.1-8"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
-    id("com.github.jk1.dependency-license-report") version "2.1"
-    id("com.github.spotbugs") version "5.0.14"
-    id("com.diffplug.spotless") version "6.19.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("com.github.jk1.dependency-license-report") version "2.5"
+    id("com.github.spotbugs") version "5.2.1"
+    id("com.diffplug.spotless") version "6.22.0"
 }
 
 group = "com.fujitsu"
@@ -27,12 +27,12 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.+")
-    implementation("io.github.microutils:kotlin-logging:3.0.4")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
 //    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
     implementation("ch.qos.logback:logback-classic:1.+")
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:3.0.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 tasks {
@@ -128,7 +128,7 @@ spotless {
         removeUnusedImports()
 
         // Choose one of these formatters.
-        googleJavaFormat("1.17.0")
+        googleJavaFormat("1.18.1")
         formatAnnotations()
     }
 }

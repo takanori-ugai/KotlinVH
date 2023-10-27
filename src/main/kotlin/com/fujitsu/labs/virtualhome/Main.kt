@@ -119,7 +119,7 @@ fun main() {
     println(sq.addCharacter())
     println(sq.cameraCount())
     val config = RenderParams(
-        processing_time_limit = 60,
+        processingTimeLimit = 60,
         find_solution = false,
         skip_animation = false,
         recording = true,
@@ -202,12 +202,12 @@ class Main {
         if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         println("Success : Add Character")
         val config = RenderParams(
-            processing_time_limit = 1,
+            processingTimeLimit = 1,
             find_solution = false,
             skip_animation = false,
             recording = true,
             save_pose_data = false,
-            skip_execution = false
+            skipExecution = false
         )
 //    val config = RenderParams(
 //        processing_time_limit = 60, find_solution = false, skip_animation = true, recording = false,
@@ -237,12 +237,12 @@ class Main {
         val graph = client.environmentGraph()
         val catId = graph.nodes.filter { it.className == "cat" }[0]
         val config = RenderParams(
-            processing_time_limit = 1,
+            processingTimeLimit = 1,
             find_solution = false,
             skip_animation = false,
             recording = true,
             save_pose_data = false,
-            skip_execution = true
+            skipExecution = true
         )
 //        val scriptObj = Script(script)
         if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
