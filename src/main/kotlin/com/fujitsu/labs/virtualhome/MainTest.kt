@@ -290,7 +290,8 @@ class MainTest {
             skip_animation = false,
             recording = true,
             save_pose_data = false,
-            skip_execution = false
+            skip_execution = false,
+            out_graph = true
         )
     ) {
         if (!client.reset(scene).success) throw VHException("Reset Error")

@@ -22,6 +22,14 @@ import kotlinx.serialization.Serializable
  * @property image_height The height of the image, default is 480.
  * @property time_scale The scale for time, default is 1.0.
  * @property skip_animation Boolean flag to skip animation, default is false.
+ * @property vis_check_object Boolean checked by all cameras or not
+ * @property vis_check_character Boolean checked by all camera or not
+ * @property vis_check_object_all Boolean checked objects of the camera belong to the room
+ * @property out_graph Boolean out graph data every frame or not
+ * @property per_frame Int out grap data per frame
+ * @property specified_cameras The list of camera indexes, must be used when the camera mode is 'SPECIFIED'. 'SPECIFIED' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
+ * @property diagonal_cameras1 The list of each fixed diagonal camera index for each room, must be used when the camera mode is 'DIAGONAL1'. There should be only one camera index for each room. 2023/04/21
+ * @property diagonal_cameras2 The list of each fixed diagonal camera index for each room, must be used when the camera mode is 'DIAGONAL2'. There should be only one camera index for each room. 'DIAGONAL1' and 'DIAGONAL2' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
  */
 @Serializable
 data class RenderParams(
@@ -41,5 +49,13 @@ data class RenderParams(
     val image_width: Int = 640,
     val image_height: Int = 480,
     val time_scale: Double = 1.0,
-    val skip_animation: Boolean = false
+    val skip_animation: Boolean = false,
+    val vis_check_object: Boolean = false,
+    val vis_check_character: Boolean = false,
+    val vis_check_object_all: Boolean = false,
+    val out_graph: Boolean = false,
+    val per_frame: Int = 5,
+    val specified_cameras: List<String> = emptyList(),
+    val diagonal_cameras1: List<String> = emptyList(),
+    val diagonal_cameras2: List<String> = emptyList()
 )
