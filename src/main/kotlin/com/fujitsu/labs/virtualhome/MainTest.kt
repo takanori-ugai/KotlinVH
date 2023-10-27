@@ -290,7 +290,7 @@ class MainTest {
             skip_animation = false,
             recording = true,
             save_pose_data = false,
-            skipExecution = false
+            skipExecution = false,
             out_graph = true
         )
     ) {
