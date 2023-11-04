@@ -28,9 +28,12 @@ import kotlinx.serialization.Serializable
  * @property vis_check_object_all Boolean checked objects of the camera belong to the room
  * @property out_graph Boolean out graph data every frame or not
  * @property per_frame Int out grap data per frame
- * @property specified_cameras The list of camera indexes, must be used when the camera mode is 'SPECIFIED'. 'SPECIFIED' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
- * @property diagonal_cameras1 The list of each fixed diagonal camera index for each room, must be used when the camera mode is 'DIAGONAL1'. There should be only one camera index for each room. 2023/04/21
- * @property diagonal_cameras2 The list of each fixed diagonal camera index for each room, must be used when the camera mode is 'DIAGONAL2'. There should be only one camera index for each room. 'DIAGONAL1' and 'DIAGONAL2' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
+ * @property specified_cameras The list of camera indexes, must be used when the camera mode is
+ * 'SPECIFIED'. 'SPECIFIED' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
+ * @property diagonal_cameras1 The list of each fixed diagonal camera index for each room,
+ * must be used when the camera mode is 'DIAGONAL1'. There should be only one camera index for each room. 2023/04/21
+ * @property diagonal_cameras2 The list of each fixed diagonal camera index for each room,
+ * must be used when the camera mode is 'DIAGONAL2'. There should be only one camera index for each room. 'DIAGONAL1' and 'DIAGONAL2' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
  */
 @Serializable
 data class RenderParams(
@@ -46,7 +49,8 @@ data class RenderParams(
     val outputFolder: String = "Output/",
     @SerialName("file_name_prefix")
     val fileNamePrefix: String = "script",
-    val frame_rate: Int = 5,
+    @SerialName("frame_rate")
+    val frameRate: Int = 5,
     val image_synthesis: List<String> = listOf("normal"),
     val find_solution: Boolean = false,
     val save_pose_data: Boolean = false,

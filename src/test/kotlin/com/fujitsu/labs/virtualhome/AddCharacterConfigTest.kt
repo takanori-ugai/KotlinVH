@@ -1,8 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import mu.KotlinLogging
 import org.junit.jupiter.api.Test
 
 private val logger = KotlinLogging.logger {}
@@ -27,7 +27,7 @@ class AddCharacterConfigTest {
     @kotlinx.serialization.ExperimentalSerializationApi
     fun test1() {
         val position = Position(1, 2, 3)
-        println(
+        logger.info {
             format.encodeToString(
                 AddCharacterConfig(
                     characterResource = "Chars/Male1",
@@ -35,8 +35,8 @@ class AddCharacterConfigTest {
                     characterPosition = position
                 )
             )
-        )
-        println(
+        }
+        logger.info {
             format.encodeToString(
                 AddCharacterConfig(
                     characterResource = "Chars/Male1",
@@ -44,6 +44,6 @@ class AddCharacterConfigTest {
                     initialRoom = "kitchen"
                 )
             )
-        )
+        }
     }
 }
