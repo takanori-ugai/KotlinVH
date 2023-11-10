@@ -1,8 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
-import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

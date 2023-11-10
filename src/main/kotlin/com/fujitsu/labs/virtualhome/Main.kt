@@ -1,11 +1,14 @@
 package com.fujitsu.labs.virtualhome
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.lang.System.currentTimeMillis
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Base64
+
+private val logger = KotlinLogging.logger {}
 
 fun main() {
     val format = Json {
@@ -97,7 +100,7 @@ fun main() {
     val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
     val sq = VirtualHomeClient(host = "localhost")
     val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-    println(res?.success)
+    logger.info { res?.success }
     executeResetAndEnvironmentGraphRequests(sq)
     val graph = sq.environmentGraph()
     println(graph.nodes[0])
@@ -158,8 +161,8 @@ fun main() {
 }
 
 private fun executeResetAndEnvironmentGraphRequests(sq: VirtualHomeClient) {
-    println("Check: " + sq.check()?.success)
-    println(sq.reset(4)?.success)
+    println("Check: " + sq.check().success)
+    println(sq.reset(4).success)
     println(sq.visibleObjects(0))
     println(sq.visibleObjects(1).size)
     println(sq.visibleObjects(2).size)
