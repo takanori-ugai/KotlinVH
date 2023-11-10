@@ -71,6 +71,21 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     }
 
     /**
+     * Retrieves camera data for the specified camera indexes.
+     *
+     * @param cameraIndexes The list of camera indexes to retrieve data for.
+     * @return The response containing the camera data.
+     */
+    fun cameraData(cameraIndexes: List<Int>): VirtualHomeResponse {
+        val data = VirtualHomeRequest(
+            action = "camera_data",
+            intParams = cameraIndexes
+        )
+//        logger.info { format.encodeToString(data) }
+        return sendRequest(data)
+    }
+
+    /**
      * Renders a script with the given list of strings.
      *
      * @param script The list of strings representing the script to render.
@@ -93,6 +108,21 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     fun expandScene(graph: Graph, config: ExpandSceneConfig = ExpandSceneConfig()): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(config), format.encodeToString(graph))
         val data = VirtualHomeRequest(action = "expand_scene", stringParams = stringParams)
+        return sendRequest(data)
+    }
+
+    /**
+     * This function is used to add a camera to the virtual home environment.
+     *
+     * @param position The position of the camera in the 3D space. Default value is Position(0,1,0).
+     * @param rotation The rotation of the camera in the 3D space. Default value is Position(0,0,0).
+     * @param fieldView The field of view of the camera. Default value is 40.
+     *
+     * @return VirtualHomeResponse Returns the response from the virtual home after adding the camera.
+     */
+    fun addCamera(position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 40): VirtualHomeResponse {
+        val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView)))
+        val data = VirtualHomeRequest(action = "add_camera", stringParams = stringParams)
         return sendRequest(data)
     }
 

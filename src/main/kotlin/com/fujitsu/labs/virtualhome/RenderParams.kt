@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
  * @property skip_execution Boolean flag to skip execution, default is false.
  * @property output_folder The folder to output the results, default is "Output/".
  * @property file_name_prefix The prefix for the output file name, default is "script".
- * @property frame_rate The frame rate for rendering, default is 5.
+ * @property frameRate The frame rate for rendering, default is 5.
  * @property image_synthesis The list of image synthesis modes, default is ["normal"].
  * @property find_solution Boolean flag to find a solution, default is false.
  * @property save_pose_data Boolean flag to save pose data, default is false.
@@ -46,7 +46,8 @@ data class RenderParams(
     val outputFolder: String = "Output/",
     @SerialName("file_name_prefix")
     val fileNamePrefix: String = "script",
-    val frame_rate: Int = 5,
+    @SerialName("frame_rate")
+    val frameRate: Int = 5,
     val image_synthesis: List<String> = listOf("normal"),
     val find_solution: Boolean = false,
     val save_pose_data: Boolean = false,

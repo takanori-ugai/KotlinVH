@@ -104,6 +104,12 @@ fun main() {
     println(graph.nodes.size)
     val sofa = graph.nodes.filter { it.className == "sofa" }[1]
     println(sofa)
+    println(sq.addCamera(Position(10, 200, 5), Position(20, 21, 22)))
+    println(sq.cameraCount())
+    println(sq.cameraData(listOf(89)))
+//    val image = Base64.getDecoder().decode(sq.cameraImage(listOf(89))?.messageList?.get(0))
+//    Files.write(Paths.get("cfo.png"), image)
+//    System.exit(0)
     graph.nodes.add(Node(className = "cat", category = "Animals", id = 1000, properties = listOf(), states = listOf()))
     println("ADDRESSBOOK: " + graph.nodes.filter { it.className == "book" })
     graph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
