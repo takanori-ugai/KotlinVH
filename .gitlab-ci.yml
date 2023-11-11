@@ -8,7 +8,7 @@
 # https://gradle.org/
 # https://github.com/gradle/gradle
 
-image: gradle:jdk16
+image: gradle:jdk17
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -45,7 +45,9 @@ test:
 pages:
   stage: deploy
   script:
-  - echo 'Nothing to do...'
+    - |
+      ./gradlew dokkaHtml
+      cp -r build/dokka/html/ public/
   artifacts:
     paths:
     - public
