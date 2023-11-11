@@ -47,7 +47,7 @@ pages:
   script:
     - |
       ./gradlew dokkaHtml
-      cp -r build/dokka/html/ public/
+      cp -r build/dokka/html/* public/
   artifacts:
     paths:
     - public
