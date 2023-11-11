@@ -33,7 +33,9 @@ import kotlinx.serialization.Serializable
  * @property diagonal_cameras1 The list of each fixed diagonal camera index for each room,
  * must be used when the camera mode is 'DIAGONAL1'. There should be only one camera index for each room. 2023/04/21
  * @property diagonal_cameras2 The list of each fixed diagonal camera index for each room,
- * must be used when the camera mode is 'DIAGONAL2'. There should be only one camera index for each room. 'DIAGONAL1' and 'DIAGONAL2' camera mode's functionalities are exactly same as 'AUTO' mode. 2023/04/21
+ * must be used when the camera mode is 'DIAGONAL2'. There should be only one camera index
+ * for each room. 'DIAGONAL1' and 'DIAGONAL2' camera mode's functionalities are exactly
+ * same as 'AUTO' mode. 2023/04/21
  */
 @Serializable
 data class RenderParams(

@@ -127,6 +127,37 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     }
 
     /**
+     * Updates the camera in the virtual home environment.
+     *
+     * @param cameraIndex The index of the camera to update.
+     * @param position The new position of the camera. Default is Position(0, 1, 0).
+     * @param rotation The new rotation of the camera. Default is Position(0, 0, 0).
+     * @param fieldView The new field of view of the camera. Default is 40.
+     * @return The response from the virtual home environment.
+     */
+    fun updateCamera(cameraIndex: Int, position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 40): VirtualHomeResponse {
+        val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView)))
+        val data = VirtualHomeRequest(action = "update_camera", intParams = listOf(cameraIndex), stringParams = stringParams)
+        return sendRequest(data)
+    }
+
+    /**
+     * Updates the character's camera in the virtual home environment.
+     *
+     * @param position The new position of the camera. Default is Position(0, 1, 0).
+     * @param rotation The new rotation of the camera. Default is Position(0, 0, 0).
+     * @param fieldView The new field of view of the camera. Default is 60.
+     * @param name The name of the character. Default is "PERSON_FRONT".
+     * @return The response from the virtual home environment.
+     */
+    fun updateCharacterCamera(position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 60, name: String ="PERSON_FRONT"): VirtualHomeResponse {
+        val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView, name)))
+        val data = VirtualHomeRequest(action = "update_character_camera", stringParams = stringParams)
+        return sendRequest(data)
+    }
+
+
+    /**
      * Get the environment graph
      */
     fun environmentGraph(): Graph {

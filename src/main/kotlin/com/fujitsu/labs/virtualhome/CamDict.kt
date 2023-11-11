@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
  * @param position The position of the camera.
  * @param rotation The rotation of the camera.
  * @property fieldView The field of view of the camera.
+ * @property cameraName The name of the camera. It's optional and default is null.
  */
 @Serializable
 data class CamDict(
@@ -20,5 +21,11 @@ data class CamDict(
      * The field of view of the camera.
      */
     @SerialName("field_view")
-    val fieldView: Int
+    val fieldView: Int,
+
+    /**
+     * The name of the camera.
+     */
+    @SerialName("camera_name")
+    val cameraName: String? = null
 )
