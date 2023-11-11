@@ -150,12 +150,11 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param name The name of the character. Default is "PERSON_FRONT".
      * @return The response from the virtual home environment.
      */
-    fun updateCharacterCamera(position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 60, name: String ="PERSON_FRONT"): VirtualHomeResponse {
+    fun updateCharacterCamera(position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 60, name: String = "PERSON_FRONT"): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView, name)))
         val data = VirtualHomeRequest(action = "update_character_camera", stringParams = stringParams)
         return sendRequest(data)
     }
-
 
     /**
      * Get the environment graph
