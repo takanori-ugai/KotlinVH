@@ -10,7 +10,7 @@ plugins {
     jacoco
     id("org.jetbrains.dokka") version "1.9.10"
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
     id("com.github.jk1.dependency-license-report") version "2.5"
     id("com.github.spotbugs") version "5.2.1"
     id("com.diffplug.spotless") version "6.22.0"
