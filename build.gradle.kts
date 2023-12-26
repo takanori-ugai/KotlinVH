@@ -9,7 +9,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     jacoco
     id("org.jetbrains.dokka") version "1.9.10"
-    id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    id("io.gitlab.arturbosch.detekt") version "1.23.4"
     id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
     id("com.github.jk1.dependency-license-report") version "2.5"
     id("com.github.spotbugs") version "5.2.3"
