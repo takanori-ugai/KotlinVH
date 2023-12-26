@@ -18,21 +18,18 @@ data class AddCharacterConfig(
      */
     @SerialName("character_resource")
     val characterResource: String = "Chars/Male1",
-
     /**
      * The mode used for adding the character.
      */
     val mode: String = AddCharacterMode.Random.toString(),
-
     /**
      * The position where the character will be added.
      */
     @SerialName("character_position")
     val characterPosition: Position? = null,
-
     /**
      * The initial room where the character will be placed.
      */
     @SerialName("initial_room")
-    val initialRoom: String? = null
+    val initialRoom: String? = null,
 )

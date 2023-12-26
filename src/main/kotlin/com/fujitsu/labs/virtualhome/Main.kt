@@ -11,10 +11,11 @@ import java.util.Base64
 private val logger = KotlinLogging.logger {}
 
 fun main() {
-    val format = Json {
-        encodeDefaults = true
+    val format =
+        Json {
+            encodeDefaults = true
 //        explicitNulls = false
-    }
+        }
 
     /**
      * Not supported action in Unity Simulater
@@ -65,10 +66,11 @@ fun main() {
      **  TURNTO
      **  WATCH
      */
-    val script0 = listOf(
-        "<char0> [WALK] <wine> (93)",
-        "<char0> [GRAB] <wine> (93)",
-        "<char0> [DRINK] <wine> (93)",
+    val script0 =
+        listOf(
+            "<char0> [WALK] <wine> (93)",
+            "<char0> [GRAB] <wine> (93)",
+            "<char0> [DRINK] <wine> (93)",
 //        "<char0> [WALK] <washingmachine> (365)",
 //        "<char0> [PUTIN] <washingmachine> (365)  <wine> (93)",
 //        "<char0> [CLOSE] <door> (128)",
@@ -86,11 +88,11 @@ fun main() {
 //        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)",
 //        "<char0> [STANDUP] <sofa> (139)",
-        "<char0> [WALK] <tablelamp> (76)"
+            "<char0> [WALK] <tablelamp> (76)",
 //        "<char0> [PUTON] <clothesshirt> (36)"
 //        "<char0> [GRAB] <book> (86)",
 //        "<char0> [PLUGIN] <tablelamp> (76)"
-    )
+        )
     val main = Main()
 //    main.checkScripts(script0)
     main.testScripts(script0)
@@ -127,35 +129,38 @@ fun main() {
     // キャラクターを追加するのはシーンを作った後、キャラクターを追加してからシーンを作成するとサーバが止まる
     println(sq.addCharacter())
     println(sq.cameraCount())
-    val config = RenderParams(
-        processingTimeLimit = 60,
-        find_solution = false,
-        skip_animation = false,
-        recording = true,
-        save_pose_data = true
-    )
+    val config =
+        RenderParams(
+            processingTimeLimit = 60,
+            find_solution = false,
+            skip_animation = false,
+            recording = true,
+            save_pose_data = true,
+        )
 //    val config = RenderParams(
 //        processing_time_limit = 60, find_solution = true, skip_animation = true, recording = true,
 //        save_pose_data = false, image_synthesis = listOf()
 //    )
     // val script = listOf("<char0> [WALK] <cat> (366)")
-    val script = listOf(
-        "<char0> [RUN] <book> (86)",
-        "<char0> [FIND] <book> (86)",
-        "<char0> [READ] <book> (86)"
+    val script =
+        listOf(
+            "<char0> [RUN] <book> (86)",
+            "<char0> [FIND] <book> (86)",
+            "<char0> [READ] <book> (86)",
 //        "<char0> [WALK] <sofa> (139)"
-    )
+        )
     val scriptObj = Script(script)
 //    val scriptObj2 = Script(listOf("<char0> [WALK] <cat> (366) <dog> (377)"))
 //    val scriptObj3 = Script(listOf("[WALK] <cat> (366) <dog> (377)"))
-    val script2 = listOf(
-        "<char0> [RUN] <book> (86)",
-        "<char0> [FIND] <book> (86)",
-        "<char0> [READ] <book> (86)",
+    val script2 =
+        listOf(
+            "<char0> [RUN] <book> (86)",
+            "<char0> [FIND] <book> (86)",
+            "<char0> [READ] <book> (86)",
 //        "<char0> [LIFT] <book> (86)",
-        "<char0> [WALK] <sofa> (139)",
-        "<char0> [SIT] <sofa> (139)"
-    )
+            "<char0> [WALK] <sofa> (139)",
+            "<char0> [SIT] <sofa> (139)",
+        )
     println(sq.renderScript(script2, config))
     saveCameraImage(sq)
 }
@@ -168,11 +173,13 @@ private fun executeResetAndEnvironmentGraphRequests(sq: VirtualHomeClient) {
     println(sq.visibleObjects(2).size)
     println(sq.visibleObjects(3).size)
 }
+
 private fun printNodeInformation(main: Main) {
     println(main.findNodes("tv"))
     println(main.findNodesByProperty("HAS_PLUG"))
     println(main.findNodesById(1))
 }
+
 private fun saveCameraImage(sq: VirtualHomeClient) {
     val res0 = sq.cameraImage(listOf(0))
     val image = Base64.getDecoder().decode(res0?.messageList?.get(0))
@@ -196,8 +203,8 @@ class Main {
                 category = "Animals",
                 id = 1000,
                 properties = listOf(),
-                states = listOf()
-            )
+                states = listOf(),
+            ),
         )
         initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
         if (client.expandScene(initGraph)!!.success) {
@@ -210,14 +217,15 @@ class Main {
         }
         if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         println("Success : Add Character")
-        val config = RenderParams(
-            processingTimeLimit = 1,
-            find_solution = false,
-            skip_animation = false,
-            recording = true,
-            save_pose_data = false,
-            skipExecution = false
-        )
+        val config =
+            RenderParams(
+                processingTimeLimit = 1,
+                find_solution = false,
+                skip_animation = false,
+                recording = true,
+                save_pose_data = false,
+                skipExecution = false,
+            )
 //    val config = RenderParams(
 //        processing_time_limit = 60, find_solution = false, skip_animation = true, recording = false,
 //        save_pose_data = false, image_synthesis = listOf()
@@ -237,22 +245,23 @@ class Main {
                 category = "Animals",
                 id = 1000,
                 properties = listOf(),
-                states = listOf()
-            )
+                states = listOf(),
+            ),
         )
         initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
         if (!client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
         if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         val catId = graph.nodes.filter { it.className == "cat" }[0]
-        val config = RenderParams(
-            processingTimeLimit = 1,
-            find_solution = false,
-            skip_animation = false,
-            recording = true,
-            save_pose_data = false,
-            skipExecution = true
-        )
+        val config =
+            RenderParams(
+                processingTimeLimit = 1,
+                find_solution = false,
+                skip_animation = false,
+                recording = true,
+                save_pose_data = false,
+                skipExecution = true,
+            )
 //        val scriptObj = Script(script)
         if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
         return true

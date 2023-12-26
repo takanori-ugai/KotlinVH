@@ -16,5 +16,5 @@ data class ImageConfig(
     @SerialName("image_width")
     val imageWidth: String = "640",
     @SerialName("image_height")
-    val imageHeight: String = "320"
+    val imageHeight: String = "320",
 )

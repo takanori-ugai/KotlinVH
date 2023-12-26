@@ -16,7 +16,7 @@ data class Edge(
     @SerialName("to_id")
     val toId: Int,
     @SerialName("relation_type")
-    val relationType: String
+    val relationType: String,
 )
 
 /**
@@ -43,7 +43,7 @@ data class Node(
     @SerialName("bounding_box")
     val boundingBox: Map<String, List<Float>>? = null,
     val properties: List<String>? = null,
-    val states: List<String>? = null
+    val states: List<String>? = null,
 )
 
 /**
@@ -54,5 +54,5 @@ data class Node(
 @Serializable
 data class Graph(
     val nodes: MutableList<Node> = mutableListOf(),
-    val edges: MutableList<Edge> = mutableListOf()
+    val edges: MutableList<Edge> = mutableListOf(),
 )

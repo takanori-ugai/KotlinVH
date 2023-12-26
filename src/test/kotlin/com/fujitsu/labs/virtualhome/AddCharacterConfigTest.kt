@@ -15,10 +15,11 @@ class AddCharacterConfigTest {
      * Configuration of Json converter
      */
     @kotlinx.serialization.ExperimentalSerializationApi
-    private val format = Json {
-        encodeDefaults = true
-        explicitNulls = false
-    }
+    private val format =
+        Json {
+            encodeDefaults = true
+            explicitNulls = false
+        }
 
     /**
      * Tests the serialization of the AddCharacterConfig class.
@@ -32,8 +33,8 @@ class AddCharacterConfigTest {
                 AddCharacterConfig(
                     characterResource = "Chars/Male1",
                     mode = "fix_position",
-                    characterPosition = position
-                )
+                    characterPosition = position,
+                ),
             )
         }
         logger.info {
@@ -41,8 +42,8 @@ class AddCharacterConfigTest {
                 AddCharacterConfig(
                     characterResource = "Chars/Male1",
                     mode = "fix_position",
-                    initialRoom = "kitchen"
-                )
+                    initialRoom = "kitchen",
+                ),
             )
         }
     }

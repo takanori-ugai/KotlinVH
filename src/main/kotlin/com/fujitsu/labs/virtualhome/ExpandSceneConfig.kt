@@ -21,5 +21,5 @@ data class ExpandSceneConfig(
     @SerialName("ignore_obstacles")
     val ignoreObstacles: Boolean = false,
     @SerialName("transfer_transform")
-    val transferTransform: Boolean = true
+    val transferTransform: Boolean = true,
 )

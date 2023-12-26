@@ -10,7 +10,7 @@ plugins {
     jacoco
     id("org.jetbrains.dokka") version "1.9.10"
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
     id("com.github.jk1.dependency-license-report") version "2.5"
     id("com.github.spotbugs") version "5.2.3"
     id("com.diffplug.spotless") version "6.22.0"
@@ -24,10 +24,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.+")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.2")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
 //    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
-    implementation("ch.qos.logback:logback-classic:1.+")
+    implementation("ch.qos.logback:logback-classic:1.4.12")
     testImplementation("org.wiremock:wiremock:3.3.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")

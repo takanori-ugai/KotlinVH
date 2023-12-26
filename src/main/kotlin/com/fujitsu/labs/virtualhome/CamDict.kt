@@ -13,19 +13,16 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class CamDict(
-
     val position: Position,
     val rotation: Position,
-
     /**
      * The field of view of the camera.
      */
     @SerialName("field_view")
     val fieldView: Int,
-
     /**
      * The name of the camera.
      */
     @SerialName("camera_name")
-    val cameraName: String? = null
+    val cameraName: String? = null,
 )

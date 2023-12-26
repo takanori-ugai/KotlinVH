@@ -20,7 +20,10 @@ fun main() {
  * @param nodes The list of nodes to be written to the CSV file.
  * @param fileName The name of the CSV file.
  */
-private fun writeNodesToCSV(nodes: List<Node>, fileName: String) {
+private fun writeNodesToCSV(
+    nodes: List<Node>,
+    fileName: String,
+) {
     File(fileName).bufferedWriter(Charsets.UTF_8).use { out ->
         val header = "nodes/id,nodes/class_name"
         out.write("$header\n")

@@ -55,10 +55,11 @@ fun main() {
      **  TURNTO
      **  WATCH
      */
-    val script0 = listOf(
-        "<char0> [WALK] <wine> (93)",
-        "<char0> [GRAB] <wine> (93)",
-        "<char0> [DRINK] <wine> (93)",
+    val script0 =
+        listOf(
+            "<char0> [WALK] <wine> (93)",
+            "<char0> [GRAB] <wine> (93)",
+            "<char0> [DRINK] <wine> (93)",
 //        "<char0> [WALK] <washingmachine> (365)",
 //        "<char0> [PUTIN] <washingmachine> (365)  <wine> (93)",
 //        "<char0> [CLOSE] <door> (128)",
@@ -76,11 +77,11 @@ fun main() {
 //        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)",
 //        "<char0> [STANDUP] <sofa> (139)",
-        "<char0> [WALK] <tablelamp> (76)"
+            "<char0> [WALK] <tablelamp> (76)",
 //        "<char0> [PUTON] <clothesshirt> (36)"
 //        "<char0> [GRAB] <book> (86)",
 //        "<char0> [PLUGIN] <tablelamp> (76)"
-    )
+        )
     val main = MainTest()
     main.testReset()
     main.testEnvironmentGraph()
@@ -93,22 +94,24 @@ fun main() {
     main.testRendering()
 //    System.exit(0)
 
-    val script = listOf(
-        "<char0> [RUN] <book> (86)",
-        "<char0> [FIND] <book> (86)",
-        "<char0> [READ] <book> (86)"
+    val script =
+        listOf(
+            "<char0> [RUN] <book> (86)",
+            "<char0> [FIND] <book> (86)",
+            "<char0> [READ] <book> (86)",
 //        "<char0> [WALK] <sofa> (139)"
-    )
+        )
     val scriptObj = Script(script)
-    val script2 = listOf(
-        "<char0> [RUN] <book> (86)",
-        "<char0> [FIND] <book> (86)",
-        "<char0> [READ] <book> (86)",
-        "<char0> [FALLBACK]"
+    val script2 =
+        listOf(
+            "<char0> [RUN] <book> (86)",
+            "<char0> [FIND] <book> (86)",
+            "<char0> [READ] <book> (86)",
+            "<char0> [FALLBACK]",
 //        "<char0> [LIFT] <book> (86)",
 //        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)"
-    )
+        )
     main.testRendering(script2, 4)
 }
 
@@ -172,8 +175,8 @@ class MainTest {
                     category = "Animals",
                     id = 1000,
                     properties = listOf(),
-                    states = listOf()
-                )
+                    states = listOf(),
+                ),
             )
             graph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
             println(client.expandScene(graph))
@@ -246,19 +249,21 @@ class MainTest {
             val initGraph = client.environmentGraph()
             if (client.addCharacter().success) {
                 val sofa = initGraph.nodes.last { it.className == "book" }
-                val script = listOf(
-                    "<char0> [WALK] <book> (${sofa.id})",
-                    "<char0> [FIND] <book> (${sofa.id})",
-                    "<char0> [READ] <book> (${sofa.id})"
-                )
-                val config = RenderParams(
-                    processingTimeLimit = 1,
-                    find_solution = false,
-                    skip_animation = false,
-                    recording = true,
-                    save_pose_data = false,
-                    skipExecution = false
-                )
+                val script =
+                    listOf(
+                        "<char0> [WALK] <book> (${sofa.id})",
+                        "<char0> [FIND] <book> (${sofa.id})",
+                        "<char0> [READ] <book> (${sofa.id})",
+                    )
+                val config =
+                    RenderParams(
+                        processingTimeLimit = 1,
+                        find_solution = false,
+                        skip_animation = false,
+                        recording = true,
+                        save_pose_data = false,
+                        skipExecution = false,
+                    )
                 if (client.renderScript(script, config).success) {
                     println("Rendering on Scene $it Succeeded")
                 } else {
@@ -284,15 +289,16 @@ class MainTest {
     fun testRendering(
         script: List<String>,
         scene: Int,
-        config: RenderParams = RenderParams(
-            processingTimeLimit = 1,
-            find_solution = true,
-            skip_animation = false,
-            recording = true,
-            save_pose_data = false,
-            skipExecution = false,
-            out_graph = true
-        )
+        config: RenderParams =
+            RenderParams(
+                processingTimeLimit = 1,
+                find_solution = true,
+                skip_animation = false,
+                recording = true,
+                save_pose_data = false,
+                skipExecution = false,
+                out_graph = true,
+            ),
     ) {
         if (!client.reset(scene).success) throw VHException("Reset Error")
         if (client.addCharacter().success) {
@@ -322,22 +328,23 @@ class MainTest {
                 category = "Animals",
                 id = 1000,
                 properties = listOf(),
-                states = listOf()
-            )
+                states = listOf(),
+            ),
         )
         initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
         if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
         if (!client.addCharacter().success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         val catId = graph.nodes.last { it.className == "cat" }
-        val config = RenderParams(
-            processingTimeLimit = 1,
-            find_solution = false,
-            skip_animation = false,
-            recording = true,
-            save_pose_data = false,
-            skipExecution = true
-        )
+        val config =
+            RenderParams(
+                processingTimeLimit = 1,
+                find_solution = false,
+                skip_animation = false,
+                recording = true,
+                save_pose_data = false,
+                skipExecution = true,
+            )
 //        val scriptObj = Script(script)
         if (!client.renderScript(script, config).success) throw VHException("Error in Rendering")
         return true

@@ -21,11 +21,12 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     /**
      * Configuration of Json converter
      */
-    private val format = Json {
-        encodeDefaults = true
-        @ExperimentalSerializationApi
-        explicitNulls = false
-    }
+    private val format =
+        Json {
+            encodeDefaults = true
+            @ExperimentalSerializationApi
+            explicitNulls = false
+        }
 
     private val url = URL("http://$host:$port")
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
@@ -51,21 +52,23 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         cameraIndexes: List<Int>,
         mode: String = "normal",
         imageWidth: Int = 640,
-        imageHeight: Int = 320
+        imageHeight: Int = 320,
     ): VirtualHomeResponse {
-        val data = VirtualHomeRequest(
-            action = "camera_image",
-            intParams = cameraIndexes,
-            stringParams = listOf(
-                format.encodeToString(
-                    ImageConfig(
-                        mode = mode,
-                        imageWidth = imageWidth.toString(),
-                        imageHeight = imageHeight.toString()
-                    )
-                )
+        val data =
+            VirtualHomeRequest(
+                action = "camera_image",
+                intParams = cameraIndexes,
+                stringParams =
+                    listOf(
+                        format.encodeToString(
+                            ImageConfig(
+                                mode = mode,
+                                imageWidth = imageWidth.toString(),
+                                imageHeight = imageHeight.toString(),
+                            ),
+                        ),
+                    ),
             )
-        )
 //        logger.info { format.encodeToString(data) }
         return sendRequest(data)
     }
@@ -77,10 +80,11 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @return The response containing the camera data.
      */
     fun cameraData(cameraIndexes: List<Int>): VirtualHomeResponse {
-        val data = VirtualHomeRequest(
-            action = "camera_data",
-            intParams = cameraIndexes
-        )
+        val data =
+            VirtualHomeRequest(
+                action = "camera_data",
+                intParams = cameraIndexes,
+            )
 //        logger.info { format.encodeToString(data) }
         return sendRequest(data)
     }
@@ -92,7 +96,10 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param config The RenderParams configuration (optional).
      * @return A VirtualHomeResponse or null if the request fails.
      */
-    fun renderScript(script: List<String>, config: RenderParams = RenderParams()): VirtualHomeResponse {
+    fun renderScript(
+        script: List<String>,
+        config: RenderParams = RenderParams(),
+    ): VirtualHomeResponse {
         val stringParams = mutableListOf(format.encodeToString(config))
         stringParams.addAll(script)
         val data = VirtualHomeRequest(action = "render_script", stringParams = stringParams)
@@ -105,7 +112,10 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param config  Configuration
      * @param graph   The graph for expanding the scene.
      */
-    fun expandScene(graph: Graph, config: ExpandSceneConfig = ExpandSceneConfig()): VirtualHomeResponse {
+    fun expandScene(
+        graph: Graph,
+        config: ExpandSceneConfig = ExpandSceneConfig(),
+    ): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(config), format.encodeToString(graph))
         val data = VirtualHomeRequest(action = "expand_scene", stringParams = stringParams)
         return sendRequest(data)
@@ -120,7 +130,11 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      *
      * @return VirtualHomeResponse Returns the response from the virtual home after adding the camera.
      */
-    fun addCamera(position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 40): VirtualHomeResponse {
+    fun addCamera(
+        position: Position = Position(0, 1, 0),
+        rotation: Position = Position(0, 0, 0),
+        fieldView: Int = 40,
+    ): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView)))
         val data = VirtualHomeRequest(action = "add_camera", stringParams = stringParams)
         return sendRequest(data)
@@ -135,7 +149,12 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param fieldView The new field of view of the camera. Default is 40.
      * @return The response from the virtual home environment.
      */
-    fun updateCamera(cameraIndex: Int, position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 40): VirtualHomeResponse {
+    fun updateCamera(
+        cameraIndex: Int,
+        position: Position = Position(0, 1, 0),
+        rotation: Position = Position(0, 0, 0),
+        fieldView: Int = 40,
+    ): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView)))
         val data = VirtualHomeRequest(action = "update_camera", intParams = listOf(cameraIndex), stringParams = stringParams)
         return sendRequest(data)
@@ -150,7 +169,12 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
      * @param name The name of the character. Default is "PERSON_FRONT".
      * @return The response from the virtual home environment.
      */
-    fun updateCharacterCamera(position: Position = Position(0, 1, 0), rotation: Position = Position(0, 0, 0), fieldView: Int = 60, name: String = "PERSON_FRONT"): VirtualHomeResponse {
+    fun updateCharacterCamera(
+        position: Position = Position(0, 1, 0),
+        rotation: Position = Position(0, 0, 0),
+        fieldView: Int = 60,
+        name: String = "PERSON_FRONT",
+    ): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView, name)))
         val data = VirtualHomeRequest(action = "update_character_camera", stringParams = stringParams)
         return sendRequest(data)
@@ -195,33 +219,35 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     fun addCharacter(
         characterResource: String = "Chars/Male1",
         position: Position? = null,
-        initialRoom: String = ""
+        initialRoom: String = "",
     ): VirtualHomeResponse {
         val addCharacterConfig =
             if (position != null) {
                 AddCharacterConfig(
                     characterResource = characterResource,
                     mode = AddCharacterMode.FixPosition.toString(),
-                    characterPosition = position
+                    characterPosition = position,
                 )
             } else if (initialRooms.contains(initialRoom)) {
                 AddCharacterConfig(
                     characterResource = characterResource,
                     mode = AddCharacterMode.FixPosition.toString(),
-                    initialRoom = initialRoom
+                    initialRoom = initialRoom,
                 )
             } else {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = AddCharacterMode.Random.toString()
+                    mode = AddCharacterMode.Random.toString(),
                 )
             }
-        val data = VirtualHomeRequest(
-            action = "add_character",
-            stringParams = listOf(
-                format.encodeToString(addCharacterConfig)
+        val data =
+            VirtualHomeRequest(
+                action = "add_character",
+                stringParams =
+                    listOf(
+                        format.encodeToString(addCharacterConfig),
+                    ),
             )
-        )
         return sendRequest(data)
     }
 

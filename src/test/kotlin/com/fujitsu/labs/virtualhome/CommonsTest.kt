@@ -3,6 +3,7 @@ package com.fujitsu.labs.virtualhome
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+
 private val logger = KotlinLogging.logger {}
 
 /**

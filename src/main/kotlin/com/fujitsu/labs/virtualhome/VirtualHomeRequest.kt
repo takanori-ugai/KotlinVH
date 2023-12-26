@@ -19,5 +19,5 @@ data class VirtualHomeRequest(
     val id: Int = abs(currentTimeMillis().toInt()),
     val action: String,
     val intParams: List<Int>? = null,
-    val stringParams: List<String>? = null
+    val stringParams: List<String>? = null,
 )

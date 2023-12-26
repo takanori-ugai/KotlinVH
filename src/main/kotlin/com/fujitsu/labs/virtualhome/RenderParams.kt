@@ -70,5 +70,5 @@ data class RenderParams(
     val per_frame: Int = 5,
     val specified_cameras: List<String> = emptyList(),
     val diagonal_cameras1: List<String> = emptyList(),
-    val diagonal_cameras2: List<String> = emptyList()
+    val diagonal_cameras2: List<String> = emptyList(),
 )

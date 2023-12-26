@@ -15,15 +15,15 @@ import org.junit.jupiter.api.Test
  */
 @WireMockTest
 class RequestTest {
-
     /**
      * Configuration of Json converter
      */
-    private val format = Json {
-        encodeDefaults = true
-        @ExperimentalSerializationApi
-        explicitNulls = false
-    }
+    private val format =
+        Json {
+            encodeDefaults = true
+            @ExperimentalSerializationApi
+            explicitNulls = false
+        }
 
     private lateinit var vh: VirtualHomeClient
 
@@ -42,7 +42,7 @@ class RequestTest {
         stubFor(
             post("/")
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'idle')]"))
-                .willReturn(okJson(format.encodeToString(res)))
+                .willReturn(okJson(format.encodeToString(res))),
         )
         assertTrue(vh.check().success)
     }
@@ -58,9 +58,9 @@ class RequestTest {
             post("/")
                 .withRequestBody(
                     matchingJsonPath("$[?(@.action == 'reset')]")
-                        .and(matchingJsonPath("$[?(@.intParams[0] == $sceneIndex)]"))
+                        .and(matchingJsonPath("$[?(@.intParams[0] == $sceneIndex)]")),
                 )
-                .willReturn(okJson(format.encodeToString(res)))
+                .willReturn(okJson(format.encodeToString(res))),
         )
         assertTrue(vh.reset(sceneIndex).success)
         assertTrue(vh.reset().success)
@@ -76,7 +76,7 @@ class RequestTest {
         stubFor(
             post("/")
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'camera_count')]"))
-                .willReturn(okJson(format.encodeToString(res)))
+                .willReturn(okJson(format.encodeToString(res))),
         )
         assertEquals(value, vh.cameraCount())
     }
@@ -102,9 +102,9 @@ class RequestTest {
             post("/")
                 .withRequestBody(
                     matchingJsonPath("$[?(@.action == 'observation')]")
-                        .and(matchingJsonPath("$[?(@.intParams[0] == $value)]"))
+                        .and(matchingJsonPath("$[?(@.intParams[0] == $value)]")),
                 )
-                .willReturn(okJson(format.encodeToString(res)))
+                .willReturn(okJson(format.encodeToString(res))),
         )
         assertEquals(map, vh.visibleObjects(value))
     }

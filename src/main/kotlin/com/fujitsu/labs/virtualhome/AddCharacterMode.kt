@@ -14,7 +14,8 @@ enum class AddCharacterMode(val value: String) {
     /**
      * Represents a random mode.
      */
-    Random("random") ;
+    Random("random"),
+    ;
 
     /**
      * Returns the string representation of the mode.

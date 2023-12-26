@@ -19,5 +19,5 @@ data class VirtualHomeResponse(
     val message: String?,
     val value: Int,
     @SerialName("message_list")
-    val messageList: List<String>?
+    val messageList: List<String>?,
 )
