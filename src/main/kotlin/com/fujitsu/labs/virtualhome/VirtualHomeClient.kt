@@ -274,6 +274,26 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return sendRequest(data).value
     }
 
+    /**
+     * Retrieves a list of character camera strings from a virtual home environment.
+     *
+     * This function sends a request to the virtual home system to get the current state
+     * of character cameras. It expects a response in JSON format which is then decoded into
+     * a list of strings.
+     *
+     * @return A list of character camera strings if the request is successful and the message is not null,
+     *         otherwise an empty list. default values are ["PERSON_FRONT","PERSON_TOP","FIRST_PERSON",
+     *         "PERSON_FROM_BACK","PERSON_FROM_LEFT","PERSON_RIGHT","PERSON_LEFT","PERSON_BACK"]
+     */
+    fun characterCameras(): List<String> =
+        sendRequest(VirtualHomeRequest(action = "character_cameras")).let { res ->
+            if (res.success) {
+                res.message?.let { format.decodeFromString<List<String>>(it) }.orEmpty()
+            } else {
+                emptyList()
+            }
+        }
+
     private fun readStream(inputStream: InputStream): VirtualHomeResponse {
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         val responseBody = bufferedReader.use { it.readText() }

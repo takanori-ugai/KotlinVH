@@ -87,6 +87,7 @@ fun main() {
     main.testEnvironmentGraph()
     main.testExpandScene()
     main.testExpandScene2()
+    main.testCharacterCameras()
 //    System.exit(0)
     main.testAddCharacter()
     main.testCameraCount()
@@ -145,6 +146,22 @@ class MainTest {
             } else {
                 println("Sceone $it Failed")
             }
+        }
+    }
+
+    /**
+     * Tests the character cameras functionality by resetting and retrieving camera data for each character.
+     *
+     * Iterates through character indices (0 to 6) and performs a reset followed by a retrieval of camera data.
+     * If the reset is not successful, a VHException is thrown. Otherwise, it prints out the camera data.
+     *
+     * @throws VHException if the reset operation fails.
+     */
+    fun testCharacterCameras() {
+        for (it in 0..6) {
+            if (!client.reset(it).success) throw VHException("Reset Error")
+            val cameras = client.characterCameras()
+            println("CharacterCameras $it : $cameras")
         }
     }
 
@@ -302,7 +319,7 @@ class MainTest {
     ) {
         if (!client.reset(scene).success) throw VHException("Reset Error")
         if (client.addCharacter().success) {
-            if (client.renderScript(script, config)?.success == true) {
+            if (client.renderScript(script, config).success == true) {
                 println("Rendering on Scene $scene Succeeded")
             } else {
                 println("Rendering on Scene $scene Failed")
