@@ -7,7 +7,7 @@ import java.util.Base64
 
 fun main() {
     /**
-     * Not supported action in Unity Simulater
+     * Not supported action in Unity Simulator
      **  EAT
      **  CUT
      **  PUTIN
@@ -319,7 +319,7 @@ class MainTest {
     ) {
         if (!client.reset(scene).success) throw VHException("Reset Error")
         if (client.addCharacter().success) {
-            if (client.renderScript(script, config).success == true) {
+            if (client.renderScript(script, config).success) {
                 println("Rendering on Scene $scene Succeeded")
             } else {
                 println("Rendering on Scene $scene Failed")
