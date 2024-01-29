@@ -19,7 +19,7 @@ data class CamDict(
      * The field of view of the camera.
      */
     @SerialName("field_view")
-    val fieldView: Int,
+    val fieldView: Int? = null,
     /**
      * The name of the camera.
      */

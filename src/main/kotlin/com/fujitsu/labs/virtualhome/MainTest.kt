@@ -160,8 +160,12 @@ class MainTest {
     fun testCharacterCameras() {
         for (it in 0..6) {
             if (!client.reset(it).success) throw VHException("Reset Error")
-            val cameras = client.characterCameras()
-            println("CharacterCameras $it : $cameras")
+            if (client.addCharacterCamera().success) {
+                val cameras = client.characterCameras()
+                println("CharacterCameras $it : $cameras")
+            } else {
+                println("AddCharacterCameras $it Failed")
+            }
         }
     }
 

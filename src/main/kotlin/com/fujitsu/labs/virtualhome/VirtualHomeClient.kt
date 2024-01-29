@@ -212,6 +212,41 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
     }
 
     /**
+     * Adds a character camera to the virtual environment with the specified position, rotation, and name.
+     *
+     * @param position The position of the camera in the virtual environment. Defaults to (0, 1, 0).
+     * @param rotation The rotation of the camera in the virtual environment. Defaults to (0, 0, 0).
+     * @param name The name assigned to the new camera. Defaults to "new_camera".
+     * @return [VirtualHomeResponse] containing the response data from the virtual environment.
+     */
+    fun addCharacterCamera(
+        position: Position = Position(0, 1, 0),
+        rotation: Position = Position(0, 0, 0),
+        name: String = "new_camera",
+    ): VirtualHomeResponse {
+        val stringParams = listOf(format.encodeToString(CamDict(position, rotation, cameraName = name)))
+        val data = VirtualHomeRequest(action = "add_character_camera", stringParams = stringParams)
+        return sendRequest(data)
+    }
+
+    /**
+     * Retrieves a list of indices of objects visible from the specified camera's viewpoint.  (since v2.3)
+     *
+     * @param cameraIndex The index of the camera in the virtual environment.
+     * @return A list of object indices that are visible from the specified camera. Returns an empty list
+     * if no objects are visible or if the response is null.
+     */
+    fun getVisibleObjects(cameraIndex: Int): List<Int> {
+        val data = VirtualHomeRequest(action = "get_visible_objects", intParams = listOf(cameraIndex))
+        val res = sendRequest(data).message
+        if (res != null) {
+            return format.decodeFromString(res)
+        } else {
+            return emptyList()
+        }
+    }
+
+    /**
      * Add a character.
      * @param characterResource The resource of character to add. (default value is "Chars/Male1"
      * @param initialRoom The palace to put the character, which must be kitchen, bedroom, livingroom or bathroom.
