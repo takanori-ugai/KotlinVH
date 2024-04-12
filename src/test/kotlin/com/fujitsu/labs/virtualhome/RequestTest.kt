@@ -96,7 +96,7 @@ class RequestTest {
     @Test
     fun visibleObjectTest(info: WireMockRuntimeInfo) {
         val value = 1
-        val map: Map<String, String> = mapOf("0" to "1")
+        val map = mapOf("0" to "1")
         val res = VirtualHomeResponse(1, true, format.encodeToString(map), value, listOf("Test"))
         stubFor(
             post("/")
