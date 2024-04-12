@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class AddCharacterModeTest {
-
     @Test
     fun `test FixPosition toString returns correct value`() {
         val mode = AddCharacterMode.FixPosition
