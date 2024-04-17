@@ -23,4 +23,27 @@ class CamDictTest {
         assertEquals(90, camDict.fieldView)
         assertEquals("FrontCamera", camDict.cameraName)
     }
+
+    @Test
+    fun `test default values of CamDict`() {
+        val position = Position(0, 0)
+        val rotation = Position(0, 0)
+        val camDict = CamDict(position, rotation)
+
+        assertEquals(position, camDict.position)
+        assertEquals(rotation, camDict.rotation)
+        assertEquals(null, camDict.fieldView)
+        assertEquals(null, camDict.cameraName)
+    }
+
+    @Test
+    fun `serialize and deserialize CamDict with default values`() {
+        val position = Position(0, 0)
+        val rotation = Position(0, 0)
+        val camDict = CamDict(position, rotation)
+        val json = Json.encodeToString(camDict)
+        val deserializedCamDict = Json.decodeFromString<CamDict>(json)
+
+        assertEquals(camDict, deserializedCamDict)
+    }
 }
