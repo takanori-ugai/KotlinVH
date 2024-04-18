@@ -120,7 +120,7 @@ class RequestTest {
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'get_visible_objects')]"))
                 .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
         )
-        assertEquals(emptyList<Int>(), vh.visibleObjects(1))
+        assertEquals(emptyList<Int>(), vh.getVisibleObjects(1))
     }
 
     /**
