@@ -81,6 +81,48 @@ class RequestTest {
         assertEquals(value, vh.cameraCount())
     }
 
+    @Test
+    fun addCharacterCameraTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'add_character_camera')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(true, vh.addCharacterCamera().success)
+
+        val customPosition = Position(1, 2, 3)
+        val customRotation = Position(4, 5, 6)
+        val customName = "custom_camera"
+        assertEquals(true, vh.addCharacterCamera(customPosition, customRotation, customName).success)
+    }
+
+    @Test
+    fun getVisibleObjectsTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, "[1,2,3]", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'get_visible_objects')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(listOf(1, 2, 3), vh.getVisibleObjects(1))
+    }
+
+    @Test
+    fun getVisibleObjectsTest2(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, null, value, listOf("Test"))
+        println(Json { encodeDefaults = true }.encodeToString(res))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'get_visible_objects')]"))
+                .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
+        )
+        assertEquals(emptyList<Int>(), vh.getVisibleObjects(1))
+    }
+
     /**
      * Tests the error handling of the VirtualHomeClient class.
      */
