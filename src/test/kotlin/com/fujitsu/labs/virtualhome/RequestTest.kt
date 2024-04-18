@@ -167,4 +167,16 @@ class RequestTest {
         val customName = "custom_camera"
         assertEquals(true, vh.updateCharacterCamera(customPosition, customRotation, 1, customName).success)
     }
+
+    @Test
+    fun environmentGraphTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'environment_graph')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(Graph(), vh.environmentGraph())
+    }
 }
