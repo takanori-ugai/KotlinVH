@@ -16,9 +16,9 @@ public class JavaAddCharacterConfigTest {
   public void test1() {
     Position position = new Position(1, 2, 3);
     AddCharacterConfig config1 =
-        new AddCharacterConfig("Chars/Male1", "fix_position", position, null);
+        new AddCharacterConfig("Chars/Male1", AddCharacterMode.FixPosition.toString(), position, null);
     AddCharacterConfig config2 =
-        new AddCharacterConfig("Chars/Male1", "fix_position", null, "kitchen");
+        new AddCharacterConfig("Chars/Male1", AddCharacterMode.FixPosition.toString(), null, "kitchen");
 
     assertNotNull(config1);
     assertNotNull(config2);

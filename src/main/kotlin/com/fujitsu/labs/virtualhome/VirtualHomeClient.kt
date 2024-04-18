@@ -261,19 +261,19 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
             if (position != null) {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = AddCharacterMode.FixPosition.toString(),
+                    mode = AddCharacterMode.FixPosition.value,
                     characterPosition = position,
                 )
             } else if (initialRooms.contains(initialRoom)) {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = AddCharacterMode.FixPosition.toString(),
+                    mode = AddCharacterMode.FixPosition.value,
                     initialRoom = initialRoom,
                 )
             } else {
                 AddCharacterConfig(
                     characterResource = characterResource,
-                    mode = AddCharacterMode.Random.toString(),
+                    mode = AddCharacterMode.Random.value,
                 )
             }
         val data =

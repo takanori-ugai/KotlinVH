@@ -33,7 +33,7 @@ class AddCharacterConfigTest {
             format.encodeToString(
                 AddCharacterConfig(
                     characterResource = "Chars/Male1",
-                    mode = "fix_position",
+                    mode = AddCharacterMode.FixPosition.value,
                     characterPosition = position,
                 ),
             )
@@ -42,7 +42,7 @@ class AddCharacterConfigTest {
             format.encodeToString(
                 AddCharacterConfig(
                     characterResource = "Chars/Male1",
-                    mode = "fix_position",
+                    mode = AddCharacterMode.FixPosition.value,
                     initialRoom = "kitchen",
                 ),
             )
