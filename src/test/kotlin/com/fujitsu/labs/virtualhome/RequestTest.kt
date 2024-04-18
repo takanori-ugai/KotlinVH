@@ -150,4 +150,21 @@ class RequestTest {
         )
         assertEquals(map, vh.visibleObjects(value))
     }
+
+    @Test
+    fun updateCharacterCameraTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'update_character_camera')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(true, vh.updateCharacterCamera().success)
+
+        val customPosition = Position(1, 2, 3)
+        val customRotation = Position(4, 5, 6)
+        val customName = "custom_camera"
+        assertEquals(true, vh.updateCharacterCamera(customPosition, customRotation, 1, customName).success)
+    }
 }
