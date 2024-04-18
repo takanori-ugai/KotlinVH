@@ -8,6 +8,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -53,7 +54,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         mode: String = "normal",
         imageWidth: Int = 640,
         imageHeight: Int = 320,
-    ): VirtualHomeResponse {
+    ): List<ByteArray> {
         val data =
             VirtualHomeRequest(
                 action = "camera_image",
@@ -70,7 +71,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
                     ),
             )
 //        logger.info { format.encodeToString(data) }
-        return sendRequest(data)
+        return sendRequest(data).messageList?.map { Base64.getDecoder().decode(it) } ?: emptyList()
     }
 
     /**

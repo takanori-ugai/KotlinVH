@@ -182,7 +182,7 @@ private fun printNodeInformation(main: Main) {
 
 private fun saveCameraImage(sq: VirtualHomeClient) {
     val res0 = sq.cameraImage(listOf(0))
-    val image = Base64.getDecoder().decode(res0?.messageList?.get(0))
+    val image = Base64.getDecoder().decode(res0[0])
     Files.write(Paths.get("bfo.png"), image)
 }
 

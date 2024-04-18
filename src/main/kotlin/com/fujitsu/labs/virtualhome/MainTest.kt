@@ -291,7 +291,7 @@ class MainTest {
                     println("Rendering on Scene $it Failed")
                 }
                 val res0 = client.cameraImage(listOf(0))
-                val image = Base64.getDecoder().decode(res0.messageList?.get(0))
+                val image = Base64.getDecoder().decode(res0[0])
                 Files.write(Paths.get("bfo.png"), image)
                 println("  >> Size of Image is ${image.size} : Camera Image Succeeded")
             } else {
