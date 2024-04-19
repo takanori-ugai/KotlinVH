@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 /**
  * This class contains tests for the VirtualHomeClient's request methods.
@@ -210,5 +211,18 @@ class RequestTest {
                 .willReturn(okJson(format.encodeToString(res))),
         )
         assertEquals(Graph(), vh.environmentGraph())
+    }
+
+    @Test
+    fun cameraImageTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val encoder = Base64.getEncoder()
+        val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'camera_image')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals("Test", encoder.encode(vh.cameraImage(listOf(1))[0]))
     }
 }
