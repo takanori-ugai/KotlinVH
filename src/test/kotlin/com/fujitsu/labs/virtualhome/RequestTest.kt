@@ -225,4 +225,20 @@ class RequestTest {
         )
         assertEquals("Test", encoder.encode(vh.cameraImage(listOf(1))[0]))
     }
+
+    @Test
+    fun cameraDataTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val cameraIndexes = listOf(1, 2)
+        val res = VirtualHomeResponse(1, true, "Test", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(
+                    matchingJsonPath("$[?(@.action == 'camera_data')]")
+                        .and(matchingJsonPath("$[?(@.intParams[0] == $value)]")),
+                )
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertTrue(vh.cameraData(cameraIndexes).success)
+    }
 }
