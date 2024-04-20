@@ -223,7 +223,7 @@ class RequestTest {
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'camera_image')]"))
                 .willReturn(okJson(format.encodeToString(res))),
         )
-        assertEquals("Test", encoder.encode(vh.cameraImage(listOf(1))[0]))
+        assertEquals("Test", encoder.encodeToString(vh.cameraImage(listOf(1))[0]))
     }
 
     @Test
