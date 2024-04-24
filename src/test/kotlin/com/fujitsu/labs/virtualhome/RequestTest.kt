@@ -139,7 +139,6 @@ class RequestTest {
         assertEquals(listOf("1", "2", "3"), vh.characterCameras())
     }
 
-
     @Test
     fun getVisibleObjectsTest2(info: WireMockRuntimeInfo) {
         val value = 1
