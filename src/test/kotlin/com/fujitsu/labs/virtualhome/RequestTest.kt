@@ -128,6 +128,19 @@ class RequestTest {
     }
 
     @Test
+    fun characterCamerasTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, """["1","2","3"]""", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'character_cameras')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(listOf("1", "2", "3"), vh.characterCameras())
+    }
+
+
+    @Test
     fun getVisibleObjectsTest2(info: WireMockRuntimeInfo) {
         val value = 1
         val res = VirtualHomeResponse(1, true, null, value, listOf("Test"))
