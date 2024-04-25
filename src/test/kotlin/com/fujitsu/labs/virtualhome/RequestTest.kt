@@ -214,6 +214,35 @@ class RequestTest {
     }
 
     @Test
+    fun addCharacterTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'add_character')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(true, vh.addCharacter().success)
+        assertEquals(true, vh.addCharacter("Chars/Female1").success)
+        val customPosition = Position(1, 2, 3)
+        assertEquals(true, vh.addCharacter("Chars/Female1", customPosition).success)
+        assertEquals(true, vh.addCharacter("Chars/Female1", initialRoom = "InitialRoom").success)
+    }
+
+    @Test
+    fun expandtSceneTest(info: WireMockRuntimeInfo) {
+        val value = 1
+        val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'expand_scene')]"))
+                .willReturn(okJson(format.encodeToString(res))),
+        )
+        assertEquals(true, vh.expandScene(Graph()).success)
+        assertEquals(true, vh.expandScene(Graph(), ExpandSceneConfig()).success)
+    }
+
+    @Test
     fun environmentGraphTest(info: WireMockRuntimeInfo) {
         val value = 1
         val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
