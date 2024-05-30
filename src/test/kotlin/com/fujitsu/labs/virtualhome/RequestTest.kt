@@ -9,20 +9,21 @@ import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.Base64
 
 /**
  * This class contains tests for the VirtualHomeClient's request methods.
  */
 @WireMockTest
+@ExperimentalSerializationApi
 class RequestTest {
     /**
      * Configuration of Json converter
      */
+    @ExperimentalSerializationApi
     private val format =
         Json {
             encodeDefaults = true
-            @ExperimentalSerializationApi
             explicitNulls = false
         }
 
@@ -38,6 +39,7 @@ class RequestTest {
      * Tests the check method of the VirtualHomeClient class.
      */
     @Test
+    @ExperimentalSerializationApi
     fun checkTest(info: WireMockRuntimeInfo) {
         val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
         stubFor(
