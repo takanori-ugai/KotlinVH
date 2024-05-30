@@ -70,7 +70,9 @@ fun main() {
         listOf(
             "<char0> [WALK] <wine> (93)",
             "<char0> [GRAB] <wine> (93)",
-            "<char0> [DRINK] <wine> (93)",
+            " <char0> [DRINK] <wine> (93)",
+            "[DRINK] <wine> (93)",
+            "  [DRINK] <wine> (93)",
 //        "<char0> [WALK] <washingmachine> (365)",
 //        "<char0> [PUTIN] <washingmachine> (365)  <wine> (93)",
 //        "<char0> [CLOSE] <door> (128)",

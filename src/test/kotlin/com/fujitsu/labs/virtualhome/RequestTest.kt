@@ -228,6 +228,7 @@ class RequestTest {
         assertEquals(true, vh.addCharacter("Chars/Female1").success)
         val customPosition = Position(1, 2, 3)
         assertEquals(true, vh.addCharacter("Chars/Female1", customPosition).success)
+        assertEquals(true, vh.addCharacter("Chars/Female1", initialRoom = "kitchen").success)
         assertEquals(true, vh.addCharacter("Chars/Female1", initialRoom = "InitialRoom").success)
     }
 

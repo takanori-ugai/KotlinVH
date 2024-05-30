@@ -91,6 +91,7 @@ tasks {
 }
 
 ktlint {
+    version.set("1.2.1")
     verbose.set(true)
     outputToConsole.set(true)
     coloredOutput.set(true)
