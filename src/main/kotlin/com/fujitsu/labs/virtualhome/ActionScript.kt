@@ -10,7 +10,7 @@ package com.fujitsu.labs.virtualhome
 data class ActionScript(
     val character: String?,
     val action: String,
-    val objects: List<Pair<String, Int>>
+    val objects: List<Pair<String, Int>>,
 )
 
 /**
@@ -25,10 +25,11 @@ fun parseActionScript(script: List<String>): List<ActionScript> {
 
     return script.mapNotNull { line ->
         regex.matchEntire(line)?.destructured?.let { (character, action, rest) ->
-            val objects = objectTimeRegex.findAll(rest).map { match ->
-                val (obj, time) = match.destructured
-                obj to time.toInt()
-            }.toList()
+            val objects =
+                objectTimeRegex.findAll(rest).map { match ->
+                    val (obj, time) = match.destructured
+                    obj to time.toInt()
+                }.toList()
             ActionScript(character.ifEmpty { null }, action, objects)
         }
     }
@@ -36,12 +37,13 @@ fun parseActionScript(script: List<String>): List<ActionScript> {
 
 // Example usage
 fun main() {
-    val script = listOf(
-        "<char0> [WALK] <wine> (93) <book> (89)",
-        "<char0> [GRAB] <wine> (93)",
-        "  <char0> [DRINK] <wine> (93)",
-        "[DRINK] <wine> (93)"
-    )
+    val script =
+        listOf(
+            "<char0> [WALK] <wine> (93) <book> (89)",
+            "<char0> [GRAB] <wine> (93)",
+            "  <char0> [DRINK] <wine> (93)",
+            "[DRINK] <wine> (93)",
+        )
 
     val parsedScripts = parseActionScript(script)
     parsedScripts.forEach { println(it) }
