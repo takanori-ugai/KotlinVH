@@ -30,7 +30,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.6")
     testImplementation("org.wiremock:wiremock:3.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.3")
 }
 
 tasks {
