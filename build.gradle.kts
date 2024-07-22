@@ -28,7 +28,7 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
 //    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
     implementation("ch.qos.logback:logback-classic:1.5.6")
-    testImplementation("org.wiremock:wiremock:3.8.0")
+    testImplementation("org.wiremock:wiremock:3.9.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.3")
 }
