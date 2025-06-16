@@ -12,7 +12,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
     id("com.github.jk1.dependency-license-report") version "2.9"
-    id("com.github.spotbugs") version "6.1.13"
+    id("com.github.spotbugs") version "6.2.0"
     id("com.diffplug.spotless") version "7.0.4"
 }
 
