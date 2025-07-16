@@ -62,8 +62,7 @@ class RequestTest {
                 .withRequestBody(
                     matchingJsonPath("$[?(@.action == 'reset')]")
                         .and(matchingJsonPath("$[?(@.intParams[0] == $sceneIndex)]")),
-                )
-                .willReturn(okJson(format.encodeToString(res))),
+                ).willReturn(okJson(format.encodeToString(res))),
         )
         assertTrue(vh.reset(sceneIndex).success)
         assertTrue(vh.reset().success)
@@ -176,8 +175,7 @@ class RequestTest {
                 .withRequestBody(
                     matchingJsonPath("$[?(@.action == 'observation')]")
                         .and(matchingJsonPath("$[?(@.intParams[0] == $value)]")),
-                )
-                .willReturn(okJson(format.encodeToString(res))),
+                ).willReturn(okJson(format.encodeToString(res))),
         )
         assertEquals(map, vh.visibleObjects(value))
     }
@@ -280,8 +278,7 @@ class RequestTest {
                 .withRequestBody(
                     matchingJsonPath("$[?(@.action == 'camera_data')]")
                         .and(matchingJsonPath("$[?(@.intParams[0] == $value)]")),
-                )
-                .willReturn(okJson(format.encodeToString(res))),
+                ).willReturn(okJson(format.encodeToString(res))),
         )
         assertTrue(vh.cameraData(cameraIndexes).success)
     }

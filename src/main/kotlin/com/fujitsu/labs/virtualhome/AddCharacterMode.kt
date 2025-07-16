@@ -5,7 +5,9 @@ package com.fujitsu.labs.virtualhome
  *
  * @property value The string representation of the mode.
  */
-enum class AddCharacterMode(val value: String) {
+enum class AddCharacterMode(
+    val value: String,
+) {
     /**
      * Represents a fixed position mode.
      */

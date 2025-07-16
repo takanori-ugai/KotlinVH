@@ -26,10 +26,12 @@ fun parseActionScript(script: List<String>): List<ActionScript> {
     return script.mapNotNull { line ->
         regex.matchEntire(line)?.destructured?.let { (character, action, rest) ->
             val objects =
-                objectTimeRegex.findAll(rest).map { match ->
-                    val (obj, time) = match.destructured
-                    obj to time.toInt()
-                }.toList()
+                objectTimeRegex
+                    .findAll(rest)
+                    .map { match ->
+                        val (obj, time) = match.destructured
+                        obj to time.toInt()
+                    }.toList()
             ActionScript(character.ifEmpty { null }, action, objects)
         }
     }

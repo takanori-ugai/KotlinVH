@@ -8,7 +8,6 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -18,7 +17,10 @@ private val logger = KotlinLogging.logger {}
  * @property host The host of the VirtualHome server. (Default value is "localhost")
  * @property port The port of the VirtualHome server. (Default value is 8080)
  */
-class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
+class VirtualHomeClient(
+    host: String = "localhost",
+    port: Int = 8080,
+) {
     /**
      * Configuration of Json converter
      */
@@ -337,9 +339,7 @@ class VirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         return Json.decodeFromString(responseBody)
     }
 
-    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse {
-        return sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-    }
+    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
 
     /**
      * Sends a request to the VirtualHome server.

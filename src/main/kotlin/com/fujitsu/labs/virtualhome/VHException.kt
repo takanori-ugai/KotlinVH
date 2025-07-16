@@ -5,4 +5,6 @@ package com.fujitsu.labs.virtualhome
  *
  * @property str The message for the exception.
  */
-class VHException(str: String) : Exception(str)
+class VHException(
+    str: String,
+) : Exception(str)
