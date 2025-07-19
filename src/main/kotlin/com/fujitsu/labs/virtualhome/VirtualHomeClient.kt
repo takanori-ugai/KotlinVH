@@ -8,6 +8,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Base64
 
 private val logger = KotlinLogging.logger {}
 
@@ -187,21 +188,15 @@ class VirtualHomeClient(
      * Get the environment graph
      */
     fun environmentGraph(): Graph {
-        val data = VirtualHomeRequest(action = "environment_graph")
-        val res = sendRequest(data)
-        if (res.message != null) {
-            return format.decodeFromString(res.message)
-        }
-        return Graph()
+        val request = VirtualHomeRequest(action = "environment_graph")
+        val response = sendRequest(request)
+        return response.message?.let { format.decodeFromString(it) } ?: Graph()
     }
 
     /**
      * Check the server's status
      */
-    fun check(): VirtualHomeResponse {
-        val data = VirtualHomeRequest(action = "idle")
-        return sendRequest(data)
-    }
+    fun check(): VirtualHomeResponse = sendRequest(VirtualHomeRequest(action = "idle"))
 
     /**
      * Reset the scene.
@@ -295,12 +290,12 @@ class VirtualHomeClient(
      * @return The visible objects (map of id and the class name)
      */
     fun visibleObjects(cameraIndex: Int = 0): Map<String, String> {
-        val data = VirtualHomeRequest(action = "observation", intParams = listOf(cameraIndex))
-        val res = sendRequest(data)
-        if (res.success && res.message != null) {
-            return format.decodeFromString(res.message)
+        val request = VirtualHomeRequest(action = "observation", intParams = listOf(cameraIndex))
+        val response = sendRequest(request)
+        if (!response.success || response.message == null) {
+            return emptyMap()
         }
-        return mapOf()
+        return format.decodeFromString(response.message)
     }
 
     /**
