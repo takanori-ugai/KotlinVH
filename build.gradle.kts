@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -7,7 +6,7 @@ plugins {
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.serialization") version "2.2.0"
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.9"
     jacoco
     id("org.jetbrains.dokka") version "2.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
@@ -85,10 +84,11 @@ tasks {
         dependsOn(test) // tests are required to run before generating the report
     }
 
-    withType<ShadowJar> {
+    shadowJar {
         manifest {
             attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
         }
+        minimize()
     }
 }
 
