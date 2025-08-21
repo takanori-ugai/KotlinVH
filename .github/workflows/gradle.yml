@@ -11,6 +11,10 @@ name: Java CI
 
 on: [push]
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   build:
     strategy:
