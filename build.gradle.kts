@@ -8,7 +8,7 @@ plugins {
     java
     id("com.gradleup.shadow") version "9.2.2"
     jacoco
-    id("org.jetbrains.dokka") version "2.0.0"
+    id("org.jetbrains.dokka") version "2.1.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
     id("com.github.jk1.dependency-license-report") version "2.9"
