@@ -134,10 +134,10 @@ fun main() {
     val config =
         RenderParams(
             processingTimeLimit = 60,
-            find_solution = false,
-            skip_animation = false,
+            findSolution = false,
+            skipAnimation = false,
             recording = true,
-            save_pose_data = true,
+            savePoseData = true,
         )
 //    val config = RenderParams(
 //        processing_time_limit = 60, find_solution = true, skip_animation = true, recording = true,
