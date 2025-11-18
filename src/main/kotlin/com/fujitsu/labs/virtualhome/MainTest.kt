@@ -279,10 +279,10 @@ class MainTest {
                 val config =
                     RenderParams(
                         processingTimeLimit = 1,
-                        find_solution = false,
-                        skip_animation = false,
+                        findSolution = false,
+                        skipAnimation = false,
                         recording = true,
-                        save_pose_data = false,
+                        savePoseData = false,
                         skipExecution = false,
                     )
                 if (client.renderScript(script, config).success) {
@@ -313,12 +313,12 @@ class MainTest {
         config: RenderParams =
             RenderParams(
                 processingTimeLimit = 1,
-                find_solution = true,
-                skip_animation = false,
+                findSolution = true,
+                skipAnimation = false,
                 recording = true,
-                save_pose_data = false,
+                savePoseData = false,
                 skipExecution = false,
-                out_graph = true,
+                outGraph = true,
             ),
     ) {
         if (!client.reset(scene).success) throw VHException("Reset Error")
@@ -360,10 +360,10 @@ class MainTest {
         val config =
             RenderParams(
                 processingTimeLimit = 1,
-                find_solution = false,
-                skip_animation = false,
+                findSolution = false,
+                skipAnimation = false,
                 recording = true,
-                save_pose_data = false,
+                savePoseData = false,
                 skipExecution = true,
             )
 //        val scriptObj = Script(script)

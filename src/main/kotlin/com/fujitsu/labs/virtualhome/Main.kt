@@ -222,15 +222,15 @@ class Main {
         val config =
             RenderParams(
                 processingTimeLimit = 1,
-                find_solution = false,
-                skip_animation = false,
+                findSolution = false,
+                skipAnimation = false,
                 recording = true,
-                save_pose_data = false,
+                savePoseData = false,
                 skipExecution = false,
             )
 //    val config = RenderParams(
-//        processing_time_limit = 60, find_solution = false, skip_animation = true, recording = false,
-//        save_pose_data = false, image_synthesis = listOf()
+//        processingTimeLimit = 60, findSolution = false, skipAnimation = true, recording = false,
+//        savePoseData = false, imageSynthesis = listOf()
 //    )
 //        val scriptObj = Script(script)
         println(client.renderScript(script, config))
@@ -258,10 +258,10 @@ class Main {
         val config =
             RenderParams(
                 processingTimeLimit = 1,
-                find_solution = false,
-                skip_animation = false,
+                findSolution = false,
+                skipAnimation = false,
                 recording = true,
-                save_pose_data = false,
+                savePoseData = false,
                 skipExecution = true,
             )
 //        val scriptObj = Script(script)
