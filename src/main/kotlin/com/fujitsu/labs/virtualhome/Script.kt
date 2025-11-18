@@ -4,6 +4,12 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
+private const val OBJECTS_GROUP_IDX = 4
+private const val NAME_GROUP_IDX = 1
+private const val ID_GROUP_IDX = 2
+private const val CHAR_GROUP_IDX = 2
+private const val ACTION_GROUP_IDX = 3
+
 /**
  * Data class representing an object.
  *
@@ -74,35 +80,28 @@ class Script(
      */
     private fun parseScript(script: List<String>): List<ScriptLine> =
         script.map { line ->
+            val matchResult = regex.find(line)
+            val groups = matchResult?.groups
+            val value = groups?.get(OBJECTS_GROUP_IDX)?.value.toString()
             val objects =
                 regex2
-                    .findAll(
-                        regex
-                            .find(line)
-                            ?.groups
-                            ?.get(4)
-                            ?.value
-                            .toString(),
-                    ).map { findObj(it.groups[1]?.value.toString(), it.groups[2]?.value!!.toInt()) }
+                    .findAll(value)
+                    .map {
+                        findObj(
+                            it.groups[NAME_GROUP_IDX]?.value.toString(),
+                            it.groups[ID_GROUP_IDX]?.value!!.toInt(),
+                        )
+                    }
                     .toList()
 
             val scriptLine =
                 ScriptLine(
-                    regex
-                        .find(line)
-                        ?.groups
-                        ?.get(2)
-                        ?.value,
-                    regex
-                        .find(line)
-                        ?.groups
-                        ?.get(3)
-                        ?.value
-                        .toString(),
+                    groups?.get(CHAR_GROUP_IDX)?.value,
+                    groups?.get(ACTION_GROUP_IDX)?.value.toString(),
                     objects,
                 )
 
-            if (!checkLine(scriptLine)) throw Exception("Error in Script: $scriptLine")
+            require(checkLine(scriptLine)) { "Error in Script: $scriptLine" }
             scriptLine
         }
 
@@ -116,14 +115,21 @@ class Script(
         val actions = Commons.actionList
         val action = actions[line.action]
         logger.info { "Action Properties : $action.properties" }
-        if (action == null) return false
+        if (action == null) {
+            return false
+        }
+
         val properties = Commons.propertiesData()
         line.objects.forEachIndexed { index, obj ->
             val objProperties = properties[obj.name]
             logger.info { "Object Properties: $objProperties" }
-            if (objProperties == null) return false
+            if (objProperties == null) {
+                return false
+            }
             action.properties[index].forEach {
-                if (!objProperties.contains(it)) return false
+                if (!objProperties.contains(it)) {
+                    return false
+                }
             }
         }
         return true
