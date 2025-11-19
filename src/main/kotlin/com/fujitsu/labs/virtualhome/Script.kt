@@ -91,8 +91,7 @@ class Script(
                             it.groups[NAME_GROUP_IDX]?.value.toString(),
                             it.groups[ID_GROUP_IDX]?.value!!.toInt(),
                         )
-                    }
-                    .toList()
+                    }.toList()
 
             val scriptLine =
                 ScriptLine(
