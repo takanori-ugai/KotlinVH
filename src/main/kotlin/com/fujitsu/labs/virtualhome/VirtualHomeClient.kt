@@ -12,6 +12,9 @@ import java.util.Base64
 
 private val logger = KotlinLogging.logger {}
 
+private const val CONNECT_TIMEOUT = 30000
+private const val READ_TIMEOUT = 60000
+
 /**
  * A client for interacting with the VirtualHome server.
  *
@@ -347,8 +350,8 @@ class VirtualHomeClient(
         var ret = VirtualHomeResponse(0, false, "", 0, null)
         val connection = url.openConnection() as HttpURLConnection
         try {
-            connection.connectTimeout = 30000
-            connection.readTimeout = 60000
+            connection.connectTimeout = CONNECT_TIMEOUT
+            connection.readTimeout = READ_TIMEOUT
             connection.doOutput = true
             connection.setChunkedStreamingMode(0)
             connection.setRequestProperty("Content-type", "application/json; charset=utf-8")
