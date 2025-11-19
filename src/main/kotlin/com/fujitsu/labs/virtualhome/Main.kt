@@ -85,7 +85,11 @@ private fun performCameraActions(sq: VirtualHomeClient) {
     println(sq.cameraData(listOf(CAMERA_ID)))
 }
 
-private fun addCatToScene(sq: VirtualHomeClient, graph: Graph, sofa: Node) {
+private fun addCatToScene(
+    sq: VirtualHomeClient,
+    graph: Graph,
+    sofa: Node,
+) {
     val node = Node(className = "cat", category = "Animals", id = CAT_ID, properties = listOf(), states = listOf())
     graph.nodes.add(node)
     println("ADDRESSBOOK: " + graph.nodes.filter { it.className == "book" })
