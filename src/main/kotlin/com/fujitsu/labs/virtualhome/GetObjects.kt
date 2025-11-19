@@ -6,12 +6,13 @@ import java.io.File
  * The main function that initializes the client, resets the scene, retrieves the environment graph,
  * and writes the nodes to a CSV file.
  */
+private const val SCENE_INDEX = 6
+
 fun main() {
-    val sceneIndex = 6
     val client = VirtualHomeClient(host = "localhost")
-    client.reset(sceneIndex)
+    client.reset(SCENE_INDEX)
     val graph = client.environmentGraph()
-    writeNodesToCSV(graph.nodes, "scene${sceneIndex + 1}.csv")
+    writeNodesToCSV(graph.nodes, "scene${SCENE_INDEX + 1}.csv")
 }
 
 /**

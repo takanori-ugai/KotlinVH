@@ -1,12 +1,17 @@
 package com.fujitsu.labs.virtualhome
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
+import com.github.tomakehurst.wiremock.client.WireMock.okJson
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Base64
@@ -40,7 +45,7 @@ class RequestTest {
      */
     @Test
     @ExperimentalSerializationApi
-    fun checkTest(info: WireMockRuntimeInfo) {
+    fun checkTest() {
         val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
         stubFor(
             post("/")
@@ -54,7 +59,7 @@ class RequestTest {
      * Tests the reset method of the VirtualHomeClient class.
      */
     @Test
-    fun resetTest(info: WireMockRuntimeInfo) {
+    fun resetTest() {
         val sceneIndex = 0
         val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
         stubFor(
@@ -72,7 +77,7 @@ class RequestTest {
      * Tests the cameraCount method of the VirtualHomeClient class.
      */
     @Test
-    fun cameraCountTest(info: WireMockRuntimeInfo) {
+    fun cameraCountTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
         stubFor(
@@ -84,7 +89,7 @@ class RequestTest {
     }
 
     @Test
-    fun addCharacterCameraTest(info: WireMockRuntimeInfo) {
+    fun addCharacterCameraTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
         stubFor(
@@ -101,7 +106,7 @@ class RequestTest {
     }
 
     @Test
-    fun addCameraTest(info: WireMockRuntimeInfo) {
+    fun addCameraTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
         stubFor(
@@ -117,7 +122,7 @@ class RequestTest {
     }
 
     @Test
-    fun getVisibleObjectsTest(info: WireMockRuntimeInfo) {
+    fun getVisibleObjectsTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "[1,2,3]", value, listOf("Test"))
         stubFor(
@@ -129,7 +134,7 @@ class RequestTest {
     }
 
     @Test
-    fun characterCamerasTest(info: WireMockRuntimeInfo) {
+    fun characterCamerasTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, """["1","2","3"]""", value, listOf("Test"))
         stubFor(
@@ -141,7 +146,7 @@ class RequestTest {
     }
 
     @Test
-    fun getVisibleObjectsTest2(info: WireMockRuntimeInfo) {
+    fun getVisibleObjectsTest2() {
         val value = 1
         val res = VirtualHomeResponse(1, true, null, value, listOf("Test"))
         println(Json { encodeDefaults = true }.encodeToString(res))
@@ -166,7 +171,7 @@ class RequestTest {
      * Tests the visibleObjects method of the VirtualHomeClient class.
      */
     @Test
-    fun visibleObjectTest(info: WireMockRuntimeInfo) {
+    fun visibleObjectTest() {
         val value = 1
         val map = mapOf("0" to "1")
         val res = VirtualHomeResponse(1, true, format.encodeToString(map), value, listOf("Test"))
@@ -181,7 +186,7 @@ class RequestTest {
     }
 
     @Test
-    fun updateCharacterCameraTest(info: WireMockRuntimeInfo) {
+    fun updateCharacterCameraTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
         stubFor(
@@ -198,7 +203,7 @@ class RequestTest {
     }
 
     @Test
-    fun updateCameraTest(info: WireMockRuntimeInfo) {
+    fun updateCameraTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
         stubFor(
@@ -214,7 +219,7 @@ class RequestTest {
     }
 
     @Test
-    fun addCharacterTest(info: WireMockRuntimeInfo) {
+    fun addCharacterTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
         stubFor(
@@ -231,7 +236,7 @@ class RequestTest {
     }
 
     @Test
-    fun expandtSceneTest(info: WireMockRuntimeInfo) {
+    fun expandtSceneTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
         stubFor(
@@ -244,7 +249,7 @@ class RequestTest {
     }
 
     @Test
-    fun environmentGraphTest(info: WireMockRuntimeInfo) {
+    fun environmentGraphTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
         stubFor(
@@ -256,7 +261,7 @@ class RequestTest {
     }
 
     @Test
-    fun cameraImageTest(info: WireMockRuntimeInfo) {
+    fun cameraImageTest() {
         val value = 1
         val encoder = Base64.getEncoder()
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
@@ -269,7 +274,7 @@ class RequestTest {
     }
 
     @Test
-    fun cameraDataTest(info: WireMockRuntimeInfo) {
+    fun cameraDataTest() {
         val value = 1
         val cameraIndexes = listOf(1, 2)
         val res = VirtualHomeResponse(1, true, "Test", value, listOf("Test"))
