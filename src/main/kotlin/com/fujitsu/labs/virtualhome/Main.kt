@@ -35,64 +35,8 @@ private const val SAVE_CAMERA_ID = 0
 private const val CAT_NODE_ID = 0
 private const val MAIN_CAMERA_ID = 0
 private const val SOFA_INDEX = 1
-private const val MAIN_SCENE_NUM = 4
 
 fun main() {
-    val format =
-        Json {
-            encodeDefaults = true
-//        explicitNulls = false
-        }
-
-    /**
-     * Not supported action in Unity Simulater
-     **  EAT
-     **  CUT
-     **  PUTIN
-     **  WIPE
-     **  PUTON
-     **  PUTOFF
-     **  GREET
-     **  DROP
-     **  LIE
-     **  POUR
-     **  TYPE
-     *   PUSH
-     *   PULL
-     **  MOVE
-     **  WASH
-     *   RINSE
-     **  SLEEP
-     **  WAKEUP
-     *   SCRUB
-     **  SQUEEZE
-     *   RELEASE
-     **  PLUGIN
-     **  PLUGOUT
-     * Supported action
-     **  FIND
-     **  WALK
-     **  DRINK
-     **  CLOSE // ドアをちゃんと閉めない。ドアしか閉められない
-     **  READ
-     **  SIT
-     **  STANDUP
-     **  PUTBACK
-     **  GRAB
-     **  LOOKAT
-     *   LOOKAT_SHORT
-     *   LOOKAT_MEDIUM = LOOKAT
-     *   LOOKAT_LONG
-     **  OPEN // ドアしか開けられない
-     **  POINTAT = LOOKAT
-     *   PUTOBJBACK // 手に持っているものを元あった場所に戻す
-     *   RUN
-     **  SWITCHOFF
-     **  SWITCHON
-     **  TOUCH
-     **  TURNTO
-     **  WATCH
-     */
     val script0 =
         listOf(
             "<char0> [WALK] <wine> ($WINE_ID)",
@@ -106,20 +50,52 @@ fun main() {
     main.testScripts(script0)
     printNodeInformation(main)
 
-    val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
     val sq = VirtualHomeClient(host = "localhost")
+    val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
+    val format = Json { encodeDefaults = true }
     val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
     logger.info { res?.success }
     executeResetAndEnvironmentGraphRequests(sq)
+
     val graph = sq.environmentGraph()
     println(graph.nodes[MAIN_CAMERA_ID])
     println(graph.nodes.size)
+
     val sofa = graph.nodes.filter { it.className == "sofa" }[SOFA_INDEX]
     println(sofa)
+
+    performCameraActions(sq)
+    addCatToScene(sq, graph, sofa)
+    renderFinalScript(sq)
+}
+
+private fun executeResetAndEnvironmentGraphRequests(sq: VirtualHomeClient) {
+    println("Check: " + sq.check().success)
+    println(sq.reset(RESET_NUM).success)
+    CAMERA_IDS.forEach { id ->
+        println(sq.visibleObjects(id).size)
+    }
+}
+
+private fun printNodeInformation(main: Main) {
+    println(main.findNodes("tv"))
+    println(main.findNodesByProperty("HAS_PLUG"))
+    println(main.findNodesById(NODE_ID))
+}
+
+private fun performCameraActions(sq: VirtualHomeClient) {
     println(sq.addCamera(Position(POS_X, POS_Y, POS_Z), Position(ROT_X, ROT_Y, ROT_Z)))
     println(sq.cameraCount())
     println(sq.cameraData(listOf(CAMERA_ID)))
-    graph.nodes.add(Node(className = "cat", category = "Animals", id = CAT_ID, properties = listOf(), states = listOf()))
+}
+
+private fun addCatToScene(
+    sq: VirtualHomeClient,
+    graph: Graph,
+    sofa: Node,
+) {
+    val node = Node(className = "cat", category = "Animals", id = CAT_ID, properties = listOf(), states = listOf())
+    graph.nodes.add(node)
     println("ADDRESSBOOK: " + graph.nodes.filter { it.className == "book" })
     graph.edges.add(Edge(fromId = CAT_ID, toId = sofa.id!!, relationType = "ON"))
     println(sq.expandScene(graph))
@@ -130,6 +106,9 @@ fun main() {
     println(graph2.nodes.size)
     println(sq.addCharacter())
     println(sq.cameraCount())
+}
+
+private fun renderFinalScript(sq: VirtualHomeClient) {
     val config =
         RenderParams(
             processingTimeLimit = PROCESSING_TIME_LIMIT,
@@ -148,20 +127,6 @@ fun main() {
         )
     println(sq.renderScript(script2, config))
     saveCameraImage(sq)
-}
-
-private fun executeResetAndEnvironmentGraphRequests(sq: VirtualHomeClient) {
-    println("Check: " + sq.check().success)
-    println(sq.reset(RESET_NUM).success)
-    CAMERA_IDS.forEach { id ->
-        println(sq.visibleObjects(id).size)
-    }
-}
-
-private fun printNodeInformation(main: Main) {
-    println(main.findNodes("tv"))
-    println(main.findNodesByProperty("HAS_PLUG"))
-    println(main.findNodesById(NODE_ID))
 }
 
 private fun saveCameraImage(sq: VirtualHomeClient) {
@@ -222,7 +187,7 @@ class Main {
     fun checkScripts(script: List<String>): Boolean {
         if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofa = initGraph.nodes.filter { it.className == "sofa" }[1]
+        val sofa = initGraph.nodes.filter { it.className == "sofa" }[SOFA_INDEX]
         initGraph.nodes.add(
             Node(
                 className = "cat",
