@@ -8,6 +8,7 @@ import java.util.Base64
 private const val MAX_LOOP = 6
 private const val NEW_CAT_ID = 1000
 private const val SCENE_NUM = 4
+private const val TEST_SCENE_NUM = 3
 private const val RESET_MAX_LOOP = 8
 private const val TEST_PROCESSING_TIME_LIMIT = 1
 private const val BOOK_ID = 86
@@ -133,7 +134,7 @@ fun main() {
  * This class contains various test methods for the VirtualHomeClient.
  */
 class MainTest {
-    private val sceneNum = 3
+    private val sceneNum = TEST_SCENE_NUM
     private val client = VirtualHomeClient(host = "localhost")
 
     /**

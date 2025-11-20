@@ -26,11 +26,16 @@ private const val BOOK_ID = 86
 private const val SOFA_ID_2 = 139
 private const val WINE_ID = 93
 private const val TABLELAMP_ID = 76
-private val CAMERA_IDS = listOf(0, 1, 2, 3)
+private const val CAM_0 = 0
+private const val CAM_1 = 1
+private const val CAM_2 = 2
+private const val CAM_3 = 3
+private val CAMERA_IDS = listOf(CAM_0, CAM_1, CAM_2, CAM_3)
 private const val SAVE_CAMERA_ID = 0
 private const val CAT_NODE_ID = 0
 private const val MAIN_CAMERA_ID = 0
 private const val SOFA_INDEX = 1
+private const val MAIN_SCENE_NUM = 0
 
 fun main() {
     val script0 =
@@ -132,7 +137,7 @@ private fun saveCameraImage(sq: VirtualHomeClient) {
 }
 
 class Main {
-    val sceneNum = 4
+    val sceneNum = MAIN_SCENE_NUM
     private val client = VirtualHomeClient(host = "localhost")
 
     fun testScripts(script: List<String>): Boolean {
