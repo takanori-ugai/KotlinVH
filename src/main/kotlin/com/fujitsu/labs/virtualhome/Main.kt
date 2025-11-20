@@ -35,6 +35,7 @@ private const val SAVE_CAMERA_ID = 0
 private const val CAT_NODE_ID = 0
 private const val MAIN_CAMERA_ID = 0
 private const val SOFA_INDEX = 1
+private const val MAIN_SCENE_NUM = 0
 
 fun main() {
     val script0 =
