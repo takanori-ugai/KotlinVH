@@ -53,22 +53,39 @@ data class RenderParams(
     val fileNamePrefix: String = "script",
     @SerialName("frame_rate")
     val frameRate: Int = 5,
-    val image_synthesis: List<String> = listOf("normal"),
-    val find_solution: Boolean = false,
-    val save_pose_data: Boolean = false,
-    val save_scene_status: Boolean = false,
-    val camera_mode: List<String> = listOf("AUTO"),
+    @SerialName("image_synthesis")
+    val imageSynthesis: List<String> = listOf("normal"),
+    @SerialName("find_solution")
+    val findSolution: Boolean = false,
+    @SerialName("save_pose_data")
+    val savePoseData: Boolean = false,
+    @SerialName("save_scene_status")
+    val saveSceneStatus: Boolean = false,
+    @SerialName("camera_mode")
+    val cameraMode: List<String> = listOf("AUTO"),
     val recording: Boolean = false,
-    val image_width: Int = 640,
-    val image_height: Int = 480,
-    val time_scale: Double = 1.0,
-    val skip_animation: Boolean = false,
-    val vis_check_object: Boolean = false,
-    val vis_check_character: Boolean = false,
-    val vis_check_object_all: Boolean = false,
-    val out_graph: Boolean = false,
-    val per_frame: Int = 5,
-    val specified_cameras: List<String> = emptyList(),
-    val diagonal_cameras1: List<String> = emptyList(),
-    val diagonal_cameras2: List<String> = emptyList(),
+    @SerialName("image_width")
+    val imageWidth: Int = 640,
+    @SerialName("image_height")
+    val imageHeight: Int = 480,
+    @SerialName("time_scale")
+    val timeScale: Double = 1.0,
+    @SerialName("skip_animation")
+    val skipAnimation: Boolean = false,
+    @SerialName("vis_check_object")
+    val visCheckObject: Boolean = false,
+    @SerialName("vis_check_character")
+    val visCheckCharacter: Boolean = false,
+    @SerialName("vis_check_object_all")
+    val visCheckObjectAll: Boolean = false,
+    @SerialName("out_graph")
+    val outGraph: Boolean = false,
+    @SerialName("per_frame")
+    val perFrame: Int = 5,
+    @SerialName("specified_cameras")
+    val specifiedCameras: List<String> = emptyList(),
+    @SerialName("diagonal_cameras1")
+    val diagonalCameras1: List<String> = emptyList(),
+    @SerialName("diagonal_cameras2")
+    val diagonalCameras2: List<String> = emptyList(),
 )
