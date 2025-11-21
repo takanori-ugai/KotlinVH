@@ -35,7 +35,7 @@ class VirtualHomeClient(
     private val url = URL("http://$host:$port")
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
-    /**
+    /*
      * This action is not implemented
      *
      * fun checkScript(script: List<String>) : Response? {

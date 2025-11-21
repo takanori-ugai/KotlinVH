@@ -24,12 +24,24 @@ private fun writeNodesToCSV(
     nodes: List<Node>,
     fileName: String,
 ) {
+    // Escapes a value for safe CSV output according to RFC 4180
+    fun escapeCsv(value: String?): String =
+        if (value == null) {
+            ""
+        } else if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+            "\"" + value.replace("\"", "\"\"") + "\""
+        } else {
+            value
+        }
+
     File(fileName).bufferedWriter(Charsets.UTF_8).use { out ->
         val header = "nodes/id,nodes/class_name"
         out.write("$header\n")
         println(header)
         nodes.forEach { node ->
-            out.write("${node.className},${node.id}\n")
+            val idField = escapeCsv(node.id.toString())
+            val classNameField = escapeCsv(node.className)
+            out.write("$idField,$classNameField\n")
         }
     }
 }
