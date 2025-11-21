@@ -5,6 +5,20 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Base64
 
+private const val MAX_LOOP = 6
+private const val NEW_CAT_ID = 1000
+private const val SCENE_NUM = 4
+private const val TEST_SCENE_NUM = 3
+private const val RESET_MAX_LOOP = 8
+private const val TEST_PROCESSING_TIME_LIMIT = 1
+private const val BOOK_ID = 86
+private const val SOFA_ID = 139
+private const val WINE_ID = 93
+private const val TABLELAMP_ID = 76
+private const val CAMERA_ID = 0
+private const val BOOK_ID_2 = 86
+private const val WASHING_MACHINE_ID = 365
+
 fun main() {
     /**
      * Not supported action in Unity Simulator
@@ -57,11 +71,11 @@ fun main() {
      */
     val script0 =
         listOf(
-            "<char0> [WALK] <wine> (93)",
-            "<char0> [GRAB] <wine> (93)",
-            "<char0> [DRINK] <wine> (93)",
+            "<char0> [WALK] <wine> ($WINE_ID)",
+            "<char0> [GRAB] <wine> ($WINE_ID)",
+            "<char0> [DRINK] <wine> ($WINE_ID)",
 //        "<char0> [WALK] <washingmachine> (365)",
-//        "<char0> [PUTIN] <washingmachine> (365)  <wine> (93)",
+//        "<char0> [PUTIN] <washingmachine> (365)  <wine> ($WINE_ID)",
 //        "<char0> [CLOSE] <door> (128)",
 //        "<char0> [LOOKAT_LONG] <door> (128)",
 //        "<char0> [OPEN] <door> (128)",
@@ -75,12 +89,12 @@ fun main() {
 //        "<char0> [WIPE] <tv> (106)",
 //        "<char0> [FIND] <sofa> (139)",
 //        "<char0> [WALK] <sofa> (139)",
-//        "<char0> [SIT] <sofa> (139)",
-//        "<char0> [STANDUP] <sofa> (139)",
-            "<char0> [WALK] <tablelamp> (76)",
+//        "<char0> [SIT] <sofa> ($SOFA_ID)",
+//        "<char0> [STANDUP] <sofa> ($SOFA_ID)",
+            "<char0> [WALK] <tablelamp> ($TABLELAMP_ID)",
 //        "<char0> [PUTON] <clothesshirt> (36)"
-//        "<char0> [GRAB] <book> (86)",
-//        "<char0> [PLUGIN] <tablelamp> (76)"
+//        "<char0> [GRAB] <book> ($BOOK_ID_2)",
+//        "<char0> [PLUGIN] <tablelamp> ($TABLELAMP_ID)"
         )
     val main = MainTest()
     main.testReset()
@@ -97,30 +111,30 @@ fun main() {
 
     val script =
         listOf(
-            "<char0> [RUN] <book> (86)",
-            "<char0> [FIND] <book> (86)",
-            "<char0> [READ] <book> (86)",
-//        "<char0> [WALK] <sofa> (139)"
+            "<char0> [RUN] <book> ($BOOK_ID)",
+            "<char0> [FIND] <book> ($BOOK_ID)",
+            "<char0> [READ] <book> ($BOOK_ID)",
+            "<char0> [WALK] <sofa> ($SOFA_ID)",
         )
     val scriptObj = Script(script)
     val script2 =
         listOf(
-            "<char0> [RUN] <book> (86)",
-            "<char0> [FIND] <book> (86)",
-            "<char0> [READ] <book> (86)",
+            "<char0> [RUN] <book> ($BOOK_ID)",
+            "<char0> [FIND] <book> ($BOOK_ID)",
+            "<char0> [READ] <book> ($BOOK_ID)",
             "<char0> [FALLBACK]",
 //        "<char0> [LIFT] <book> (86)",
 //        "<char0> [WALK] <sofa> (139)",
 //        "<char0> [SIT] <sofa> (139)"
         )
-    main.testRendering(script2, 4)
+    main.testRendering(script2, SCENE_NUM)
 }
 
 /**
  * This class contains various test methods for the VirtualHomeClient.
  */
 class MainTest {
-    private val sceneNum = 3
+    private val sceneNum = TEST_SCENE_NUM
     private val client = VirtualHomeClient(host = "localhost")
 
     /**
@@ -128,7 +142,7 @@ class MainTest {
      */
     fun testReset() {
         println("Check : " + client.check().success)
-        for (index in 0..8) {
+        for (index in 0..RESET_MAX_LOOP) {
             println("Reset $index " + client.reset(index).success)
         }
         println("Test Reset() Succeeded")
@@ -138,7 +152,7 @@ class MainTest {
      * Tests the environment graph functionality of the client.
      */
     fun testEnvironmentGraph() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (initGraph.nodes.any { it.className == "sofa" }) {
@@ -158,7 +172,7 @@ class MainTest {
      * @throws VHException if the reset operation fails.
      */
     fun testCharacterCameras() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             if (client.addCharacterCamera().success) {
                 val cameras = client.characterCameras()
@@ -173,7 +187,7 @@ class MainTest {
      * Tests the expand scene functionality of the client.
      */
     fun testExpandScene() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             println(client.expandScene(initGraph).success)
@@ -185,7 +199,7 @@ class MainTest {
      * Tests the expand scene functionality of the client with a modified graph.
      */
     fun testExpandScene2() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             val graph = client.environmentGraph()
             val sofa = graph.nodes.last { it.className == "sofa" }
@@ -194,12 +208,12 @@ class MainTest {
                 Node(
                     className = "cat",
                     category = "Animals",
-                    id = 1000,
+                    id = NEW_CAT_ID,
                     properties = listOf(),
                     states = listOf(),
                 ),
             )
-            graph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
+            graph.edges.add(Edge(fromId = NEW_CAT_ID, toId = sofa.id!!, relationType = "ON"))
             println(client.expandScene(graph))
             val graph2 = client.environmentGraph()
             // expandSceneのあとオブジェクトのIDが変化する
@@ -215,7 +229,7 @@ class MainTest {
      * Tests the add character functionality of the client.
      */
     fun testAddCharacter() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             if (client.addCharacter().success) {
                 println("AddCharacter on Scene $it Succeeded")
@@ -229,7 +243,7 @@ class MainTest {
      * Tests the camera count functionality of the client.
      */
     fun testCameraCount() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             val cameraA = client.cameraCount()
             client.addCharacter()
@@ -245,7 +259,7 @@ class MainTest {
      * Tests the visible objects functionality of the client.
      */
     fun testVisibleObjects() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             client.addCharacter()
             val cameraN = client.cameraCount()
@@ -265,7 +279,7 @@ class MainTest {
      * Tests the rendering functionality of the client.
      */
     fun testRendering() {
-        for (it in 0..6) {
+        for (it in 0..MAX_LOOP) {
             if (!client.reset(it).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (client.addCharacter().success) {
@@ -278,7 +292,7 @@ class MainTest {
                     )
                 val config =
                     RenderParams(
-                        processingTimeLimit = 1,
+                        processingTimeLimit = TEST_PROCESSING_TIME_LIMIT,
                         findSolution = false,
                         skipAnimation = false,
                         recording = true,
@@ -290,7 +304,7 @@ class MainTest {
                 } else {
                     println("Rendering on Scene $it Failed")
                 }
-                val res0 = client.cameraImage(listOf(0))
+                val res0 = client.cameraImage(listOf(CAMERA_ID))
                 val image = Base64.getDecoder().decode(res0[0])
                 Files.write(Paths.get("bfo.png"), image)
                 println("  >> Size of Image is ${image.size} : Camera Image Succeeded")
@@ -312,7 +326,7 @@ class MainTest {
         scene: Int,
         config: RenderParams =
             RenderParams(
-                processingTimeLimit = 1,
+                processingTimeLimit = TEST_PROCESSING_TIME_LIMIT,
                 findSolution = true,
                 skipAnimation = false,
                 recording = true,
@@ -347,19 +361,19 @@ class MainTest {
             Node(
                 className = "cat",
                 category = "Animals",
-                id = 1000,
+                id = NEW_CAT_ID,
                 properties = listOf(),
                 states = listOf(),
             ),
         )
-        initGraph.edges.add(Edge(fromId = 1000, toId = sofa.id!!, relationType = "ON"))
+        initGraph.edges.add(Edge(fromId = NEW_CAT_ID, toId = sofa.id!!, relationType = "ON"))
         if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
         if (!client.addCharacter().success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
         val catId = graph.nodes.last { it.className == "cat" }
         val config =
             RenderParams(
-                processingTimeLimit = 1,
+                processingTimeLimit = TEST_PROCESSING_TIME_LIMIT,
                 findSolution = false,
                 skipAnimation = false,
                 recording = true,
