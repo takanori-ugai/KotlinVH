@@ -1,9 +1,10 @@
 package com.fujitsu.labs.virtualhome
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.serialization.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -142,7 +143,8 @@ class VirtualHomeClient(
         rotation: Position = Position(0, 0, 0),
         fieldView: Int = 40,
     ): VirtualHomeResponse {
-        val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView)))
+        val camDict = CamDict(position, rotation, fieldView)
+        val stringParams = listOf(format.encodeToString(camDict))
         val data = VirtualHomeRequest(action = "add_camera", stringParams = stringParams)
         return sendRequest(data)
     }
@@ -163,7 +165,12 @@ class VirtualHomeClient(
         fieldView: Int = 40,
     ): VirtualHomeResponse {
         val stringParams = listOf(format.encodeToString(CamDict(position, rotation, fieldView)))
-        val data = VirtualHomeRequest(action = "update_camera", intParams = listOf(cameraIndex), stringParams = stringParams)
+        val data =
+            VirtualHomeRequest(
+                action = "update_camera",
+                intParams = listOf(cameraIndex),
+                stringParams = stringParams,
+            )
         return sendRequest(data)
     }
 
@@ -337,7 +344,10 @@ class VirtualHomeClient(
         return Json.decodeFromString(responseBody)
     }
 
-    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse = sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse {
+        val json = format.encodeToString(data)
+        return sendRequest(json.toByteArray(Charsets.UTF_8))
+    }
 
     /**
      * Sends a request to the VirtualHome server.
@@ -366,7 +376,7 @@ class VirtualHomeClient(
             if (statusCode == HttpURLConnection.HTTP_OK) {
                 ret = readStream(connection.inputStream)
             }
-        } catch (exception: Exception) {
+        } catch (exception: IOException) {
             println("Error: $exception")
             return VirtualHomeResponse(0, false, "$exception", 0, null)
         } finally {

@@ -16,8 +16,6 @@ private const val SOFA_ID = 139
 private const val WINE_ID = 93
 private const val TABLELAMP_ID = 76
 private const val CAMERA_ID = 0
-private const val BOOK_ID_2 = 86
-private const val WASHING_MACHINE_ID = 365
 
 fun main() {
     /**
@@ -370,7 +368,7 @@ class MainTest {
         if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
         if (!client.addCharacter().success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
-        val catId = graph.nodes.last { it.className == "cat" }
+        graph.nodes.last { it.className == "cat" }
         val config =
             RenderParams(
                 processingTimeLimit = TEST_PROCESSING_TIME_LIMIT,
