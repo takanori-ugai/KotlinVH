@@ -228,6 +228,25 @@ class RequestTest {
     }
 
     @Test
+    fun `returns empty map when response success is true and message is null`() {
+        val res =
+            VirtualHomeResponse(
+                id = 1,
+                success = true,
+                message = null,
+                value = 1,
+                messageList = listOf("Test"),
+            )
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'observation')]"))
+                .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
+        )
+        val result = vh.visibleObjects(0)
+        assertEquals(emptyMap<String, String>(), result)
+    }
+
+    @Test
     fun updateCharacterCameraTest() {
         val value = 1
         val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
