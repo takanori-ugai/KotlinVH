@@ -139,11 +139,17 @@ class MainTest {
      * Tests the reset functionality of the client.
      */
     fun testReset() {
-        println("Check : " + client.check().success)
-        for (index in 0..RESET_MAX_LOOP) {
-            println("Reset $index " + client.reset(index).success)
+        val check = client.check()
+        if (check.success) {
+            println("Check : Success")
+            for (index in 0..RESET_MAX_LOOP) {
+                println("Reset $index " + client.reset(index).success)
+            }
+            println("Test Reset() Succeeded")
+        } else {
+            println("Check fail")
+            throw VHException("Check Error: ${check.message}")
         }
-        println("Test Reset() Succeeded")
     }
 
     /**
@@ -151,7 +157,9 @@ class MainTest {
      */
     fun testEnvironmentGraph() {
         for (it in 0..MAX_LOOP) {
-            if (!client.reset(it).success) throw VHException("Reset Error")
+            val reset = client.reset(it)
+            println(reset)
+            if (!reset.success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             if (initGraph.nodes.any { it.className == "sofa" }) {
                 println("Scene $it succeeded")

@@ -3,6 +3,7 @@ package com.fujitsu.labs.virtualhome
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.okJson
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.serverError
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
@@ -11,9 +12,12 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.Base64
 
 /**
@@ -286,5 +290,55 @@ class RequestTest {
                 ).willReturn(okJson(format.encodeToString(res))),
         )
         assertTrue(vh.cameraData(cameraIndexes).success)
+    }
+
+    @Test
+    fun `renderScript sends correct request and returns response`() {
+        val script = listOf("action1", "action2")
+        val config = RenderParams()
+        val expectedResponse = VirtualHomeResponse(0, true, "ok", 0, listOf("result"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
+                .willReturn(okJson(format.encodeToString(expectedResponse))),
+        )
+        val response = vh.renderScript(script, config)
+        assertEquals(expectedResponse, response)
+    }
+
+    @Test
+    fun `renderScript works with default config`() {
+        val script = listOf("foo")
+        val expectedResponse = VirtualHomeResponse(1, true, "default", 0, listOf("bar"))
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
+                .willReturn(okJson(format.encodeToString(expectedResponse))),
+        )
+        val response = vh.renderScript(script)
+        assertEquals(expectedResponse, response)
+    }
+
+    @Test
+    fun `renderScript handles empty script`() {
+        val script = emptyList<String>()
+        val expectedResponse = VirtualHomeResponse(2, true, "empty", 0, emptyList())
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
+                .willReturn(okJson(format.encodeToString(expectedResponse))),
+        )
+        val response = vh.renderScript(script)
+        assertEquals(expectedResponse, response)
+    }
+
+    @Test
+    fun `renderScript throws or returns error on server error`() {
+        stubFor(
+            post("/")
+                .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
+                .willReturn(serverError()),
+        )
+        assertFalse(vh.renderScript(listOf("fail")).success)
     }
 }
