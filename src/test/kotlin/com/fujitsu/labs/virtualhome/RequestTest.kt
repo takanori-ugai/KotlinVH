@@ -202,7 +202,7 @@ class RequestTest {
         stubFor(
             post("/")
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'observation')]"))
-                .willReturn(okJson(format.encodeToString(res))),
+                .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
         )
         val result = vh.visibleObjects(0)
         assertEquals(emptyMap<String, String>(), result)
@@ -221,7 +221,7 @@ class RequestTest {
         stubFor(
             post("/")
                 .withRequestBody(matchingJsonPath("$[?(@.action == 'observation')]"))
-                .willReturn(okJson(format.encodeToString(res))),
+                .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
         )
         val result = vh.visibleObjects(0)
         assertEquals(emptyMap<String, String>(), result)
