@@ -3,10 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
-    java
-    id("com.gradleup.shadow") version "9.3.0"
+    kotlin("multiplatform") version "2.1.0"
+    kotlin("plugin.serialization") version "2.1.0"
+    id("com.gradleup.shadow") version "8.3.0"
     jacoco
     id("org.jetbrains.dokka") version "2.1.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
@@ -23,47 +22,77 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.9.0")
-    implementation("io.ktor:ktor-client-core:3.0.1")
-    implementation("io.ktor:ktor-client-cio:3.0.1")
-    implementation("io.ktor:ktor-client-content-negotiation:3.0.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.1")
-    implementation("io.github.oshai:kotlin-logging-jvm:7.0.13")
-//    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.+")
-    implementation("ch.qos.logback:logback-classic:1.5.22")
-    testImplementation("org.wiremock:wiremock:3.13.2")
-    testImplementation(platform("org.junit:junit-bom:6.0.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+kotlin {
+    jvm {
+        withJava()
+        compilations.all {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_17)
+                }
+            }
+        }
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
+    }
+    js(IR) {
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "10s"
+                }
+            }
+        }
+        binaries.executable()
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+                implementation("io.ktor:ktor-client-core:3.0.3")
+                implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
+                implementation("io.github.oshai:kotlin-logging:7.0.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:3.0.3")
+                implementation("ch.qos.logback:logback-classic:1.5.16")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.wiremock:wiremock:3.12.0")
+                implementation(platform("org.junit:junit-bom:5.12.0"))
+                implementation("org.junit.jupiter:junit-jupiter")
+                runtimeOnly("org.junit.platform:junit-platform-launcher")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-js:3.0.3")
+                // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
+            }
+        }
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
 }
 
 tasks {
-    compileKotlin {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
-    }
-
-    compileTestKotlin {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
-    }
-
-    compileJava {
-        options.encoding = "UTF-8"
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-
-    compileTestJava {
-        options.encoding = "UTF-8"
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-
-    test {
-        useJUnitPlatform()
-        finalizedBy(jacocoTestReport) // report is always generated after tests run
-    }
-
     withType<Detekt>().configureEach {
         // Target version of the generated JVM bytecode. It is used for type resolution.
         jvmTarget = "17"
@@ -80,24 +109,24 @@ tasks {
         }
     }
 
-    jacocoTestReport {
-        reports {
-            xml.required = true
-            html.required = false
-        }
-        dependsOn(test) // tests are required to run before generating the report
-    }
+    // Shadow jar task usually only works well with JVM plugin or with application plugin.
+    // In multiplatform, it might be tricky.
+    // However, since we have jvm target and main class is in there, we can try to configure it.
+    // But since `shadowJar` task is not registered automatically for KMP probably.
 
-    shadowJar {
-        manifest {
-            attributes["Main-Class"] = "com.fujitsu.labs.virtualhome.MainKt"
-        }
-        minimize()
+    // Jacoco config
+}
+
+// Fix jacoco
+tasks.withType<JacocoReport> {
+    reports {
+        xml.required.set(true)
+        html.required.set(false)
     }
 }
 
 ktlint {
-    version.set("1.8.0")
+    version.set("1.5.0")
     verbose.set(true)
     outputToConsole.set(true)
     coloredOutput.set(true)
@@ -108,6 +137,7 @@ ktlint {
     }
     filter {
         exclude("**/style-violations.kt")
+        exclude("**/ResourceData.kt")
     }
 }
 
@@ -124,8 +154,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.13"
-//    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
+    toolVersion = "0.8.12"
 }
 
 spotless {
@@ -135,15 +164,7 @@ spotless {
         removeUnusedImports()
 
         // Choose one of these formatters.
-        googleJavaFormat("1.28.0")
+        googleJavaFormat("1.19.2")
         formatAnnotations()
-    }
-}
-
-kotlin {
-    sourceSets.all {
-        languageSettings {
-            languageVersion = "2.0"
-        }
     }
 }
