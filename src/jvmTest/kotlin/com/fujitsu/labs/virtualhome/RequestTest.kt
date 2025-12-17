@@ -1,7 +1,6 @@
 package com.fujitsu.labs.virtualhome
 
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
