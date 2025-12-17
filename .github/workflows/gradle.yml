@@ -30,11 +30,13 @@ jobs:
           java-version: ${{ matrix.java_version }}
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4.4.3
+        uses: gradle/actions/setup-gradle@v5.0.0
+      - name: Update with Gradle
+        run: ./gradlew kotlinStoreYarnLock
       - name: Build with Gradle
         run: ./gradlew build
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.5.0
+        uses: codecov/codecov-action@v5.5.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: takanori-ugai/KotlinVH
