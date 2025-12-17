@@ -1,20 +1,26 @@
 package com.fujitsu.labs.virtualhome
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Base64
 
 private val logger = KotlinLogging.logger {}
 
-private const val CONNECT_TIMEOUT = 30000
-private const val READ_TIMEOUT = 60000
+private const val CONNECT_TIMEOUT = 30000L
+private const val READ_TIMEOUT = 60000L
 
 /**
  * A client for interacting with the VirtualHome server.
@@ -36,7 +42,18 @@ class VirtualHomeClient(
             explicitNulls = false
         }
 
-    private val url = URL("http://$host:$port")
+    private val url = "http://$host:$port"
+
+    private val client =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(format)
+            }
+            install(HttpTimeout) {
+                connectTimeoutMillis = CONNECT_TIMEOUT
+                requestTimeoutMillis = READ_TIMEOUT
+            }
+        }
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
     /*
@@ -337,51 +354,20 @@ class VirtualHomeClient(
             }
         }
 
-    private fun readStream(inputStream: InputStream): VirtualHomeResponse {
-        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-        val responseBody = bufferedReader.use { it.readText() }
-        bufferedReader.close()
-        return Json.decodeFromString(responseBody)
-    }
-
-    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse {
-        val json = format.encodeToString(data)
-        return sendRequest(json.toByteArray(Charsets.UTF_8))
-    }
-
-    /**
-     * Sends a request to the VirtualHome server.
-     *
-     * @param req The request to send as a byte array.
-     * @return A VirtualHomeResponse or null if the request fails.
-     */
-    fun sendRequest(req: ByteArray): VirtualHomeResponse {
-        // HttpURLConnectionの作成
-        var ret = VirtualHomeResponse(0, false, "", 0, null)
-        val connection = url.openConnection() as HttpURLConnection
-        try {
-            connection.connectTimeout = CONNECT_TIMEOUT
-            connection.readTimeout = READ_TIMEOUT
-            connection.doOutput = true
-            connection.setChunkedStreamingMode(0)
-            connection.setRequestProperty("Content-type", "application/json; charset=utf-8")
-            // Bodyの書き込み
-            val outputStream = connection.outputStream
-            outputStream.write(req)
-            outputStream.flush()
-            outputStream.close()
-
-            // Responseの読み出し
-            val statusCode = connection.responseCode
-            if (statusCode == HttpURLConnection.HTTP_OK) {
-                ret = readStream(connection.inputStream)
+    fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse =
+        runBlocking {
+            try {
+                return@runBlocking client
+                    .post(url) {
+                        contentType(ContentType.Application.Json)
+                        setBody(data)
+                    }.body()
+            } catch (exception: IOException) {
+                println("Error: $exception")
+                return@runBlocking VirtualHomeResponse(0, false, "$exception", 0, null)
+            } catch (exception: Exception) {
+                println("Error: $exception")
+                return@runBlocking VirtualHomeResponse(0, false, "$exception", 0, null)
             }
-        } catch (exception: IOException) {
-            println("Error: $exception")
-            return VirtualHomeResponse(0, false, "$exception", 0, null)
-        } finally {
-            connection.disconnect()
         }
-        return ret
-    }
 }

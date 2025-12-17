@@ -53,8 +53,7 @@ fun main() {
 
     val sq = VirtualHomeClient(host = "localhost")
     val data = VirtualHomeRequest(currentTimeMillis().toInt(), "idle")
-    val format = Json { encodeDefaults = true }
-    val res = sq.sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
+    val res = sq.sendRequest(data)
     logger.info { res?.success }
     executeResetAndEnvironmentGraphRequests(sq)
 
