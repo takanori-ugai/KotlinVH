@@ -1,17 +1,15 @@
 package com.fujitsu.labs.virtualhome
 
-import io.mockk.coEvery
-import io.mockk.spyk
+import io.ktor.util.encodeBase64
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import java.util.Base64
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * This class contains tests for the VirtualHomeClient's request methods.
@@ -28,11 +26,18 @@ class RequestTest {
             explicitNulls = false
         }
 
-    private lateinit var vh: VirtualHomeClient
+    class SpyVirtualHomeClient : VirtualHomeClient() {
+        var handler: ((VirtualHomeRequest) -> VirtualHomeResponse)? = null
 
-    @BeforeEach
+        override suspend fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse =
+            handler?.invoke(data) ?: VirtualHomeResponse(0, false, "Not mocked", 0, null)
+    }
+
+    private lateinit var vh: SpyVirtualHomeClient
+
+    @BeforeTest
     fun setup() {
-        vh = spyk(VirtualHomeClient())
+        vh = SpyVirtualHomeClient()
     }
 
     /**
@@ -43,9 +48,9 @@ class RequestTest {
     fun checkTest() =
         runTest {
             val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "idle" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "idle") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertTrue(vh.check().success)
         }
@@ -58,14 +63,13 @@ class RequestTest {
         runTest {
             val sceneIndex = 0
             val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
-            coEvery {
-                vh.sendRequest(
-                    match {
-                        it.action == "reset" &&
-                            it.intParams == listOf(sceneIndex)
-                    },
-                )
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "reset" && req.intParams == listOf(sceneIndex)) {
+                    res
+                } else {
+                    VirtualHomeResponse(0, false, "Wrong request", 0, null)
+                }
+            }
 
             assertTrue(vh.reset(sceneIndex).success)
             assertTrue(vh.reset().success)
@@ -79,9 +83,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "camera_count" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "camera_count") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(value, vh.cameraCount())
         }
@@ -91,9 +95,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "add_character_camera" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "add_character_camera") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(true, vh.addCharacterCamera().success)
 
@@ -108,9 +112,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "add_camera" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "add_camera") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(true, vh.addCamera().success)
 
@@ -124,14 +128,13 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "[1,2,3]", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(
-                    match {
-                        it.action == "get_visible_objects" &&
-                            it.intParams == listOf(1)
-                    },
-                )
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "get_visible_objects" && req.intParams == listOf(1)) {
+                    res
+                } else {
+                    VirtualHomeResponse(0, false, "Wrong request", 0, null)
+                }
+            }
 
             assertEquals(listOf(1, 2, 3), vh.getVisibleObjects(1))
         }
@@ -141,9 +144,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, """["1","2","3"]""", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "character_cameras" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "character_cameras") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(listOf("1", "2", "3"), vh.characterCameras())
         }
@@ -153,9 +156,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, null, value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "get_visible_objects" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "get_visible_objects") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(emptyList<Int>(), vh.getVisibleObjects(1))
         }
@@ -166,13 +169,8 @@ class RequestTest {
     @Test
     fun errorTest() =
         runTest {
-            // Since we are mocking sendRequest, we can't test "wrong port" behavior like before.
-            // But if we want to simulate failure in check(), we return a failed response.
-            // The original test created a client with wrong port, which would cause connection error.
-            // sendRequest catches exception and returns false success.
-
             val failureRes = VirtualHomeResponse(0, false, "Error", 0, null)
-            coEvery { vh.sendRequest(any()) } returns failureRes
+            vh.handler = { failureRes }
 
             assertFalse(vh.check().success)
         }
@@ -187,14 +185,13 @@ class RequestTest {
             val map = mapOf("0" to "1")
             val res = VirtualHomeResponse(1, true, format.encodeToString(map), value, listOf("Test"))
 
-            coEvery {
-                vh.sendRequest(
-                    match {
-                        it.action == "observation" &&
-                            it.intParams == listOf(value)
-                    },
-                )
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "observation" && req.intParams == listOf(value)) {
+                    res
+                } else {
+                    VirtualHomeResponse(0, false, "Wrong request", 0, null)
+                }
+            }
 
             assertEquals(map, vh.visibleObjects(value))
         }
@@ -210,7 +207,9 @@ class RequestTest {
                     value = 1,
                     messageList = listOf("Test"),
                 )
-            coEvery { vh.sendRequest(match { it.action == "observation" }) } returns res
+            vh.handler = { req ->
+                if (req.action == "observation") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             val result = vh.visibleObjects(0)
             assertEquals(emptyMap<String, String>(), result)
@@ -227,7 +226,9 @@ class RequestTest {
                     value = 1,
                     messageList = listOf("Test"),
                 )
-            coEvery { vh.sendRequest(match { it.action == "observation" }) } returns res
+            vh.handler = { req ->
+                if (req.action == "observation") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             val result = vh.visibleObjects(0)
             assertEquals(emptyMap<String, String>(), result)
@@ -244,7 +245,9 @@ class RequestTest {
                     value = 1,
                     messageList = listOf("Test"),
                 )
-            coEvery { vh.sendRequest(match { it.action == "observation" }) } returns res
+            vh.handler = { req ->
+                if (req.action == "observation") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             val result = vh.visibleObjects(0)
             assertEquals(emptyMap<String, String>(), result)
@@ -255,9 +258,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "update_character_camera" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "update_character_camera") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(true, vh.updateCharacterCamera().success)
 
@@ -272,9 +275,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "update_camera" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "update_camera") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(true, vh.updateCamera(1).success)
 
@@ -288,9 +291,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "add_character" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "add_character") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(true, vh.addCharacter().success)
             assertEquals(true, vh.addCharacter("Chars/Female1").success)
@@ -305,9 +308,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "expand_scene" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "expand_scene") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(true, vh.expandScene(Graph()).success)
             assertEquals(true, vh.expandScene(Graph(), ExpandSceneConfig()).success)
@@ -318,9 +321,9 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "environment_graph" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "environment_graph") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             assertEquals(Graph(), vh.environmentGraph())
         }
@@ -329,13 +332,16 @@ class RequestTest {
     fun cameraImageTest() =
         runTest {
             val value = 1
-            val encoder = Base64.getEncoder()
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(match { it.action == "camera_image" })
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "camera_image") res else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
-            assertEquals("Test", encoder.encodeToString(vh.cameraImage(listOf(1))[0]))
+            // vh.cameraImage returns List<ByteArray> by calling decodeBase64Bytes on each item in messageList.
+            // messageList is listOf("Test"). "Test" decoded is some bytes.
+            // We verify by encoding it back to string using Base64.
+            val bytes = vh.cameraImage(listOf(1))[0]
+            assertEquals("Test", bytes.encodeBase64())
         }
 
     @Test
@@ -344,14 +350,13 @@ class RequestTest {
             val value = 1
             val cameraIndexes = listOf(1, 2)
             val res = VirtualHomeResponse(1, true, "Test", value, listOf("Test"))
-            coEvery {
-                vh.sendRequest(
-                    match {
-                        it.action == "camera_data" &&
-                            it.intParams == cameraIndexes
-                    },
-                )
-            } returns res
+            vh.handler = { req ->
+                if (req.action == "camera_data" && req.intParams == cameraIndexes) {
+                    res
+                } else {
+                    VirtualHomeResponse(0, false, "Wrong request", 0, null)
+                }
+            }
 
             assertTrue(vh.cameraData(cameraIndexes).success)
         }
@@ -362,9 +367,9 @@ class RequestTest {
             val script = listOf("action1", "action2")
             val config = RenderParams()
             val expectedResponse = VirtualHomeResponse(0, true, "ok", 0, listOf("result"))
-            coEvery {
-                vh.sendRequest(match { it.action == "render_script" })
-            } returns expectedResponse
+            vh.handler = { req ->
+                if (req.action == "render_script") expectedResponse else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             val response = vh.renderScript(script, config)
             assertEquals(expectedResponse, response)
@@ -375,9 +380,9 @@ class RequestTest {
         runTest {
             val script = listOf("foo")
             val expectedResponse = VirtualHomeResponse(1, true, "default", 0, listOf("bar"))
-            coEvery {
-                vh.sendRequest(match { it.action == "render_script" })
-            } returns expectedResponse
+            vh.handler = { req ->
+                if (req.action == "render_script") expectedResponse else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             val response = vh.renderScript(script)
             assertEquals(expectedResponse, response)
@@ -388,9 +393,9 @@ class RequestTest {
         runTest {
             val script = emptyList<String>()
             val expectedResponse = VirtualHomeResponse(2, true, "empty", 0, emptyList())
-            coEvery {
-                vh.sendRequest(match { it.action == "render_script" })
-            } returns expectedResponse
+            vh.handler = { req ->
+                if (req.action == "render_script") expectedResponse else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+            }
 
             val response = vh.renderScript(script)
             assertEquals(expectedResponse, response)
@@ -399,13 +404,8 @@ class RequestTest {
     @Test
     fun `renderScript throws or returns error on server error`() =
         runTest {
-            // Mocking a server error by returning a failure response from sendRequest
-            // (simulating that sendRequest caught an exception or received 500 and returned failure object)
-            // But wait, the original test mocked serverError(), which causes HttpClient to throw or return 500.
-            // sendRequest catches exception and returns success=false.
-
             val failureRes = VirtualHomeResponse(0, false, "Server Error", 0, null)
-            coEvery { vh.sendRequest(match { it.action == "render_script" }) } returns failureRes
+            vh.handler = { failureRes }
 
             assertFalse(vh.renderScript(listOf("fail")).success)
         }

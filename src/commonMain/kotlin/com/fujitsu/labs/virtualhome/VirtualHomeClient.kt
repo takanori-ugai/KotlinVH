@@ -25,7 +25,7 @@ private const val READ_TIMEOUT = 60000L
  * @property host The host of the VirtualHome server. (Default value is "localhost")
  * @property port The port of the VirtualHome server. (Default value is 8080)
  */
-class VirtualHomeClient(
+open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
 ) {
@@ -351,7 +351,7 @@ class VirtualHomeClient(
             }
         }
 
-    suspend fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse {
+    open suspend fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse {
         try {
             return client
                 .post(url) {
