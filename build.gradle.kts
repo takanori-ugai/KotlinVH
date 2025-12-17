@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("multiplatform") version "2.1.0"
-    kotlin("plugin.serialization") version "2.1.0"
+    kotlin("multiplatform") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
     id("com.gradleup.shadow") version "8.3.0"
     jacoco
     id("org.jetbrains.dokka") version "2.1.0"
@@ -24,7 +24,6 @@ repositories {
 
 kotlin {
     jvm {
-        withJava()
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
@@ -73,9 +72,9 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation("org.wiremock:wiremock:3.12.0")
-                implementation(platform("org.junit:junit-bom:5.12.0"))
-                implementation("org.junit.jupiter:junit-jupiter")
-                runtimeOnly("org.junit.platform:junit-platform-launcher")
+//                implementation("org.junit:junit-bom:5.12.0")
+                implementation("org.junit.jupiter:junit-jupiter:6.0.1")
+                runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
             }
         }
         val jsMain by getting {
@@ -115,16 +114,15 @@ tasks {
     // But since `shadowJar` task is not registered automatically for KMP probably.
 
     // Jacoco config
-}
-
-// Fix jacoco
-tasks.withType<JacocoReport> {
-    reports {
-        xml.required.set(true)
-        html.required.set(false)
+    withType<JacocoReport> {
+        reports {
+            xml.required.set(true)
+            html.required.set(false)
+        }
     }
 }
 
+// Fix jacoco
 ktlint {
     version.set("1.5.0")
     verbose.set(true)
