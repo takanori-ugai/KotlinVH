@@ -71,7 +71,7 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("org.wiremock:wiremock:3.12.0")
+                implementation("io.mockk:mockk:1.13.10")
 //                implementation("org.junit:junit-bom:5.12.0")
                 implementation("org.junit.jupiter:junit-jupiter:6.0.1")
                 runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")

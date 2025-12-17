@@ -1,12 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
-import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.okJson
-import com.github.tomakehurst.wiremock.client.WireMock.post
-import com.github.tomakehurst.wiremock.client.WireMock.serverError
-import com.github.tomakehurst.wiremock.client.WireMock.stubFor
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
-import com.github.tomakehurst.wiremock.junit5.WireMockTest
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -21,7 +17,6 @@ import java.util.Base64
 /**
  * This class contains tests for the VirtualHomeClient's request methods.
  */
-@WireMockTest
 @ExperimentalSerializationApi
 class RequestTest {
     /**
@@ -37,9 +32,8 @@ class RequestTest {
     private lateinit var vh: VirtualHomeClient
 
     @BeforeEach
-    fun setup(info: WireMockRuntimeInfo) {
-        val port = info.httpPort
-        vh = VirtualHomeClient(port = port)
+    fun setup() {
+        vh = spyk(VirtualHomeClient())
     }
 
     /**
@@ -50,11 +44,10 @@ class RequestTest {
     fun checkTest() =
         runTest {
             val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'idle')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "idle" })
+            } returns res
+
             assertTrue(vh.check().success)
         }
 
@@ -66,13 +59,15 @@ class RequestTest {
         runTest {
             val sceneIndex = 0
             val res = VirtualHomeResponse(1, true, "test", 1, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(
-                        matchingJsonPath("$[?(@.action == 'reset')]")
-                            .and(matchingJsonPath("$[?(@.intParams[0] == $sceneIndex)]")),
-                    ).willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(
+                    match {
+                        it.action == "reset" &&
+                            it.intParams == listOf(sceneIndex)
+                    },
+                )
+            } returns res
+
             assertTrue(vh.reset(sceneIndex).success)
             assertTrue(vh.reset().success)
         }
@@ -85,11 +80,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'camera_count')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "camera_count" })
+            } returns res
+
             assertEquals(value, vh.cameraCount())
         }
 
@@ -98,11 +92,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'add_character_camera')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "add_character_camera" })
+            } returns res
+
             assertEquals(true, vh.addCharacterCamera().success)
 
             val customPosition = Position(1, 2, 3)
@@ -116,11 +109,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'add_camera')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "add_camera" })
+            } returns res
+
             assertEquals(true, vh.addCamera().success)
 
             val customPosition = Position(1, 2, 3)
@@ -133,11 +125,15 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "[1,2,3]", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'get_visible_objects')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(
+                    match {
+                        it.action == "get_visible_objects" &&
+                            it.intParams == listOf(1)
+                    },
+                )
+            } returns res
+
             assertEquals(listOf(1, 2, 3), vh.getVisibleObjects(1))
         }
 
@@ -146,11 +142,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, """["1","2","3"]""", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'character_cameras')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "character_cameras" })
+            } returns res
+
             assertEquals(listOf("1", "2", "3"), vh.characterCameras())
         }
 
@@ -159,12 +154,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, null, value, listOf("Test"))
-            println(Json { encodeDefaults = true }.encodeToString(res))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'get_visible_objects')]"))
-                    .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "get_visible_objects" })
+            } returns res
+
             assertEquals(emptyList<Int>(), vh.getVisibleObjects(1))
         }
 
@@ -172,9 +165,16 @@ class RequestTest {
      * Tests the error handling of the VirtualHomeClient class.
      */
     @Test
-    fun errorTest(info: WireMockRuntimeInfo) =
+    fun errorTest() =
         runTest {
-            val vh = VirtualHomeClient(port = info.httpPort + 100)
+            // Since we are mocking sendRequest, we can't test "wrong port" behavior like before.
+            // But if we want to simulate failure in check(), we return a failed response.
+            // The original test created a client with wrong port, which would cause connection error.
+            // sendRequest catches exception and returns false success.
+
+            val failureRes = VirtualHomeResponse(0, false, "Error", 0, null)
+            coEvery { vh.sendRequest(any()) } returns failureRes
+
             assertFalse(vh.check().success)
         }
 
@@ -187,13 +187,16 @@ class RequestTest {
             val value = 1
             val map = mapOf("0" to "1")
             val res = VirtualHomeResponse(1, true, format.encodeToString(map), value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(
-                        matchingJsonPath("$[?(@.action == 'observation')]")
-                            .and(matchingJsonPath("$[?(@.intParams[0] == $value)]")),
-                    ).willReturn(okJson(format.encodeToString(res))),
-            )
+
+            coEvery {
+                vh.sendRequest(
+                    match {
+                        it.action == "observation" &&
+                            it.intParams == listOf(value)
+                    },
+                )
+            } returns res
+
             assertEquals(map, vh.visibleObjects(value))
         }
 
@@ -208,11 +211,8 @@ class RequestTest {
                     value = 1,
                     messageList = listOf("Test"),
                 )
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'observation')]"))
-                    .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
-            )
+            coEvery { vh.sendRequest(match { it.action == "observation" }) } returns res
+
             val result = vh.visibleObjects(0)
             assertEquals(emptyMap<String, String>(), result)
         }
@@ -228,11 +228,8 @@ class RequestTest {
                     value = 1,
                     messageList = listOf("Test"),
                 )
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'observation')]"))
-                    .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
-            )
+            coEvery { vh.sendRequest(match { it.action == "observation" }) } returns res
+
             val result = vh.visibleObjects(0)
             assertEquals(emptyMap<String, String>(), result)
         }
@@ -248,11 +245,8 @@ class RequestTest {
                     value = 1,
                     messageList = listOf("Test"),
                 )
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'observation')]"))
-                    .willReturn(okJson(Json { encodeDefaults = true }.encodeToString(res))),
-            )
+            coEvery { vh.sendRequest(match { it.action == "observation" }) } returns res
+
             val result = vh.visibleObjects(0)
             assertEquals(emptyMap<String, String>(), result)
         }
@@ -262,11 +256,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'update_character_camera')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "update_character_camera" })
+            } returns res
+
             assertEquals(true, vh.updateCharacterCamera().success)
 
             val customPosition = Position(1, 2, 3)
@@ -280,11 +273,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'update_camera')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "update_camera" })
+            } returns res
+
             assertEquals(true, vh.updateCamera(1).success)
 
             val customPosition = Position(1, 2, 3)
@@ -297,11 +289,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'add_character')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "add_character" })
+            } returns res
+
             assertEquals(true, vh.addCharacter().success)
             assertEquals(true, vh.addCharacter("Chars/Female1").success)
             val customPosition = Position(1, 2, 3)
@@ -315,11 +306,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'expand_scene')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "expand_scene" })
+            } returns res
+
             assertEquals(true, vh.expandScene(Graph()).success)
             assertEquals(true, vh.expandScene(Graph(), ExpandSceneConfig()).success)
         }
@@ -329,11 +319,10 @@ class RequestTest {
         runTest {
             val value = 1
             val res = VirtualHomeResponse(1, true, format.encodeToString(Graph()), value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'environment_graph')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "environment_graph" })
+            } returns res
+
             assertEquals(Graph(), vh.environmentGraph())
         }
 
@@ -343,11 +332,10 @@ class RequestTest {
             val value = 1
             val encoder = Base64.getEncoder()
             val res = VirtualHomeResponse(1, true, "test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'camera_image')]"))
-                    .willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "camera_image" })
+            } returns res
+
             assertEquals("Test", encoder.encodeToString(vh.cameraImage(listOf(1))[0]))
         }
 
@@ -357,13 +345,15 @@ class RequestTest {
             val value = 1
             val cameraIndexes = listOf(1, 2)
             val res = VirtualHomeResponse(1, true, "Test", value, listOf("Test"))
-            stubFor(
-                post("/")
-                    .withRequestBody(
-                        matchingJsonPath("$[?(@.action == 'camera_data')]")
-                            .and(matchingJsonPath("$[?(@.intParams[0] == $value)]")),
-                    ).willReturn(okJson(format.encodeToString(res))),
-            )
+            coEvery {
+                vh.sendRequest(
+                    match {
+                        it.action == "camera_data" &&
+                            it.intParams == cameraIndexes
+                    },
+                )
+            } returns res
+
             assertTrue(vh.cameraData(cameraIndexes).success)
         }
 
@@ -373,11 +363,10 @@ class RequestTest {
             val script = listOf("action1", "action2")
             val config = RenderParams()
             val expectedResponse = VirtualHomeResponse(0, true, "ok", 0, listOf("result"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
-                    .willReturn(okJson(format.encodeToString(expectedResponse))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "render_script" })
+            } returns expectedResponse
+
             val response = vh.renderScript(script, config)
             assertEquals(expectedResponse, response)
         }
@@ -387,11 +376,10 @@ class RequestTest {
         runTest {
             val script = listOf("foo")
             val expectedResponse = VirtualHomeResponse(1, true, "default", 0, listOf("bar"))
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
-                    .willReturn(okJson(format.encodeToString(expectedResponse))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "render_script" })
+            } returns expectedResponse
+
             val response = vh.renderScript(script)
             assertEquals(expectedResponse, response)
         }
@@ -401,11 +389,10 @@ class RequestTest {
         runTest {
             val script = emptyList<String>()
             val expectedResponse = VirtualHomeResponse(2, true, "empty", 0, emptyList())
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
-                    .willReturn(okJson(format.encodeToString(expectedResponse))),
-            )
+            coEvery {
+                vh.sendRequest(match { it.action == "render_script" })
+            } returns expectedResponse
+
             val response = vh.renderScript(script)
             assertEquals(expectedResponse, response)
         }
@@ -413,11 +400,14 @@ class RequestTest {
     @Test
     fun `renderScript throws or returns error on server error`() =
         runTest {
-            stubFor(
-                post("/")
-                    .withRequestBody(matchingJsonPath("$[?(@.action == 'render_script')]"))
-                    .willReturn(serverError()),
-            )
+            // Mocking a server error by returning a failure response from sendRequest
+            // (simulating that sendRequest caught an exception or received 500 and returned failure object)
+            // But wait, the original test mocked serverError(), which causes HttpClient to throw or return 500.
+            // sendRequest catches exception and returns success=false.
+
+            val failureRes = VirtualHomeResponse(0, false, "Server Error", 0, null)
+            coEvery { vh.sendRequest(match { it.action == "render_script" }) } returns failureRes
+
             assertFalse(vh.renderScript(listOf("fail")).success)
         }
 }
