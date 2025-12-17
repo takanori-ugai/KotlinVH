@@ -50,9 +50,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-                implementation("io.ktor:ktor-client-core:3.0.3")
-                implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
+                implementation("io.ktor:ktor-client-core:3.3.3")
+                implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
                 implementation("io.github.oshai:kotlin-logging:7.0.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
             }
@@ -65,7 +65,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.0.3")
+                implementation("io.ktor:ktor-client-cio:3.3.3")
                 implementation("ch.qos.logback:logback-classic:1.5.16")
             }
         }
@@ -79,7 +79,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:3.0.3")
+                implementation("io.ktor:ktor-client-js:3.3.3")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
             }
         }
