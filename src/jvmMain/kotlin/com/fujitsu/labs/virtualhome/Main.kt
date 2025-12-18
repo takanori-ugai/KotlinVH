@@ -2,9 +2,9 @@ package com.fujitsu.labs.virtualhome
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.random.Random
 
 private val logger = KotlinLogging.logger {}
 
@@ -53,10 +53,7 @@ fun main() {
     runBlocking {
         val data =
             VirtualHomeRequest(
-                Clock.System
-                    .now()
-                    .toEpochMilliseconds()
-                    .toInt(),
+                Random.nextInt(),
                 "idle",
             )
         val res = sq.sendRequest(data)

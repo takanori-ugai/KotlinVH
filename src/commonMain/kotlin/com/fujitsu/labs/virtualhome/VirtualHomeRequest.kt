@@ -1,8 +1,7 @@
 package com.fujitsu.labs.virtualhome
 
-import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
-import kotlin.math.abs
+import kotlin.random.Random
 
 /**
  * Represents a request to the VirtualHome server.
@@ -14,13 +13,7 @@ import kotlin.math.abs
  */
 @Serializable
 data class VirtualHomeRequest(
-    val id: Int =
-        abs(
-            Clock.System
-                .now()
-                .toEpochMilliseconds()
-                .toInt(),
-        ),
+    val id: Int = Random.nextInt(),
     val action: String,
     val intParams: List<Int>? = null,
     val stringParams: List<String>? = null,
