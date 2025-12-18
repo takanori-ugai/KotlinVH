@@ -160,7 +160,7 @@ class Main {
         await this.client.addCharacter();
         let graph = await this.client.environmentGraph();
         let regex = new RegExp(name);
-        let nodeList = toJsArray(graph.nodes);
+        let nodeList = toJsArray(graph.nodes) as InstanceType<typeof Node>[];
         return nodeList.filter(it => it.className && regex.test(it.className));
     }
 
@@ -168,7 +168,7 @@ class Main {
         await this.client.reset(this.sceneNum);
         await this.client.addCharacter();
         let graph = await this.client.environmentGraph();
-        let nodeList = toJsArray(graph.nodes);
+        let nodeList = toJsArray(graph.nodes) as InstanceType<typeof Node>[];
         return nodeList.filter(it => it.properties && toJsArray(it.properties).includes(property));
     }
 
@@ -176,7 +176,7 @@ class Main {
         await this.client.reset(this.sceneNum);
         await this.client.addCharacter();
         let graph = await this.client.environmentGraph();
-        let nodeList = toJsArray(graph.nodes);
+        let nodeList = toJsArray(graph.nodes) as InstanceType<typeof Node>[];
         return nodeList.filter(it => it.id === id);
     }
 }
@@ -206,14 +206,14 @@ async function addCatToScene(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClie
     let node = new Node(CAT_ID, "Animals", "cat", null, null, null, fromJsArray([]), fromJsArray([]));
     addToList(graph.nodes, node);
 
-    let nodeList = toJsArray(graph.nodes);
+    let nodeList = toJsArray(graph.nodes) as InstanceType<typeof Node>[];
     console.log("ADDRESSBOOK: " + nodeList.filter(it => it.className === "book").map(n=>n.toString()));
 
     addToList(graph.edges, new Edge(CAT_ID, sofa.id!, "ON"));
     console.log((await sq.expandScene(graph)).toString());
 
     let graph2 = await sq.environmentGraph();
-    let nodeList2 = toJsArray(graph2.nodes);
+    let nodeList2 = toJsArray(graph2.nodes) as InstanceType<typeof Node>[];
 
     console.log(nodeList2.filter(it => it.id === CAT_ID).map(n=>n.toString()));
     console.log("CAT: " + nodeList2.filter(it => it.className === "cat").map(n=>n.toString()));
@@ -294,7 +294,7 @@ async function main() {
         await executeResetAndEnvironmentGraphRequests(sq);
 
         let graph = await sq.environmentGraph();
-        let nodeList = toJsArray(graph.nodes);
+        let nodeList = toJsArray(graph.nodes) as InstanceType<typeof Node>[];
         console.log(nodeList[MAIN_CAMERA_ID].toString());
         console.log(nodeList.length);
 
