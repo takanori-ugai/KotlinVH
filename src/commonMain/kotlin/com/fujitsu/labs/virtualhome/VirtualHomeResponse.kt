@@ -2,6 +2,8 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
 /**
  * Represents a response from the VirtualHome server.
@@ -12,6 +14,8 @@ import kotlinx.serialization.Serializable
  * @property value The value associated with the response.
  * @property messageList A list of messages associated with the response, if any.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class VirtualHomeResponse(
     val id: Int,

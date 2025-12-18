@@ -2,6 +2,8 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
 /**
  * Data class representing the configuration for expanding a scene.
@@ -11,6 +13,8 @@ import kotlinx.serialization.Serializable
  * @property ignoreObstacles Flag indicating whether to ignore obstacles during the expansion.
  * @property transferTransform Flag indicating whether to transfer transformations during the expansion.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class ExpandSceneConfig(
     val randomize: Boolean = false,

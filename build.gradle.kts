@@ -23,6 +23,9 @@ repositories {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xenable-suspend-function-exporting")
+    }
     jvm {
         compilations.all {
             compileTaskProvider.configure {
@@ -44,6 +47,7 @@ kotlin {
             }
         }
         binaries.executable()
+        binaries.library()
     }
     linuxX64 {
         binaries {
@@ -97,12 +101,12 @@ kotlin {
     }
 }
 
-tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "17"
-    targetCompatibility = "17"
-}
-
 tasks {
+    withType<JavaCompile>().configureEach {
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
+    }
+
     withType<Detekt>().configureEach {
         // Target version of the generated JVM bytecode. It is used for type resolution.
         jvmTarget = "17"
@@ -125,11 +129,24 @@ tasks {
     // But since `shadowJar` task is not registered automatically for KMP probably.
 
     // Jacoco config
-    withType<JacocoReport> {
-        reports {
-            xml.required.set(true)
-            html.required.set(false)
+    val jacocoTestReport =
+        register<JacocoReport>("jacocoTestReport") {
+            reports {
+                xml.required.set(true)
+                csv.required.set(true)
+                // html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+            }
+            dependsOn("jvmTest")
+            // sourceSets(kotlin.sourceSets.jvmMain) // might need adjustment
+            classDirectories.setFrom(files(layout.buildDirectory.dir("classes/kotlin/jvm/main")))
+            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/jvmCommonMain/kotlin", "src/commonMain/kotlin"))
+            executionData.setFrom(layout.buildDirectory.file("jacoco/jvmTest.exec"))
         }
+
+    // Fix implicit dependency between jsNodeProductionLibraryDistribution and jsProductionExecutableCompileSync
+    // This happens because both use the same package directory when both executable and library binaries are configured.
+    named("jsNodeProductionLibraryDistribution") {
+        dependsOn("jsProductionExecutableCompileSync")
     }
 }
 
@@ -163,7 +180,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.12"
+    toolVersion = "0.8.14"
 }
 
 spotless {
@@ -173,7 +190,7 @@ spotless {
         removeUnusedImports()
 
         // Choose one of these formatters.
-        googleJavaFormat("1.19.2")
+        googleJavaFormat("1.28.0")
         formatAnnotations()
     }
 }
