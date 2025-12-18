@@ -48,6 +48,7 @@ kotlin {
         }
         binaries.executable()
         binaries.library()
+        generateTypeScriptDefinitions()
     }
     linuxX64 {
         binaries {
