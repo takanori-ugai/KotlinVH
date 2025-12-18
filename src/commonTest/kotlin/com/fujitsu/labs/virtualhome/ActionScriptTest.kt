@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 
 class ActionScriptTest {
     @Test
-    fun `parses action script with character, action, and objects`() {
+    fun `parses action script with character action and objects`() {
         val script = listOf("<Alice> [walk] <door> (1) <key> (2)")
         val result = parseActionScript(script)
         assertEquals(1, result.size)
