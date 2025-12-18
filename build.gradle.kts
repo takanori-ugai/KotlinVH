@@ -135,6 +135,12 @@ tasks {
             html.required.set(false)
         }
     }
+
+    // Fix implicit dependency between jsNodeProductionLibraryDistribution and jsProductionExecutableCompileSync
+    // This happens because both use the same package directory when both executable and library binaries are configured.
+    named("jsNodeProductionLibraryDistribution") {
+        dependsOn("jsProductionExecutableCompileSync")
+    }
 }
 
 // Fix jacoco
