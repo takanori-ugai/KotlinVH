@@ -19,7 +19,7 @@ import kotlin.js.JsExport
 private val logger = KotlinLogging.logger {}
 
 private const val CONNECT_TIMEOUT = 30000L
-private const val READ_TIMEOUT = 60000L
+private const val READ_TIMEOUT = 600000L
 
 /**
  * A client for interacting with the VirtualHome server.
@@ -32,6 +32,7 @@ private const val READ_TIMEOUT = 60000L
 open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
+    timeout: Long = READ_TIMEOUT,
 ) {
     /**
      * Configuration of Json converter
@@ -52,7 +53,7 @@ open class VirtualHomeClient(
             }
             install(HttpTimeout) {
                 connectTimeoutMillis = CONNECT_TIMEOUT
-                requestTimeoutMillis = READ_TIMEOUT
+                requestTimeoutMillis = timeout
             }
         }
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
