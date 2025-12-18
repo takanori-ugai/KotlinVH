@@ -13,6 +13,11 @@ const RenderParams = vhPkg.RenderParams;
 const Graph = vhPkg.Graph;
 const Node = vhPkg.Node;
 const Edge = vhPkg.Edge;
+const KtList = vh.kotlin.collections.KtList;
+
+function fromJsArray(arr) {
+    return KtList.fromJsArray(arr);
+}
 
 const CAT_ID = 1000;
 const CAMERA_ID = 89;
@@ -62,6 +67,9 @@ function addItem(collection, item) {
     if (collection && typeof collection.add === 'function') {
         return collection.add(item);
     }
+    if (collection && typeof collection.asJsArrayView === 'function') {
+        return collection.asJsArrayView().push(item);
+    }
     if (Array.isArray(collection) || (collection && typeof collection.push === 'function')) {
         return collection.push(item);
     }
@@ -95,8 +103,8 @@ class Main {
              null,
              null,
              null,
-             [],
-             []
+             fromJsArray([]),
+             fromJsArray([])
         );
 
         addItem(initGraph.nodes, newNode);
@@ -126,11 +134,11 @@ class Main {
             "Output/", // outputFolder
             "script", // fileNamePrefix
             5, // frameRate
-            ["normal"], // imageSynthesis
+            fromJsArray(["normal"]), // imageSynthesis
             false, // findSolution
             false, // savePoseData
             false, // saveSceneStatus
-            ["AUTO"], // cameraMode
+            fromJsArray(["AUTO"]), // cameraMode
             true, // recording
             640, // imageWidth
             480, // imageHeight
@@ -138,7 +146,7 @@ class Main {
             false // skipAnimation
         );
 
-        let res = await this.client.renderScript(script, config);
+        let res = await this.client.renderScript(fromJsArray(script), config);
         console.log(res.toString());
         return true;
     }
@@ -190,12 +198,12 @@ async function performCameraActions(sq) {
     let res = await sq.addCamera(new Position(POS_X, POS_Y, POS_Z), new Position(ROT_X, ROT_Y, ROT_Z));
     console.log(res.toString());
     console.log(await sq.cameraCount());
-    let camData = await sq.cameraData([CAMERA_ID]);
+    let camData = await sq.cameraData(fromJsArray([CAMERA_ID]));
     console.log(camData.toString());
 }
 
 async function addCatToScene(sq, graph, sofa) {
-    let node = new Node(CAT_ID, "Animals", "cat", null, null, null, [], []);
+    let node = new Node(CAT_ID, "Animals", "cat", null, null, null, fromJsArray([]), fromJsArray([]));
     addItem(graph.nodes, node);
 
     let nodeList = toArray(graph.nodes);
@@ -221,8 +229,8 @@ async function addCatToScene(sq, graph, sofa) {
 async function renderFinalScript(sq) {
     // Matches RenderParams constructor
     let config = new RenderParams(
-        false, -1, PROCESSING_TIME_LIMIT, false, "Output/", "script", 5, ["normal"],
-        false, true, false, ["AUTO"], true, 640, 480, 1.0, false
+        false, -1, PROCESSING_TIME_LIMIT, false, "Output/", "script", 5, fromJsArray(["normal"]),
+        false, true, false, fromJsArray(["AUTO"]), true, 640, 480, 1.0, false
     );
 
     let script2 = [
@@ -233,12 +241,12 @@ async function renderFinalScript(sq) {
         "<char0> [SIT] <sofa> (" + SOFA_ID_2 + ")",
     ];
 
-    console.log((await sq.renderScript(script2, config)).toString());
+    console.log((await sq.renderScript(fromJsArray(script2), config)).toString());
     await saveCameraImage(sq);
 }
 
 async function saveCameraImage(sq) {
-    let res0 = await sq.cameraImage([SAVE_CAMERA_ID]);
+    let res0 = await sq.cameraImage(fromJsArray([SAVE_CAMERA_ID]));
     let image = res0[0];
     if (image) {
         // Kotlin ByteArray -> JS Int8Array. fs.writeFileSync expects Buffer or Uint8Array.

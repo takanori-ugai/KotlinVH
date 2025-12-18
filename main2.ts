@@ -42,6 +42,8 @@ function toJsArray<T>(collection: KtList<T> | KtMutableList<T> | any): T[] {
 function addToList<T>(collection: KtMutableList<T> | any, item: T) {
     if (collection && typeof collection.add === 'function') {
         collection.add(item);
+    } else if (collection && typeof collection.asJsArrayView === 'function') {
+        collection.asJsArrayView().push(item);
     } else if (Array.isArray(collection) || (collection && typeof collection.push === 'function')) {
         collection.push(item);
     } else {
