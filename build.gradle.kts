@@ -23,6 +23,9 @@ repositories {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xenable-suspend-function-exporting")
+    }
     jvm {
         compilations.all {
             compileTaskProvider.configure {
@@ -44,6 +47,7 @@ kotlin {
             }
         }
         binaries.executable()
+        binaries.library()
     }
     linuxX64 {
         binaries {

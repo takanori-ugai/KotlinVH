@@ -2,6 +2,8 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.Serializable
 import kotlin.random.Random
+import kotlin.js.JsExport
+import kotlin.js.ExperimentalJsExport
 
 /**
  * Represents a request to the VirtualHome server.
@@ -11,6 +13,8 @@ import kotlin.random.Random
  * @property intParams Optional list of integer parameters.
  * @property stringParams Optional list of string parameters.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class VirtualHomeRequest(
     val id: Int = Random.nextInt(),

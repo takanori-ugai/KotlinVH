@@ -2,6 +2,8 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.js.JsExport
+import kotlin.js.ExperimentalJsExport
 
 /**
  * Data class representing an edge in a graph.
@@ -9,6 +11,8 @@ import kotlinx.serialization.Serializable
  * @property toId The ID of the node where the edge ends.
  * @property relationType The type of relation between the nodes.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class Edge(
     @SerialName("from_id")
@@ -30,6 +34,8 @@ data class Edge(
  * @property properties The properties of the node.
  * @property states The states of the node.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class Node(
     val id: Int? = null,
@@ -51,6 +57,8 @@ data class Node(
  * @property nodes The nodes of the graph.
  * @property edges The edges of the graph.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class Graph(
     val nodes: MutableList<Node> = mutableListOf(),

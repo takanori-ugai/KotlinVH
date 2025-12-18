@@ -2,6 +2,8 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.js.JsExport
+import kotlin.js.ExperimentalJsExport
 
 /**
  * Data class representing rendering parameters.
@@ -37,6 +39,8 @@ import kotlinx.serialization.Serializable
  * for each room. 'DIAGONAL1' and 'DIAGONAL2' camera mode's functionalities are exactly
  * same as 'AUTO' mode. 2023/04/21
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class RenderParams(
     @SerialName("randomize_execution")

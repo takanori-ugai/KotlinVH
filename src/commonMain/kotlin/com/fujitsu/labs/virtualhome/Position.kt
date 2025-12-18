@@ -1,6 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.Serializable
+import kotlin.js.JsExport
+import kotlin.js.ExperimentalJsExport
 
 /**
  * Data class representing a position in a 3D space.
@@ -9,6 +11,8 @@ import kotlinx.serialization.Serializable
  * @property y The y-coordinate of the position, default is 0.
  * @property z The z-coordinate of the position, default is 0.
  */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class Position(
     val x: Int = 0,
