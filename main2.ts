@@ -95,7 +95,7 @@ class Main {
         if (!resetRes.success) throw new Error("Reset Error");
 
         let initGraph = await this.client.environmentGraph();
-        let nodeList = toJsArray(initGraph.nodes);
+        let nodeList = toJsArray(initGraph.nodes) as InstanceType<typeof Node>[];
 
         let sofas = nodeList.filter(it => it.className === "sofa");
         let sofa = sofas[sofas.length - 1]; // last()
@@ -118,7 +118,7 @@ class Main {
         if (expandRes.success) {
             console.log("Success : Expand Scene");
             let graph = await this.client.environmentGraph();
-            let cats = toJsArray(graph.nodes).filter(it => it.className === "cat");
+            let cats = (toJsArray(graph.nodes) as InstanceType<typeof Node>[]).filter(it => it.className === "cat");
             let catId = cats[CAT_NODE_ID];
             console.log("CATID: " + catId);
         } else {
@@ -218,7 +218,7 @@ async function addCatToScene(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClie
     console.log(nodeList2.filter(it => it.id === CAT_ID).map(n=>n.toString()));
     console.log("CAT: " + nodeList2.filter(it => it.className === "cat").map(n=>n.toString()));
 
-    let edgeList2 = toJsArray(graph2.edges);
+    let edgeList2 = toJsArray(graph2.edges) as InstanceType<typeof Edge>[];
     console.log(edgeList2.filter(it => it.toId === sofa.id).map(e=>e.toString()));
 
     console.log(nodeList2.length);
@@ -250,7 +250,7 @@ async function saveCameraImage(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeCl
     let list = toJsArray(res0);
     let image = list[0];
     if (image) {
-        let buffer = Buffer.from(image);
+        let buffer = Buffer.from(image as any);
         fs.writeFileSync("bfo.png", buffer);
     }
 }
