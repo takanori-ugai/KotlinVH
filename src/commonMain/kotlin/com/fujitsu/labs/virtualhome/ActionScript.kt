@@ -42,15 +42,15 @@ fun parseActionScript(script: List<String>): List<ActionScript> {
 }
 
 // Example usage
-fun main() {
-    val script =
-        listOf(
-            "<char0> [WALK] <wine> (93) <book> (89)",
-            "<char0> [GRAB] <wine> (93)",
-            "  <char0> [DRINK] <wine> (93)",
-            "[DRINK] <wine> (93)",
-        )
-
-    val parsedScripts = parseActionScript(script)
-    parsedScripts.forEach { println(it) }
-}
+// fun main() {
+//    val script =
+//        listOf(
+//            "<char0> [WALK] <wine> (93) <book> (89)",
+//            "<char0> [GRAB] <wine> (93)",
+//            "  <char0> [DRINK] <wine> (93)",
+//            "[DRINK] <wine> (93)",
+//        )
+//
+//    val parsedScripts = parseActionScript(script)
+//    parsedScripts.forEach { println(it) }
+// }
