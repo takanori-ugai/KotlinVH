@@ -45,6 +45,13 @@ kotlin {
         }
         binaries.executable()
     }
+    linuxX64 {
+        binaries {
+            executable {
+                entryPoint = "com.fujitsu.labs.virtualhome.main"
+            }
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -81,6 +88,11 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-js:3.3.3")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
+            }
+        }
+        val linuxX64Main by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:3.0.3")
             }
         }
     }
