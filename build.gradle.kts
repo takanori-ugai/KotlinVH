@@ -176,8 +176,8 @@ detekt {
             "src/commonTest/kotlin",
             "src/linuxX86Main/kotlin",
             "src/jvmMain/kotlin",
-            "src/jvmTest/kotlin"
-        )
+            "src/jvmTest/kotlin",
+        ),
     )
     // point to your custom config defining rules to run, overwriting default behavior
     config.setFrom("$projectDir/config/detekt.yml")
