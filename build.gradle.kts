@@ -15,7 +15,7 @@ plugins {
     id("com.diffplug.spotless") version "8.1.0"
 }
 
-group = "com.fujitsu"
+group = "io.github.ugaikit"
 version = "0.6"
 
 repositories {
@@ -53,7 +53,7 @@ kotlin {
     linuxX64 {
         binaries {
             executable {
-                entryPoint = "com.fujitsu.labs.virtualhome.main"
+                entryPoint = "io.github.ugaikit.vh.main"
             }
         }
     }

@@ -1,18 +1,18 @@
 const vh = require('./build/compileSync/js/main/productionLibrary/kotlin/VirtualHome.js');
 const fs = require('fs');
 
-const com = vh.com;
-const fujitsu = com.fujitsu;
-const labs = fujitsu.labs;
-const virtualhome = labs.virtualhome;
+const io = vh.io;
+const github = io.github;
+const ugaikit = github.ugaikit;
+const vhPkg = ugaikit.vh;
 
-const VirtualHomeClient = virtualhome.VirtualHomeClient;
-const VirtualHomeRequest = virtualhome.VirtualHomeRequest;
-const Position = virtualhome.Position;
-const RenderParams = virtualhome.RenderParams;
-const Graph = virtualhome.Graph;
-const Node = virtualhome.Node;
-const Edge = virtualhome.Edge;
+const VirtualHomeClient = vhPkg.VirtualHomeClient;
+const VirtualHomeRequest = vhPkg.VirtualHomeRequest;
+const Position = vhPkg.Position;
+const RenderParams = vhPkg.RenderParams;
+const Graph = vhPkg.Graph;
+const Node = vhPkg.Node;
+const Edge = vhPkg.Edge;
 
 const CAT_ID = 1000;
 const CAMERA_ID = 89;
