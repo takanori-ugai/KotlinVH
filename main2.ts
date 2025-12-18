@@ -2,19 +2,19 @@ import * as fs from 'fs';
 import * as vh from './build/compileSync/js/main/productionLibrary/kotlin/VirtualHome';
 
 // Aliases for convenience
-const com = vh.com;
-const fujitsu = com.fujitsu;
-const labs = fujitsu.labs;
-const virtualhome = labs.virtualhome;
+const io = vh.io;
+const github = io.github;
+const ugaikit = github.ugaikit;
+const vhPkg = ugaikit.vh;
 const kotlin = vh.kotlin;
 
-const VirtualHomeClient = virtualhome.VirtualHomeClient;
-const VirtualHomeRequest = virtualhome.VirtualHomeRequest;
-const Position = virtualhome.Position;
-const RenderParams = virtualhome.RenderParams;
-const Graph = virtualhome.Graph;
-const Node = virtualhome.Node;
-const Edge = virtualhome.Edge;
+const VirtualHomeClient = vhPkg.VirtualHomeClient;
+const VirtualHomeRequest = vhPkg.VirtualHomeRequest;
+const Position = vhPkg.Position;
+const RenderParams = vhPkg.RenderParams;
+const Graph = vhPkg.Graph;
+const Node = vhPkg.Node;
+const Edge = vhPkg.Edge;
 
 type KtMutableList<E> = vh.kotlin.collections.KtMutableList<E>;
 type KtList<E> = vh.kotlin.collections.KtList<E>;
@@ -83,7 +83,7 @@ const MAIN_SCENE_NUM = 0;
 
 class Main {
     sceneNum: number;
-    client: vh.com.fujitsu.labs.virtualhome.VirtualHomeClient;
+    client: vh.io.github.ugaikit.vh.VirtualHomeClient;
 
     constructor() {
         this.sceneNum = MAIN_SCENE_NUM;
@@ -181,7 +181,7 @@ class Main {
     }
 }
 
-async function executeResetAndEnvironmentGraphRequests(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClient) {
+async function executeResetAndEnvironmentGraphRequests(sq: vh.io.github.ugaikit.vh.VirtualHomeClient) {
     let checkRes = await sq.check();
     console.log("Check: " + checkRes.success);
     let resetRes = await sq.reset(RESET_NUM);
@@ -194,7 +194,7 @@ async function executeResetAndEnvironmentGraphRequests(sq: vh.com.fujitsu.labs.v
     }
 }
 
-async function performCameraActions(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClient) {
+async function performCameraActions(sq: vh.io.github.ugaikit.vh.VirtualHomeClient) {
     let res = await sq.addCamera(new Position(POS_X, POS_Y, POS_Z), new Position(ROT_X, ROT_Y, ROT_Z));
     console.log(res.toString());
     console.log(await sq.cameraCount());
@@ -202,7 +202,7 @@ async function performCameraActions(sq: vh.com.fujitsu.labs.virtualhome.VirtualH
     console.log(camData.toString());
 }
 
-async function addCatToScene(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClient, graph: vh.com.fujitsu.labs.virtualhome.Graph, sofa: vh.com.fujitsu.labs.virtualhome.Node) {
+async function addCatToScene(sq: vh.io.github.ugaikit.vh.VirtualHomeClient, graph: vh.io.github.ugaikit.vh.Graph, sofa: vh.io.github.ugaikit.vh.Node) {
     let node = new Node(CAT_ID, "Animals", "cat", null, null, null, fromJsArray([]), fromJsArray([]));
     addToList(graph.nodes, node);
 
@@ -226,7 +226,7 @@ async function addCatToScene(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClie
     console.log(await sq.cameraCount());
 }
 
-async function renderFinalScript(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClient) {
+async function renderFinalScript(sq: vh.io.github.ugaikit.vh.VirtualHomeClient) {
     let config = new RenderParams(
         false, -1, PROCESSING_TIME_LIMIT, false, "Output/", "script", 5, fromJsArray(["normal"]),
         false, true, false, fromJsArray(["AUTO"]), true, 640, 480, 1.0, false
@@ -244,7 +244,7 @@ async function renderFinalScript(sq: vh.com.fujitsu.labs.virtualhome.VirtualHome
     await saveCameraImage(sq);
 }
 
-async function saveCameraImage(sq: vh.com.fujitsu.labs.virtualhome.VirtualHomeClient) {
+async function saveCameraImage(sq: vh.io.github.ugaikit.vh.VirtualHomeClient) {
     let res0 = await sq.cameraImage(fromJsArray([SAVE_CAMERA_ID]));
     // res0 is KtList<Int8Array>
     let list = toJsArray(res0);
