@@ -3,14 +3,14 @@ const vh = require('./build/compileSync/js/main/productionLibrary/kotlin/Virtual
 console.log('Loaded module keys:', Object.keys(vh));
 
 try {
-    const com = vh.com;
-    if (!com) {
-        throw new Error("vh.com is undefined. Exports found: " + JSON.stringify(Object.keys(vh)));
+    const io = vh.io;
+    if (!io) {
+        throw new Error("vh.io is undefined. Exports found: " + JSON.stringify(Object.keys(vh)));
     }
-    const fujitsu = com.fujitsu;
-    const labs = fujitsu.labs;
-    const virtualhome = labs.virtualhome;
-    const VirtualHomeClient = virtualhome.VirtualHomeClient;
+    const github = io.github;
+    const ugaikit = github.ugaikit;
+    const vhPkg = ugaikit.vh;
+    const VirtualHomeClient = vhPkg.VirtualHomeClient;
 
     console.log('VirtualHomeClient found:', VirtualHomeClient);
 
