@@ -1,5 +1,9 @@
 package io.github.ugaikit.vh
 
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -10,14 +14,23 @@ class GetObjectsTest {
     // Helper to invoke the private writeNodesToCSV function via reflection
     private fun callWriteNodesToCSV(
         nodes: List<Node>,
-        file: File,
+        path: Path,
     ) {
         val method =
             Class
                 .forName("io.github.ugaikit.vh.GetObjectsKt")
                 .getDeclaredMethod("writeNodesToCSV", List::class.java, String::class.java)
         method.isAccessible = true
-        method.invoke(null, nodes, file.absolutePath)
+        method.invoke(null, nodes, path.toString())
+    }
+
+    // Helper to normalize lines similarly to File.readLines()
+    private fun readLines(path: Path): List<String> {
+        val content = SystemFileSystem.source(path).buffered().use { it.readString() }
+        // lines() in Kotlin/Java usually handles \n, \r\n, \r.
+        // File.readLines() returns a list of strings not containing line separators.
+        return content.lines()
+            .let { if (it.isNotEmpty() && it.last() == "") it.dropLast(1) else it }
     }
 
     @Test
@@ -25,10 +38,10 @@ class GetObjectsTest {
         @TempDir tempDir: File,
     ) {
         val nodes = listOf(Node(1, className = "Chair"), Node(2, className = "Table"))
-        val csvFile = File(tempDir, "test.csv")
-        callWriteNodesToCSV(nodes, csvFile)
+        val csvPath = Path(tempDir.absolutePath, "test.csv")
+        callWriteNodesToCSV(nodes, csvPath)
 
-        val lines = csvFile.readLines()
+        val lines = readLines(csvPath)
         assertEquals("nodes/id,nodes/class_name", lines[0])
         assertEquals("1,Chair", lines[1])
         assertEquals("2,Table", lines[2])
@@ -39,10 +52,10 @@ class GetObjectsTest {
         @TempDir tempDir: File,
     ) {
         val nodes = emptyList<Node>()
-        val csvFile = File(tempDir, "empty.csv")
-        callWriteNodesToCSV(nodes, csvFile)
+        val csvPath = Path(tempDir.absolutePath, "empty.csv")
+        callWriteNodesToCSV(nodes, csvPath)
 
-        val lines = csvFile.readLines()
+        val lines = readLines(csvPath)
         assertEquals(1, lines.size)
         assertEquals("nodes/id,nodes/class_name", lines[0])
     }
@@ -58,10 +71,10 @@ class GetObjectsTest {
                 Node(44, className = "Line\nBreak"),
                 Node(45, className = "Carriage\rReturn"),
             )
-        val csvFile = File(tempDir, "special.csv")
-        callWriteNodesToCSV(nodes, csvFile)
+        val csvPath = Path(tempDir.absolutePath, "special.csv")
+        callWriteNodesToCSV(nodes, csvPath)
 
-        val lines = csvFile.readLines()
+        val lines = readLines(csvPath)
         assertEquals("nodes/id,nodes/class_name", lines[0])
         assertEquals("42,\"C,hair\"", lines[1])
         assertEquals("43,\"Tab\"\"le\"", lines[2])
@@ -75,10 +88,10 @@ class GetObjectsTest {
         @TempDir tempDir: File,
     ) {
         val nodes = listOf(Node(99, null))
-        val csvFile = File(tempDir, "null.csv")
-        callWriteNodesToCSV(nodes, csvFile)
+        val csvPath = Path(tempDir.absolutePath, "null.csv")
+        callWriteNodesToCSV(nodes, csvPath)
 
-        val lines = csvFile.readLines()
+        val lines = readLines(csvPath)
         assertEquals("nodes/id,nodes/class_name", lines[0])
         assertEquals("99,", lines[1])
     }

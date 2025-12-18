@@ -1,7 +1,10 @@
 package io.github.ugaikit.vh
 
 import kotlinx.coroutines.runBlocking
-import java.io.File
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.writeString
 
 /**
  * The main function that initializes the client, resets the scene, retrieves the environment graph,
@@ -38,14 +41,15 @@ private fun writeNodesToCSV(
             value
         }
 
-    File(fileName).bufferedWriter(Charsets.UTF_8).use { out ->
+    val path = Path(fileName)
+    SystemFileSystem.sink(path).buffered().use { out ->
         val header = "nodes/id,nodes/class_name"
-        out.write("$header\n")
+        out.writeString("$header\n")
         println(header)
         nodes.forEach { node ->
             val idField = escapeCsv(node.id.toString())
             val classNameField = escapeCsv(node.className)
-            out.write("$idField,$classNameField\n")
+            out.writeString("$idField,$classNameField\n")
         }
     }
 }
