@@ -25,6 +25,7 @@ repositories {
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xenable-suspend-function-exporting")
+        freeCompilerArgs.add("-Xes-long-as-bigint")
     }
     jvm {
         compilations.all {

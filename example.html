@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VirtualHomeClient Example</title>
+</head>
+<body>
+    <h1>VirtualHomeClient Example</h1>
+    <p>This example demonstrates how to use the VirtualHomeClient in a browser environment.</p>
+    <div id="output" style="white-space: pre-wrap; font-family: monospace; background: #f0f0f0; padding: 10px;">Loading...</div>
+
+    <script type="module">
+        import { io } from './build/compileSync/js/main/productionLibrary/kotlin/VirtualHome.js';
+
+        // Access the VirtualHomeClient class
+        const VirtualHomeClient = io.github.ugaikit.vh.VirtualHomeClient;
+
+        async function run() {
+            const outputDiv = document.getElementById('output');
+
+            try {
+                // Initialize the client.
+                // Default constructor connects to http://127.0.0.1:8080
+                outputDiv.innerText = "Initializing VirtualHomeClient...\n";
+                const client = new VirtualHomeClient();
+
+                outputDiv.innerText += "Client initialized.\n";
+                outputDiv.innerText += "Checking connection (this might fail if server is not running)...\n";
+
+                // Example: Check if the server is reachable
+                // The check() method returns a Promise<VirtualHomeResponse>
+                const response = await client.check();
+
+                outputDiv.innerText += "Response received:\n";
+                outputDiv.innerText += JSON.stringify(response, null, 2);
+
+            } catch (e) {
+                outputDiv.innerText += "\nError: " + e.message;
+                outputDiv.innerText += "\n(Note: This is expected if the VirtualHome server is not running on localhost:8080, or if there are CORS issues.)";
+                console.error(e);
+            }
+        }
+
+        run();
+    </script>
+</body>
+</html>
