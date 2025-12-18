@@ -1,8 +1,8 @@
 package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.Serializable
-import kotlin.js.JsExport
 import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
 /**
  * Data class representing a position in a 3D space.

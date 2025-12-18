@@ -1,9 +1,9 @@
 package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.Serializable
-import kotlin.random.Random
-import kotlin.js.JsExport
 import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+import kotlin.random.Random
 
 /**
  * Represents a request to the VirtualHome server.

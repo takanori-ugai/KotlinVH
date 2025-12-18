@@ -2,8 +2,8 @@ package com.fujitsu.labs.virtualhome
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.js.JsExport
 import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
 /**
  * Represents a response from the VirtualHome server.
