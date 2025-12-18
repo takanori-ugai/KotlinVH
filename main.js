@@ -62,6 +62,9 @@ function addItem(collection, item) {
     if (collection && typeof collection.add === 'function') {
         return collection.add(item);
     }
+    if (collection && typeof collection.asJsArrayView === 'function') {
+        return collection.asJsArrayView().push(item);
+    }
     if (Array.isArray(collection) || (collection && typeof collection.push === 'function')) {
         return collection.push(item);
     }
