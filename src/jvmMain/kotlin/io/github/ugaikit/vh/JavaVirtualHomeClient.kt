@@ -49,4 +49,22 @@ class JavaVirtualHomeClient(host: String = "localhost", port: Int = 8080) {
         imageWidth: Int = 640,
         imageHeight: Int = 320
     ): List<ByteArray> = runBlocking { client.cameraImage(cameraIndexes, mode, imageWidth, imageHeight) }
+
+    fun createRenderParams(
+        processingTimeLimit: Int,
+        findSolution: Boolean,
+        skipAnimation: Boolean,
+        recording: Boolean,
+        savePoseData: Boolean,
+        skipExecution: Boolean
+    ): RenderParams {
+        return RenderParams(
+            processingTimeLimit = processingTimeLimit,
+            findSolution = findSolution,
+            skipAnimation = skipAnimation,
+            recording = recording,
+            savePoseData = savePoseData,
+            skipExecution = skipExecution
+        )
+    }
 }

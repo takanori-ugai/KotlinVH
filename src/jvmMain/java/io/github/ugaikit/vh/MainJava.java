@@ -86,65 +86,13 @@ public class MainJava {
     }
 
     private static void renderFinalScript(JavaVirtualHomeClient client) {
-        // RenderParams constructor also requires all arguments if no @JvmOverloads
-        // Kotlin default values are NOT available in Java constructors unless @JvmOverloads is present.
-
-        // This is painful. I should add a helper in JavaVirtualHomeClient to create default RenderParams,
-        // OR simply provide all arguments.
-
-        // Let's try to provide all arguments.
-        // val randomizeExecution: Boolean = false,
-        // val randomSeed: Int = -1,
-        // val processingTimeLimit: Int = 20,
-        // val skipExecution: Boolean = false,
-        // val outputFolder: String = "Output/",
-        // val fileNamePrefix: String = "script",
-        // val frameRate: Int = 5,
-        // val imageSynthesis: List<String> = listOf("normal"),
-        // val findSolution: Boolean = false,
-        // val savePoseData: Boolean = false,
-        // val saveSceneStatus: Boolean = false,
-        // val cameraMode: List<String> = listOf("AUTO"),
-        // val recording: Boolean = false,
-        // val imageWidth: Int = 640,
-        // val imageHeight: Int = 480,
-        // val timeScale: Double = 1.0,
-        // val skipAnimation: Boolean = false,
-        // val visCheckObject: Boolean = false,
-        // val visCheckCharacter: Boolean = false,
-        // val visCheckObjectAll: Boolean = false,
-        // val outGraph: Boolean = false,
-        // val perFrame: Int = 5,
-        // val specifiedCameras: List<String> = emptyList(),
-        // val diagonalCameras1: List<String> = emptyList(),
-        // val diagonalCameras2: List<String> = emptyList(),
-
-        RenderParams config = new RenderParams(
-            false,              // randomizeExecution
-            -1,                 // randomSeed
-            PROCESSING_TIME_LIMIT, // processingTimeLimit
-            false,              // skipExecution
-            "Output/",          // outputFolder
-            "script",           // fileNamePrefix
-            5,                  // frameRate
-            new ArrayList<>(),  // imageSynthesis
-            false,              // findSolution
-            true,               // savePoseData (modified from default)
-            false,              // saveSceneStatus
-            Arrays.asList("AUTO"), // cameraMode
-            true,               // recording (modified from default)
-            640,                // imageWidth
-            480,                // imageHeight
-            1.0,                // timeScale
-            false,              // skipAnimation
-            false,              // visCheckObject
-            false,              // visCheckCharacter
-            false,              // visCheckObjectAll
-            false,              // outGraph
-            5,                  // perFrame
-            new ArrayList<>(),  // specifiedCameras
-            new ArrayList<>(),  // diagonalCameras1
-            new ArrayList<>()   // diagonalCameras2
+        RenderParams config = client.createRenderParams(
+            PROCESSING_TIME_LIMIT,
+            false, // findSolution
+            false, // skipAnimation
+            true,  // recording
+            true,  // savePoseData
+            false  // skipExecution
         );
 
         List<String> script = Arrays.asList(
