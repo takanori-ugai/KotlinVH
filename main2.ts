@@ -1,3 +1,12 @@
+/// <reference lib="es2015" />
+/// <reference lib="es2016" />
+
+// Simple definitions to avoid @types/node dependency for minimal setup
+declare var Buffer: {
+    from(arrayLike: any): any;
+};
+
+// @ts-ignore
 import * as fs from 'fs';
 import * as vh from './build/compileSync/js/main/productionLibrary/kotlin/VirtualHome';
 
