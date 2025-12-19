@@ -29,7 +29,8 @@ class GetObjectsTest {
         val content = SystemFileSystem.source(path).buffered().use { it.readString() }
         // lines() in Kotlin/Java usually handles \n, \r\n, \r.
         // File.readLines() returns a list of strings not containing line separators.
-        return content.lines()
+        return content
+            .lines()
             .let { if (it.isNotEmpty() && it.last() == "") it.dropLast(1) else it }
     }
 
