@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "io.github.ugaikit"
-version = "0.6"
+version = "0.6.1"
 
 repositories {
     mavenCentral()
@@ -215,13 +215,13 @@ mavenPublishing {
     signAllPublications()
 
     // ライブラリの座標設定
-    coordinates("io.github.ugaikit", "vh", "0.6.0")
+    coordinates("io.github.ugaikit", "vh", "0.6.1")
 
     // POM情報（Maven Centralには必須）
     pom {
         name = "KotlinVH"
         description = "Kotlin Multiplatform library for interacting with the Virtual Home API."
-        url = "https://github.com/takanori-ugai/Gemini4KT"
+        url = "https://github.com/takanori-ugai/KotlinVH"
         inceptionYear.set("2025")
         licenses {
             license {
