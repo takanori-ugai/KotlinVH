@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -13,6 +14,7 @@ plugins {
     id("com.github.jk1.dependency-license-report") version "3.0.1"
     id("com.github.spotbugs") version "6.4.8"
     id("com.diffplug.spotless") version "8.1.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.ugaikit"
@@ -203,5 +205,41 @@ spotless {
         // Choose one of these formatters.
         googleJavaFormat("1.28.0")
         formatAnnotations()
+    }
+}
+
+mavenPublishing {
+    // Maven Central に公開する場合の設定
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+
+    // ライブラリの座標設定
+    coordinates("io.github.ugaikit", "vh", "0.6.0")
+
+    // POM情報（Maven Centralには必須）
+    pom {
+        name = "KotlinVH"
+        description = "Kotlin Multiplatform library for interacting with the Virtual Home API."
+        url = "https://github.com/takanori-ugai/Gemini4KT"
+        inceptionYear.set("2025")
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "takanori-ugai"
+                name = "Takanori Ugai"
+                email = "ugai@fujitsu.com"
+            }
+        }
+        scm {
+            connection = "scm:https://github.com/takanori-ugai/KotlinVH.git"
+            developerConnection = "scm:https://github.com/takanori-ugai/KotlinVH.git"
+            url = "https://github.com/takanori-ugai/KotlinVH"
+        }
     }
 }
