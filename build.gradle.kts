@@ -144,7 +144,7 @@ tasks {
             dependsOn("jvmTest")
             // sourceSets(kotlin.sourceSets.jvmMain) // might need adjustment
             classDirectories.setFrom(files(layout.buildDirectory.dir("classes/kotlin/jvm/main")))
-            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/jvmCommonMain/kotlin", "src/commonMain/kotlin"))
+            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/commonMain/kotlin"))
             executionData.setFrom(layout.buildDirectory.file("jacoco/jvmTest.exec"))
         }
 
