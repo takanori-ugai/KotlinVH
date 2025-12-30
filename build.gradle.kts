@@ -100,7 +100,7 @@ kotlin {
         }
         val linuxX64Main by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.0.3")
+                implementation("io.ktor:ktor-client-cio:3.3.3")
             }
         }
     }
