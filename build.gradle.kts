@@ -86,7 +86,7 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.mockk:mockk:1.13.10")
+                implementation("io.mockk:mockk:1.14.7")
 //                implementation("org.junit:junit-bom:5.12.0")
                 implementation("org.junit.jupiter:junit-jupiter:6.0.1")
                 runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
