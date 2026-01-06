@@ -69,7 +69,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:3.3.3")
                 implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
-                implementation("io.github.oshai:kotlin-logging:7.0.13")
+                implementation("io.github.oshai:kotlin-logging:7.0.14")
             }
         }
         val commonTest by getting {
