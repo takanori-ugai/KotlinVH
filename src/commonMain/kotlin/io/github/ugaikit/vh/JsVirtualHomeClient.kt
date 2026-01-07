@@ -14,7 +14,11 @@ class JsVirtualHomeClient(
 
     suspend fun cameraCount(): Int = delegate.cameraCount()
 
+    suspend fun activatePhysics(active: Boolean = true): VirtualHomeResponse = delegate.activatePhysics(active)
+
     suspend fun check(): VirtualHomeResponse = delegate.check()
+
+    suspend fun checkScript(script: List<String>): VirtualHomeResponse = delegate.checkScript(script)
 
     suspend fun reset(sceneIndex: Int = 0): VirtualHomeResponse = delegate.reset(sceneIndex)
 

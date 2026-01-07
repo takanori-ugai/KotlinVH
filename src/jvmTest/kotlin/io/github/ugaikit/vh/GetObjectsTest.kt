@@ -1,6 +1,5 @@
 package io.github.ugaikit.vh
 
-import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
