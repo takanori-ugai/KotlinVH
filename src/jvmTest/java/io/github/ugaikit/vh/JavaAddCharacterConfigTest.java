@@ -42,7 +42,7 @@ public class JavaAddCharacterConfigTest {
 
     assertNotNull(commons);
 
-    VirtualHomeClient client = new VirtualHomeClient("localhost", 8080, 60000);
+    VirtualHomeClient client = new VirtualHomeClient("localhost", 8080, 60000, null);
 
     assertNotNull(client);
   }

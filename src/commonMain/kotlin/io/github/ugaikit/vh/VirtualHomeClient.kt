@@ -12,6 +12,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.decodeBase64Bytes
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -31,7 +32,8 @@ open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
     timeout: Long = READ_TIMEOUT,
-) {
+    httpClient: HttpClient? = null,
+) : CloseableResource {
     /**
      * Configuration of Json converter
      */
@@ -44,16 +46,7 @@ open class VirtualHomeClient(
 
     private val url = "http://$host:$port"
 
-    private val client =
-        HttpClient {
-            install(ContentNegotiation) {
-                json(format)
-            }
-            install(HttpTimeout) {
-                connectTimeoutMillis = CONNECT_TIMEOUT
-                requestTimeoutMillis = timeout
-            }
-        }
+    private val client = httpClient ?: createHttpClient(timeout)
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
     /**
@@ -80,9 +73,12 @@ open class VirtualHomeClient(
     }
 
     /**
-     * Closes the HTTP client.
+     * Releases the underlying HTTP client resources.
+     *
+     * Call this when the client is no longer needed (e.g., on application shutdown).
+     * On JVM targets this also enables usage with `use { ... }` / try-with-resources.
      */
-    fun close() {
+    override fun close() {
         client.close()
     }
 
@@ -93,7 +89,16 @@ open class VirtualHomeClient(
     suspend fun getObjects(): List<Node> {
         val request = VirtualHomeRequest(action = "get_objects")
         val response = sendRequest(request)
-        return response.message?.let { format.decodeFromString<List<Node>>(it) } ?: emptyList()
+        return try {
+            if (!response.success || response.message == null) {
+                emptyList()
+            } else {
+                format.decodeFromString(response.message)
+            }
+        } catch (e: SerializationException) {
+            logger.error(e) { "Failed to parse getObjects response" }
+            emptyList()
+        }
     }
 
     /**
@@ -381,6 +386,17 @@ open class VirtualHomeClient(
                 res.message?.let { format.decodeFromString<List<String>>(it) }.orEmpty()
             } else {
                 emptyList()
+            }
+        }
+
+    private fun createHttpClient(timeout: Long): HttpClient =
+        HttpClient {
+            install(ContentNegotiation) {
+                json(format)
+            }
+            install(HttpTimeout) {
+                connectTimeoutMillis = CONNECT_TIMEOUT
+                requestTimeoutMillis = timeout
             }
         }
 
