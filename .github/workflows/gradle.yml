@@ -33,10 +33,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v5.0.0
       - name: Update with Gradle
         run: ./gradlew kotlinUpgradeYarnLock
-      - name: Build with Gradle
-        run: ./gradlew build jacoco
-      - name: Build jacocoReport
-        run: ./gradlew jacocoTestReport
+      - name: Build build jvmTest jacocoReport
+        run: ./gradlew build jvmTest jacocoTestReport
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5.5.2
         with:
