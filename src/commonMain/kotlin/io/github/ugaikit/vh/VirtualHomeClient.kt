@@ -58,15 +58,45 @@ open class VirtualHomeClient(
         }
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
-    /*
-     * This action is not implemented
-     *
-     * fun checkScript(script: List<String>) : Response? {
-     * val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
-     * val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-     * return res
-     * }
+    /**
+     * Activates or deactivates physics in the environment.
+     * @param active Whether to activate physics or not.
      */
+    suspend fun activatePhysics(active: Boolean = true): VirtualHomeResponse {
+        val data =
+            VirtualHomeRequest(
+                action = "activate_physics",
+                stringParams = listOf(active.toString()),
+            )
+        return sendRequest(data)
+    }
+
+    /**
+     * Checks the validity of a script.
+     * @param script The script to check.
+     * @return A VirtualHomeResponse indicating whether the script is valid.
+     */
+    suspend fun checkScript(script: List<String>): VirtualHomeResponse {
+        val data = VirtualHomeRequest(action = "check_script", stringParams = script)
+        return sendRequest(data)
+    }
+
+    /**
+     * Closes the HTTP client.
+     */
+    fun close() {
+        client.close()
+    }
+
+    /**
+     * Retrieves all objects in the scene.
+     * @return A list of nodes representing the objects in the scene.
+     */
+    suspend fun getObjects(): List<Node> {
+        val request = VirtualHomeRequest(action = "get_objects")
+        val response = sendRequest(request)
+        return response.message?.let { format.decodeFromString<List<Node>>(it) } ?: emptyList()
+    }
 
     /**
      * Make images from cameras.
