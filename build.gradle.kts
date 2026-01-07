@@ -1,11 +1,12 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     kotlin("multiplatform") version "2.3.0"
-    kotlin("plugin.serialization") version "2.2.21"
-    id("com.gradleup.shadow") version "8.3.0"
+    kotlin("plugin.serialization") version "2.3.0"
+    id("com.gradleup.shadow") version "9.3.0"
     jacoco
     id("org.jetbrains.dokka") version "2.1.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
@@ -13,10 +14,11 @@ plugins {
     id("com.github.jk1.dependency-license-report") version "3.0.1"
     id("com.github.spotbugs") version "6.4.8"
     id("com.diffplug.spotless") version "8.1.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.ugaikit"
-version = "0.6"
+version = "0.6.1"
 
 repositories {
     mavenCentral()
@@ -62,28 +64,29 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
                 implementation("io.ktor:ktor-client-core:3.3.3")
                 implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
-                implementation("io.github.oshai:kotlin-logging:7.0.13")
+                implementation("io.github.oshai:kotlin-logging:7.0.14")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:3.3.3")
-                implementation("ch.qos.logback:logback-classic:1.5.16")
+                implementation("ch.qos.logback:logback-classic:1.5.23")
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.mockk:mockk:1.13.10")
+                implementation("io.mockk:mockk:1.14.7")
 //                implementation("org.junit:junit-bom:5.12.0")
                 implementation("org.junit.jupiter:junit-jupiter:6.0.1")
                 runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
@@ -97,7 +100,7 @@ kotlin {
         }
         val linuxX64Main by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.0.3")
+                implementation("io.ktor:ktor-client-cio:3.3.3")
             }
         }
     }
@@ -141,7 +144,7 @@ tasks {
             dependsOn("jvmTest")
             // sourceSets(kotlin.sourceSets.jvmMain) // might need adjustment
             classDirectories.setFrom(files(layout.buildDirectory.dir("classes/kotlin/jvm/main")))
-            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/jvmCommonMain/kotlin", "src/commonMain/kotlin"))
+            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/commonMain/kotlin"))
             executionData.setFrom(layout.buildDirectory.file("jacoco/jvmTest.exec"))
         }
 
@@ -202,5 +205,41 @@ spotless {
         // Choose one of these formatters.
         googleJavaFormat("1.28.0")
         formatAnnotations()
+    }
+}
+
+mavenPublishing {
+    // Maven Central に公開する場合の設定
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+
+    // ライブラリの座標設定
+    coordinates("io.github.ugaikit", "vh", "0.6.1")
+
+    // POM情報（Maven Centralには必須）
+    pom {
+        name = "KotlinVH"
+        description = "Kotlin Multiplatform library for interacting with the Virtual Home API."
+        url = "https://github.com/takanori-ugai/KotlinVH"
+        inceptionYear.set("2025")
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "takanori-ugai"
+                name = "Takanori Ugai"
+                email = "ugai@fujitsu.com"
+            }
+        }
+        scm {
+            connection = "scm:https://github.com/takanori-ugai/KotlinVH.git"
+            developerConnection = "scm:https://github.com/takanori-ugai/KotlinVH.git"
+            url = "https://github.com/takanori-ugai/KotlinVH"
+        }
     }
 }
