@@ -30,7 +30,12 @@ open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
     timeout: Long = READ_TIMEOUT,
+    httpClient: HttpClient? = null,
 ) : CloseableResource {
+    constructor(host: String, port: Int, timeout: Long) : this(host, port, timeout, null)
+
+    private val ownsClient = httpClient == null
+
     /**
      * Configuration of Json converter
      */
@@ -43,7 +48,7 @@ open class VirtualHomeClient(
 
     private val url = "http://$host:$port"
 
-    private val client = buildHttpClient(timeout)
+    private val client = httpClient ?: buildHttpClient(timeout)
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
     /**
@@ -76,7 +81,9 @@ open class VirtualHomeClient(
      * On JVM targets this also enables usage with `use { ... }` / try-with-resources.
      */
     override fun close() {
-        client.close()
+        if (ownsClient) {
+            client.close()
+        }
     }
 
     /**

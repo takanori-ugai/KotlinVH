@@ -2,6 +2,9 @@ package io.github.ugaikit.vh
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 import kotlin.random.Random
 
 private val logger = KotlinLogging.logger {}
@@ -135,7 +138,10 @@ private suspend fun renderFinalScript(sq: VirtualHomeClient) {
 private suspend fun saveCameraImage(sq: VirtualHomeClient) {
     val res0 = sq.cameraImage(listOf(SAVE_CAMERA_ID))
     val image = res0[0]
-    // Files.write(Paths.get("bfo.png"), image)
+    val path = Path("bfo.png")
+    SystemFileSystem.sink(path).buffered().use { sink ->
+        sink.write(image)
+    }
 }
 
 class Main {
