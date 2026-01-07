@@ -14,26 +14,26 @@ class JavaVirtualHomeClient
         private val client: VirtualHomeClient = VirtualHomeClient(host, port),
     ) {
         /**
- * Performs a health check of the VirtualHome server.
- *
- * @return The server's response as a [VirtualHomeResponse].
- */
-fun check(): VirtualHomeResponse = runBlocking { client.check() }
+         * Performs a health check of the VirtualHome server.
+         *
+         * @return The server's response as a [VirtualHomeResponse].
+         */
+        fun check(): VirtualHomeResponse = runBlocking { client.check() }
 
         /**
- * Reset the virtual environment to the scene specified by index.
- *
- * @param sceneIndex The index of the scene to reset.
- * @return The VirtualHomeResponse describing the outcome of the reset operation.
- */
-fun reset(sceneIndex: Int): VirtualHomeResponse = runBlocking { client.reset(sceneIndex) }
+         * Reset the virtual environment to the scene specified by index.
+         *
+         * @param sceneIndex The index of the scene to reset.
+         * @return The VirtualHomeResponse describing the outcome of the reset operation.
+         */
+        fun reset(sceneIndex: Int): VirtualHomeResponse = runBlocking { client.reset(sceneIndex) }
 
         /**
- * Fetches the client's current environment graph.
- *
- * @return The environment graph representing the current rooms, objects, and their relationships. 
- */
-fun environmentGraph(): Graph = runBlocking { client.environmentGraph() }
+         * Fetches the client's current environment graph.
+         *
+         * @return The environment graph representing the current rooms, objects, and their relationships.
+         */
+        fun environmentGraph(): Graph = runBlocking { client.environmentGraph() }
 
         /**
          * Expands the provided scene graph according to the given configuration.
@@ -66,7 +66,7 @@ fun environmentGraph(): Graph = runBlocking { client.environmentGraph() }
          *
          * @param script A list of script lines or commands that describe the actions to render in the scene.
          * @param config Rendering options and limits to apply for this render.
-         * @return A VirtualHomeResponse containing the render outcome and associated metadata. 
+         * @return A VirtualHomeResponse containing the render outcome and associated metadata.
          */
         fun renderScript(
             script: List<String>,
@@ -88,27 +88,27 @@ fun environmentGraph(): Graph = runBlocking { client.environmentGraph() }
         ): VirtualHomeResponse = runBlocking { client.addCamera(position, rotation, fieldView) }
 
         /**
- * Retrieves the number of cameras currently configured in the virtual environment.
- *
- * @return The number of configured cameras.
- */
-fun cameraCount(): Int = runBlocking { client.cameraCount() }
+         * Retrieves the number of cameras currently configured in the virtual environment.
+         *
+         * @return The number of configured cameras.
+         */
+        fun cameraCount(): Int = runBlocking { client.cameraCount() }
 
         /**
- * Retrieve camera data for the specified camera indices.
- *
- * @param cameraIndexes The list of camera indices to retrieve data for.
- * @return A [VirtualHomeResponse] containing camera metadata and state for the requested cameras.
- */
-fun cameraData(cameraIndexes: List<Int>): VirtualHomeResponse = runBlocking { client.cameraData(cameraIndexes) }
+         * Retrieve camera data for the specified camera indices.
+         *
+         * @param cameraIndexes The list of camera indices to retrieve data for.
+         * @return A [VirtualHomeResponse] containing camera metadata and state for the requested cameras.
+         */
+        fun cameraData(cameraIndexes: List<Int>): VirtualHomeResponse = runBlocking { client.cameraData(cameraIndexes) }
 
         /**
- * Retrieve the objects visible to a specific camera.
- *
- * @param cameraIndex Index of the camera whose visible objects to query (zero-based).
- * @return A map from object identifier to its label for all objects visible to the specified camera.
- */
-fun visibleObjects(cameraIndex: Int): Map<String, String> = runBlocking { client.visibleObjects(cameraIndex) }
+         * Retrieve the objects visible to a specific camera.
+         *
+         * @param cameraIndex Index of the camera whose visible objects to query (zero-based).
+         * @return A map from object identifier to its label for all objects visible to the specified camera.
+         */
+        fun visibleObjects(cameraIndex: Int): Map<String, String> = runBlocking { client.visibleObjects(cameraIndex) }
 
         /**
          * Capture images from the specified cameras and return their raw byte data.
@@ -127,17 +127,17 @@ fun visibleObjects(cameraIndex: Int): Map<String, String> = runBlocking { client
         ): List<ByteArray> = runBlocking { client.cameraImage(cameraIndexes, mode, imageWidth, imageHeight) }
 
         /**
-             * Create a RenderParams configured with the given rendering options.
-             *
-             * @param processingTimeLimit Maximum processing time (in seconds) allowed for rendering.
-             * @param findSolution Whether to search for a valid solution before rendering.
-             * @param skipAnimation Whether to omit animations from the render.
-             * @param recording Whether to enable recording during rendering.
-             * @param savePoseData Whether to persist pose data produced during rendering.
-             * @param skipExecution Whether to skip executing actions when rendering.
-             * @return A RenderParams instance populated with the provided field values.
-             */
-            fun createRenderParams(
+         * Create a RenderParams configured with the given rendering options.
+         *
+         * @param processingTimeLimit Maximum processing time (in seconds) allowed for rendering.
+         * @param findSolution Whether to search for a valid solution before rendering.
+         * @param skipAnimation Whether to omit animations from the render.
+         * @param recording Whether to enable recording during rendering.
+         * @param savePoseData Whether to persist pose data produced during rendering.
+         * @param skipExecution Whether to skip executing actions when rendering.
+         * @return A RenderParams instance populated with the provided field values.
+         */
+        fun createRenderParams(
             processingTimeLimit: Int,
             findSolution: Boolean,
             skipAnimation: Boolean,
