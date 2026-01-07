@@ -15,12 +15,13 @@ class VirtualHomeClientCloseTest {
         every { mockHttpClient.close() } just runs
 
         val client =
-            VirtualHomeClient(
+            object : VirtualHomeClient(
                 host = "localhost",
                 port = 8080,
                 timeout = 1000L,
-                httpClient = mockHttpClient,
-            )
+            ) {
+                override fun buildHttpClient(timeout: Long): HttpClient = mockHttpClient
+            }
 
         client.close()
 

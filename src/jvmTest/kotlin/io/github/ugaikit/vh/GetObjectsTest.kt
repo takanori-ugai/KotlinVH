@@ -101,7 +101,7 @@ class GetObjectsTest {
 
     private class FakeVirtualHomeClient(
         private val response: VirtualHomeResponse,
-    ) : VirtualHomeClient(httpClient = mockk(relaxed = true)) {
+    ) : VirtualHomeClient() {
         override suspend fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse = response
     }
 

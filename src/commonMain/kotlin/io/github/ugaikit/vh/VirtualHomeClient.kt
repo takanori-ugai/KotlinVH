@@ -14,13 +14,11 @@ import io.ktor.util.decodeBase64Bytes
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
 private val logger = KotlinLogging.logger {}
 
 private const val CONNECT_TIMEOUT = 30000L
-private const val READ_TIMEOUT = 600000L
+internal const val READ_TIMEOUT = 600000L
 
 /**
  * A client for interacting with the VirtualHome server.
@@ -32,7 +30,6 @@ open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
     timeout: Long = READ_TIMEOUT,
-    httpClient: HttpClient? = null,
 ) : CloseableResource {
     /**
      * Configuration of Json converter
@@ -46,7 +43,7 @@ open class VirtualHomeClient(
 
     private val url = "http://$host:$port"
 
-    private val client = httpClient ?: createHttpClient(timeout)
+    private val client = buildHttpClient(timeout)
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
     /**
@@ -388,6 +385,8 @@ open class VirtualHomeClient(
                 emptyList()
             }
         }
+
+    internal open fun buildHttpClient(timeout: Long): HttpClient = createHttpClient(timeout)
 
     private fun createHttpClient(timeout: Long): HttpClient =
         HttpClient {

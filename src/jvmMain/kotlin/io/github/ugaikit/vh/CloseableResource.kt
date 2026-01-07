@@ -1,3 +1,3 @@
 package io.github.ugaikit.vh
 
-actual typealias CloseableResource = java.io.Closeable
+actual interface CloseableResource : java.io.Closeable

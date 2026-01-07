@@ -10,7 +10,7 @@ try {
     const github = io.github;
     const ugaikit = github.ugaikit;
     const vhPkg = ugaikit.vh;
-    const VirtualHomeClient = vhPkg.VirtualHomeClient;
+    const VirtualHomeClient = vhPkg.JsVirtualHomeClient;
 
     console.log('VirtualHomeClient found:', VirtualHomeClient);
 
