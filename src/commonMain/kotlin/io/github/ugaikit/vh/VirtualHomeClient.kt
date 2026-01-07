@@ -27,8 +27,6 @@ private const val READ_TIMEOUT = 600000L
  * @property host The host of the VirtualHome server. (Default value is "localhost")
  * @property port The port of the VirtualHome server. (Default value is 8080)
  */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
