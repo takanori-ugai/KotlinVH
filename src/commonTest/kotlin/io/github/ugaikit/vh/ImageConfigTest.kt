@@ -5,11 +5,13 @@ import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+private val jsonWithDefaults = Json { encodeDefaults = true }
+
 class ImageConfigTest {
     @Test
     fun `serialize ImageConfig to JSON with default values`() {
         val config = ImageConfig()
-        val json = Json { encodeDefaults = true }.encodeToString(config)
+        val json = jsonWithDefaults.encodeToString(config)
         assertEquals("""{"mode":"normal","image_width":"640","image_height":"320"}""", json)
     }
 

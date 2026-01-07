@@ -12,14 +12,13 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.decodeBase64Bytes
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
 private val logger = KotlinLogging.logger {}
 
 private const val CONNECT_TIMEOUT = 30000L
-private const val READ_TIMEOUT = 600000L
+internal const val READ_TIMEOUT = 600000L
 
 /**
  * A client for interacting with the VirtualHome server.
@@ -27,13 +26,16 @@ private const val READ_TIMEOUT = 600000L
  * @property host The host of the VirtualHome server. (Default value is "localhost")
  * @property port The port of the VirtualHome server. (Default value is 8080)
  */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 open class VirtualHomeClient(
     host: String = "localhost",
     port: Int = 8080,
     timeout: Long = READ_TIMEOUT,
-) {
+    httpClient: HttpClient? = null,
+) : CloseableResource {
+    constructor(host: String, port: Int, timeout: Long) : this(host, port, timeout, null)
+
+    private val ownsClient = httpClient == null
+
     /**
      * Configuration of Json converter
      */
@@ -46,27 +48,62 @@ open class VirtualHomeClient(
 
     private val url = "http://$host:$port"
 
-    private val client =
-        HttpClient {
-            install(ContentNegotiation) {
-                json(format)
-            }
-            install(HttpTimeout) {
-                connectTimeoutMillis = CONNECT_TIMEOUT
-                requestTimeoutMillis = timeout
-            }
-        }
+    private val client = httpClient ?: buildHttpClient(timeout)
     private val initialRooms = listOf("kitchen", "bedroom", "livingroom", "bathroom")
 
-    /*
-     * This action is not implemented
-     *
-     * fun checkScript(script: List<String>) : Response? {
-     * val data = Request(currentTimeMillis().toInt(), "check_script", stringParams=script)
-     * val res= sendRequest(format.encodeToString(data).toByteArray(Charsets.UTF_8))
-     * return res
-     * }
+    /**
+     * Activates or deactivates physics in the environment.
+     * @param active Whether to activate physics or not.
      */
+    suspend fun activatePhysics(active: Boolean = true): VirtualHomeResponse {
+        val data =
+            VirtualHomeRequest(
+                action = "activate_physics",
+                stringParams = listOf(active.toString()),
+            )
+        return sendRequest(data)
+    }
+
+    /**
+     * Checks the validity of a script.
+     * @param script The script to check.
+     * @return A VirtualHomeResponse indicating whether the script is valid.
+     */
+    suspend fun checkScript(script: List<String>): VirtualHomeResponse {
+        val data = VirtualHomeRequest(action = "check_script", stringParams = script)
+        return sendRequest(data)
+    }
+
+    /**
+     * Releases the underlying HTTP client resources.
+     *
+     * Call this when the client is no longer needed (e.g., on application shutdown).
+     * On JVM targets this also enables usage with `use { ... }` / try-with-resources.
+     */
+    override fun close() {
+        if (ownsClient) {
+            client.close()
+        }
+    }
+
+    /**
+     * Retrieves all objects in the scene.
+     * @return A list of nodes representing the objects in the scene.
+     */
+    suspend fun getObjects(): List<Node> {
+        val request = VirtualHomeRequest(action = "get_objects")
+        val response = sendRequest(request)
+        return try {
+            if (!response.success || response.message == null) {
+                emptyList()
+            } else {
+                format.decodeFromString(response.message)
+            }
+        } catch (e: SerializationException) {
+            logger.error(e) { "Failed to parse getObjects response" }
+            emptyList()
+        }
+    }
 
     /**
      * Make images from cameras.
@@ -353,6 +390,19 @@ open class VirtualHomeClient(
                 res.message?.let { format.decodeFromString<List<String>>(it) }.orEmpty()
             } else {
                 emptyList()
+            }
+        }
+
+    internal open fun buildHttpClient(timeout: Long): HttpClient = createHttpClient(timeout)
+
+    private fun createHttpClient(timeout: Long): HttpClient =
+        HttpClient {
+            install(ContentNegotiation) {
+                json(format)
+            }
+            install(HttpTimeout) {
+                connectTimeoutMillis = CONNECT_TIMEOUT
+                requestTimeoutMillis = timeout
             }
         }
 
