@@ -3,8 +3,10 @@ package io.github.ugaikit.vh
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.slot
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
@@ -12,24 +14,34 @@ class JavaVirtualHomeClientTest {
     @Test
     fun `delegates check and reset`() {
         val mock = mockk<VirtualHomeClient>()
-        var seenSceneIndex: Int? = null
+        val sceneIndexSlot = slot<Int>()
         val checkResponse = VirtualHomeResponse(1, true, null, 0, null)
         val resetResponse = VirtualHomeResponse(2, true, null, 0, null)
         coEvery { mock.check() } returns checkResponse
-        coEvery { mock.reset(any()) } answers {
-            seenSceneIndex = firstArg()
-            resetResponse
-        }
+        coEvery { mock.reset(capture(sceneIndexSlot)) } returns resetResponse
 
         val client = JavaVirtualHomeClient(client = mock)
 
         assertSame(checkResponse, client.check())
         val resetResult = client.reset(5)
 
-        assertEquals(5, seenSceneIndex)
+        assertEquals(5, sceneIndexSlot.captured)
         assertSame(resetResponse, resetResult)
         coVerify(exactly = 1) { mock.check() }
         coVerify(exactly = 1) { mock.reset(5) }
+    }
+
+    @Test
+    fun `propagates exceptions from delegate`() {
+        val mock = mockk<VirtualHomeClient>()
+        val ex = RuntimeException("boom")
+        coEvery { mock.check() } throws ex
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        val thrown = assertFailsWith<RuntimeException> { client.check() }
+        assertSame(ex, thrown)
+        coVerify(exactly = 1) { mock.check() }
     }
 
     @Test
@@ -50,62 +62,113 @@ class JavaVirtualHomeClientTest {
     }
 
     @Test
-    fun `delegates addCharacter and renderScript`() {
+    fun `delegates addCharacter`() {
         val mock = mockk<VirtualHomeClient>()
         val position = Position(1, 2, 3)
-        val script = listOf("do something")
         val addCharacterResponse = VirtualHomeResponse(4, true, null, 0, null)
-        val renderResponse = VirtualHomeResponse(5, true, null, 0, null)
 
         coEvery { mock.addCharacter("Chars/Test", position, "kitchen") } returns addCharacterResponse
-        // renderScript stub set after renderConfig creation
+
+        val client = JavaVirtualHomeClient(client = mock)
+        val addCharacterResult = client.addCharacter("Chars/Test", position, "kitchen")
+
+        assertSame(addCharacterResponse, addCharacterResult)
+        coVerify(exactly = 1) { mock.addCharacter("Chars/Test", position, "kitchen") }
+    }
+
+    @Test
+    fun `delegates renderScript`() {
+        val mock = mockk<VirtualHomeClient>()
+        val script = listOf("do something")
+        val renderResponse = VirtualHomeResponse(5, true, null, 0, null)
 
         val client = JavaVirtualHomeClient(client = mock)
         val renderConfig = client.createRenderParams(1, true, false, true, false, true)
         coEvery { mock.renderScript(script, renderConfig) } returns renderResponse
-        val addCharacterResult = client.addCharacter("Chars/Test", position, "kitchen")
         val renderResult = client.renderScript(script, renderConfig)
 
-        assertSame(addCharacterResponse, addCharacterResult)
         assertSame(renderResponse, renderResult)
-        coVerify(exactly = 1) { mock.addCharacter("Chars/Test", position, "kitchen") }
         coVerify(exactly = 1) { mock.renderScript(script, renderConfig) }
     }
 
     @Test
-    fun `delegates camera operations`() {
+    fun `delegates addCamera`() {
         val mock = mockk<VirtualHomeClient>()
         val position = Position(0, 1, 2)
         val rotation = Position(3, 4, 5)
         val addCameraResponse = VirtualHomeResponse(6, true, null, 0, null)
-        val cameraDataResponse = VirtualHomeResponse(7, true, null, 0, null)
-        val visibleObjects = mapOf("obj" to "value")
-        val imageBytes = listOf(byteArrayOf(1, 2, 3))
 
         coEvery { mock.addCamera(position, rotation, 90) } returns addCameraResponse
-        coEvery { mock.cameraCount() } returns 42
-        coEvery { mock.cameraData(listOf(1, 2, 3)) } returns cameraDataResponse
-        coEvery { mock.visibleObjects(7) } returns visibleObjects
-        coEvery { mock.cameraImage(listOf(8), "depth", 10, 11) } returns imageBytes
 
         val client = JavaVirtualHomeClient(client = mock)
 
         val addCameraResult = client.addCamera(position, rotation, 90)
-        val count = client.cameraCount()
-        val dataResult = client.cameraData(listOf(1, 2, 3))
-        val visible = client.visibleObjects(7)
-        val image = client.cameraImage(listOf(8), "depth", 10, 11)
 
         assertSame(addCameraResponse, addCameraResult)
-        assertEquals(42, count)
-        assertSame(cameraDataResponse, dataResult)
-        assertEquals(visibleObjects, visible)
-        assertSame(imageBytes, image)
 
         coVerify { mock.addCamera(position, rotation, 90) }
+    }
+
+    @Test
+    fun `delegates cameraCount`() {
+        val mock = mockk<VirtualHomeClient>()
+        coEvery { mock.cameraCount() } returns 42
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        assertEquals(42, client.cameraCount())
         coVerify { mock.cameraCount() }
+    }
+
+    @Test
+    fun `delegates cameraData`() {
+        val mock = mockk<VirtualHomeClient>()
+        val response = VirtualHomeResponse(7, true, null, 0, null)
+        coEvery { mock.cameraData(listOf(1, 2, 3)) } returns response
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        assertSame(response, client.cameraData(listOf(1, 2, 3)))
         coVerify { mock.cameraData(listOf(1, 2, 3)) }
+    }
+
+    @Test
+    fun `delegates visibleObjects`() {
+        val mock = mockk<VirtualHomeClient>()
+        val visibleObjects = mapOf("obj" to "value")
+        coEvery { mock.visibleObjects(7) } returns visibleObjects
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        assertEquals(visibleObjects, client.visibleObjects(7))
         coVerify { mock.visibleObjects(7) }
+    }
+
+    @Test
+    fun `delegates cameraImage`() {
+        val mock = mockk<VirtualHomeClient>()
+        val imageBytes = listOf(byteArrayOf(1, 2, 3))
+        coEvery { mock.cameraImage(listOf(8), "depth", 10, 11) } returns imageBytes
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        assertSame(imageBytes, client.cameraImage(listOf(8), "depth", 10, 11))
         coVerify { mock.cameraImage(listOf(8), "depth", 10, 11) }
+    }
+
+    @Test
+    fun `cameraImage propagates delegate exceptions`() {
+        val mock = mockk<VirtualHomeClient>()
+        val ex = IllegalStateException("camera fail")
+        coEvery { mock.cameraImage(listOf(1), any(), any(), any()) } throws ex
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        val thrown =
+            assertFailsWith<IllegalStateException> {
+                client.cameraImage(listOf(1), "normal", 640, 480)
+            }
+        assertSame(ex, thrown)
+        coVerify { mock.cameraImage(listOf(1), "normal", 640, 480) }
     }
 }
