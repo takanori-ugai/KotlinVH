@@ -116,7 +116,7 @@ class JavaVirtualHomeClientTest {
 
         assertSame(addCameraResponse, addCameraResult)
 
-        coVerify { mock.addCamera(position, rotation, 90) }
+        coVerify(exactly = 1) { mock.addCamera(position, rotation, 90) }
     }
 
     @Test
@@ -127,7 +127,7 @@ class JavaVirtualHomeClientTest {
         val client = JavaVirtualHomeClient(client = mock)
 
         assertEquals(42, client.cameraCount())
-        coVerify { mock.cameraCount() }
+        coVerify(exactly = 1) { mock.cameraCount() }
     }
 
     @Test
@@ -139,7 +139,7 @@ class JavaVirtualHomeClientTest {
         val client = JavaVirtualHomeClient(client = mock)
 
         assertSame(response, client.cameraData(listOf(1, 2, 3)))
-        coVerify { mock.cameraData(listOf(1, 2, 3)) }
+        coVerify(exactly = 1) { mock.cameraData(listOf(1, 2, 3)) }
     }
 
     @Test
@@ -151,7 +151,7 @@ class JavaVirtualHomeClientTest {
         val client = JavaVirtualHomeClient(client = mock)
 
         assertEquals(visibleObjects, client.visibleObjects(7))
-        coVerify { mock.visibleObjects(7) }
+        coVerify(exactly = 1) { mock.visibleObjects(7) }
     }
 
     @Test
@@ -163,7 +163,7 @@ class JavaVirtualHomeClientTest {
         val client = JavaVirtualHomeClient(client = mock)
 
         assertSame(imageBytes, client.cameraImage(listOf(8), "depth", 10, 11))
-        coVerify { mock.cameraImage(listOf(8), "depth", 10, 11) }
+        coVerify(exactly = 1) { mock.cameraImage(listOf(8), "depth", 10, 11) }
     }
 
     @Test
@@ -179,6 +179,6 @@ class JavaVirtualHomeClientTest {
                 client.cameraImage(listOf(1), "normal", 640, 480)
             }
         assertSame(ex, thrown)
-        coVerify { mock.cameraImage(listOf(1), "normal", 640, 480) }
+        coVerify(exactly = 1) { mock.cameraImage(listOf(1), "normal", 640, 480) }
     }
 }
