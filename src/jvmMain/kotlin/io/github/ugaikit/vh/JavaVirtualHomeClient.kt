@@ -42,6 +42,7 @@ class JavaVirtualHomeClient
          * @param config Configuration options that control how the scene is expanded. Defaults to an empty configuration.
          * @return A VirtualHomeResponse containing the expansion result.
          */
+        @JvmOverloads
         fun expandScene(
             graph: Graph,
             config: ExpandSceneConfig = ExpandSceneConfig(),
@@ -55,6 +56,7 @@ class JavaVirtualHomeClient
          * @param initialRoom Name of the room to place the character in; an empty string means no explicit room assignment.
          * @return A `VirtualHomeResponse` describing the result of the add-character operation.
          */
+        @JvmOverloads
         fun addCharacter(
             characterResource: String = "Chars/Male1",
             position: Position? = null,
@@ -68,6 +70,7 @@ class JavaVirtualHomeClient
          * @param config Rendering options and limits to apply for this render.
          * @return A VirtualHomeResponse containing the render outcome and associated metadata.
          */
+        @JvmOverloads
         fun renderScript(
             script: List<String>,
             config: RenderParams = RenderParams(),
@@ -81,6 +84,7 @@ class JavaVirtualHomeClient
          * @param fieldView Camera field of view in degrees (default 40).
          * @return A VirtualHomeResponse describing the result of the add-camera operation.
          */
+        @JvmOverloads
         fun addCamera(
             position: Position,
             rotation: Position,
@@ -119,6 +123,7 @@ class JavaVirtualHomeClient
          * @param imageHeight Desired image height in pixels.
          * @return A list of image byte arrays corresponding to each requested camera index in order.
          */
+        @JvmOverloads
         fun cameraImage(
             cameraIndexes: List<Int>,
             mode: String = "normal",
@@ -137,13 +142,14 @@ class JavaVirtualHomeClient
          * @param skipExecution Whether to skip executing actions when rendering.
          * @return A RenderParams instance populated with the provided field values.
          */
+        @JvmOverloads
         fun createRenderParams(
-            processingTimeLimit: Int,
-            findSolution: Boolean,
-            skipAnimation: Boolean,
-            recording: Boolean,
-            savePoseData: Boolean,
-            skipExecution: Boolean,
+            processingTimeLimit: Int = 10,
+            findSolution: Boolean = false,
+            skipAnimation: Boolean = false,
+            recording: Boolean = false,
+            savePoseData: Boolean = false,
+            skipExecution: Boolean = false,
         ): RenderParams =
             RenderParams(
                 processingTimeLimit = processingTimeLimit,

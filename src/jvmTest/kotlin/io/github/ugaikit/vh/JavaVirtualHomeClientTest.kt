@@ -44,12 +44,23 @@ class JavaVirtualHomeClientTest {
     }
 
     @Test
+    fun `delegates environmentGraph`() {
+        val mock = mockk<VirtualHomeClient>()
+        val graph = Graph()
+        coEvery { mock.environmentGraph() } returns graph
+
+        val client = JavaVirtualHomeClient(client = mock)
+
+        assertSame(graph, client.environmentGraph())
+        coVerify(exactly = 1) { mock.environmentGraph() }
+    }
+
+    @Test
     fun `delegates environmentGraph and expandScene`() {
         val mock = mockk<VirtualHomeClient>()
         val graph = Graph()
         val config = ExpandSceneConfig(randomize = true)
         val expandResponse = VirtualHomeResponse(3, true, null, 0, null)
-        coEvery { mock.environmentGraph() } returns graph
         coEvery { mock.expandScene(graph, config) } returns expandResponse
 
         val client = JavaVirtualHomeClient(client = mock)
