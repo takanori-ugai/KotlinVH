@@ -89,7 +89,7 @@ kotlin {
                 implementation("io.mockk:mockk:1.14.7")
 //                implementation("org.junit:junit-bom:5.12.0")
                 implementation("org.junit.jupiter:junit-jupiter:6.0.1")
-                runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
+                runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.2")
             }
         }
         val jsMain by getting {
