@@ -233,7 +233,7 @@ mavenPublishing {
             developer {
                 id = "takanori-ugai"
                 name = "Takanori Ugai"
-                email = "ugai@fujitsu.com"
+                email = "ugai.takanori@gmail.com"
             }
         }
         scm {
