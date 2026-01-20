@@ -81,7 +81,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:3.3.3")
-                implementation("ch.qos.logback:logback-classic:1.5.24")
+                implementation("ch.qos.logback:logback-classic:1.5.25")
             }
         }
         val jvmTest by getting {
