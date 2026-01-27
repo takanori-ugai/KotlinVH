@@ -13,7 +13,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("com.github.jk1.dependency-license-report") version "3.0.1"
     id("com.github.spotbugs") version "6.4.8"
-    id("com.diffplug.spotless") version "8.1.0"
+    id("com.diffplug.spotless") version "8.2.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
@@ -66,7 +66,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
-                implementation("io.ktor:ktor-client-core:3.3.3")
+                implementation("io.ktor:ktor-client-core:3.4.0")
                 implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
                 implementation("io.github.oshai:kotlin-logging:7.0.14")
@@ -80,7 +80,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.3.3")
+                implementation("io.ktor:ktor-client-cio:3.4.0")
                 implementation("ch.qos.logback:logback-classic:1.5.25")
             }
         }
