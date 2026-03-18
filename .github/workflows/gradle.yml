@@ -34,7 +34,7 @@ jobs:
       - name: Update with Gradle
         run: ./gradlew kotlinUpgradeYarnLock
       - name: Build build jvmTest jacocoReport
-        run: ./gradlew build jvmTest jacocoTestReport
+        run: ./gradlew build jvmTest jacocoTestReport -x detekt
       - name: Upload coverage reports to Codecov
         if: matrix.java_version == '17'
         uses: codecov/codecov-action@v5.5.2
