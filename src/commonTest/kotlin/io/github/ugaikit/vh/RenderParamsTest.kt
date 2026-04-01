@@ -5,11 +5,13 @@ import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+private val jsonWithDefaults = Json { encodeDefaults = true }
+
 class RenderParamsTest {
     @Test
     fun `serialize RenderParams with default values`() {
         val params = RenderParams()
-        val json = Json { encodeDefaults = true }.encodeToString(params)
+        val json = jsonWithDefaults.encodeToString(params)
         // JS uses 1 for 1.0 double serialization sometimes
         val expected =
             """

@@ -26,7 +26,7 @@ class RequestTest {
             explicitNulls = false
         }
 
-    class SpyVirtualHomeClient : VirtualHomeClient() {
+    internal class SpyVirtualHomeClient : VirtualHomeClient() {
         var handler: ((VirtualHomeRequest) -> VirtualHomeResponse)? = null
 
         override suspend fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse =

@@ -6,7 +6,7 @@ const github = io.github;
 const ugaikit = github.ugaikit;
 const vhPkg = ugaikit.vh;
 
-const VirtualHomeClient = vhPkg.VirtualHomeClient;
+const VirtualHomeClient = vhPkg.JsVirtualHomeClient;
 const VirtualHomeRequest = vhPkg.VirtualHomeRequest;
 const Position = vhPkg.Position;
 const RenderParams = vhPkg.RenderParams;

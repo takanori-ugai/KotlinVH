@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
         matrix:
-          java_version: [17, 21, 23]
+          java_version: [17, 21, 25]
     runs-on: ubuntu-latest
 
     steps:
@@ -31,15 +31,19 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5.0.0
-      - name: Update with Gradle
-        run: ./gradlew kotlinUpgradeYarnLock
+      - name: Build with Gradle (Java 25)
+        if: matrix.java_version == 25
+        run: ./gradlew build -x detekt
       - name: Build with Gradle
+        if: matrix.java_version != 25
         run: ./gradlew build
       - name: Upload coverage reports to Codecov
+        if: matrix.java_version == '17'
         uses: codecov/codecov-action@v5.5.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: takanori-ugai/KotlinVH
+          files: build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+          slug: takanori-ugai/Kotlin
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5.6.2
         if: success() || failure() # always run even if the previous step fails

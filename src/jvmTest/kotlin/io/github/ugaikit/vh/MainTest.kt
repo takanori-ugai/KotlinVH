@@ -139,6 +139,7 @@ class MainTest {
                 if (!client.reset(it).success) throw VHException("Reset Error")
                 val graph = client.environmentGraph()
                 val sofa = graph.nodes.last { it.className == "sofa" }
+                val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
                 println("Sofa: ${sofa.id}")
                 graph.nodes.add(
                     Node(
@@ -149,7 +150,7 @@ class MainTest {
                         states = listOf(),
                     ),
                 )
-                graph.edges.add(Edge(fromId = NEW_CAT_ID, toId = sofa.id!!, relationType = "ON"))
+                graph.edges.add(Edge(fromId = NEW_CAT_ID, toId = sofaId, relationType = "ON"))
                 println(client.expandScene(graph))
                 val graph2 = client.environmentGraph()
                 // expandSceneのあとオブジェクトのIDが変化する
@@ -298,6 +299,7 @@ class MainTest {
             if (!client.reset(sceneNum).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             val sofa = initGraph.nodes.last { it.className == "sofa" }
+            val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
             initGraph.nodes.add(
                 Node(
                     className = "cat",
@@ -307,7 +309,7 @@ class MainTest {
                     states = listOf(),
                 ),
             )
-            initGraph.edges.add(Edge(fromId = NEW_CAT_ID, toId = sofa.id!!, relationType = "ON"))
+            initGraph.edges.add(Edge(fromId = NEW_CAT_ID, toId = sofaId, relationType = "ON"))
             if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
             if (!client.addCharacter().success) throw VHException("Add Character Error")
             val graph = client.environmentGraph()

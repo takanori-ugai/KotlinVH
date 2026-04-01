@@ -1,5 +1,6 @@
 package io.github.ugaikit.vh
 
+import kotlinx.coroutines.runBlocking
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -96,4 +97,49 @@ class GetObjectsTest {
         assertEquals("nodes/id,nodes/class_name", lines[0])
         assertEquals("99,", lines[1])
     }
+
+    private class FakeVirtualHomeClient(
+        private val response: VirtualHomeResponse,
+    ) : VirtualHomeClient() {
+        override suspend fun sendRequest(data: VirtualHomeRequest): VirtualHomeResponse = response
+    }
+
+    @Test
+    fun `getObjects returns empty list when message is null`() =
+        runBlocking {
+            val client =
+                FakeVirtualHomeClient(
+                    VirtualHomeResponse(id = 1, success = true, message = null, value = 0, messageList = null),
+                )
+
+            val result = client.getObjects()
+
+            assertTrue(result.isEmpty())
+        }
+
+    @Test
+    fun `getObjects returns empty list when message is empty string`() =
+        runBlocking {
+            val client =
+                FakeVirtualHomeClient(
+                    VirtualHomeResponse(id = 1, success = true, message = "", value = 0, messageList = null),
+                )
+
+            val result = client.getObjects()
+
+            assertTrue(result.isEmpty())
+        }
+
+    @Test
+    fun `getObjects returns empty list when message contains malformed json`() =
+        runBlocking {
+            val client =
+                FakeVirtualHomeClient(
+                    VirtualHomeResponse(id = 1, success = true, message = "not json", value = 0, messageList = null),
+                )
+
+            val result = client.getObjects()
+
+            assertTrue(result.isEmpty())
+        }
 }

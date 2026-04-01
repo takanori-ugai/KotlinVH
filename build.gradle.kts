@@ -3,16 +3,17 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("multiplatform") version "2.3.0"
-    kotlin("plugin.serialization") version "2.2.21"
-    id("com.gradleup.shadow") version "8.3.0"
+    kotlin("multiplatform") version "2.3.20"
+    kotlin("plugin.serialization") version "2.3.20"
+    id("com.gradleup.shadow") version "9.4.0"
     jacoco
     id("org.jetbrains.dokka") version "2.1.0"
+    id("org.jetbrains.dokka-javadoc") version "2.1.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
-    id("com.github.jk1.dependency-license-report") version "3.0.1"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
+    id("com.github.jk1.dependency-license-report") version "3.1.1"
     id("com.github.spotbugs") version "6.4.8"
-    id("com.diffplug.spotless") version "8.1.0"
+    id("com.diffplug.spotless") version "8.4.0"
     id("com.vanniktech.maven.publish") version "0.35.0"
 }
 
@@ -63,43 +64,43 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-                implementation("io.ktor:ktor-client-core:3.3.3")
-                implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
-                implementation("io.github.oshai:kotlin-logging:7.0.13")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+                implementation("io.ktor:ktor-client-core:3.4.2")
+                implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
+                implementation("io.github.oshai:kotlin-logging:8.0.01")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
             }
         }
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.3.3")
-                implementation("ch.qos.logback:logback-classic:1.5.16")
+                implementation("io.ktor:ktor-client-cio:3.4.2")
+                implementation("ch.qos.logback:logback-classic:1.5.32")
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.mockk:mockk:1.13.10")
+                implementation("io.mockk:mockk:1.14.9")
 //                implementation("org.junit:junit-bom:5.12.0")
-                implementation("org.junit.jupiter:junit-jupiter:6.0.1")
-                runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
+                implementation("org.junit.jupiter:junit-jupiter:6.0.3")
+                runtimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
             }
         }
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:3.3.3")
+                implementation("io.ktor:ktor-client-js:3.4.2")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
             }
         }
         val linuxX64Main by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.0.3")
+                implementation("io.ktor:ktor-client-cio:3.4.2")
             }
         }
     }
@@ -143,7 +144,7 @@ tasks {
             dependsOn("jvmTest")
             // sourceSets(kotlin.sourceSets.jvmMain) // might need adjustment
             classDirectories.setFrom(files(layout.buildDirectory.dir("classes/kotlin/jvm/main")))
-            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/jvmCommonMain/kotlin", "src/commonMain/kotlin"))
+            sourceDirectories.setFrom(files("src/jvmMain/kotlin", "src/commonMain/kotlin"))
             executionData.setFrom(layout.buildDirectory.file("jacoco/jvmTest.exec"))
         }
 
@@ -229,7 +230,7 @@ mavenPublishing {
             developer {
                 id = "takanori-ugai"
                 name = "Takanori Ugai"
-                email = "ugai@fujitsu.com"
+                email = "ugai.takanori@gmail.com"
             }
         }
         scm {

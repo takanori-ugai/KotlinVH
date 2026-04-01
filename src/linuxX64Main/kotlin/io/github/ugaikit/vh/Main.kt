@@ -2,6 +2,9 @@ package io.github.ugaikit.vh
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 import kotlin.random.Random
 
 private val logger = KotlinLogging.logger {}
@@ -55,7 +58,7 @@ fun main() {
                 "idle",
             )
         val res = sq.sendRequest(data)
-        logger.info { res?.success }
+        logger.info { res.success }
         executeResetAndEnvironmentGraphRequests(sq)
 
         val graph = sq.environmentGraph()
@@ -96,15 +99,16 @@ private suspend fun addCatToScene(
     graph: Graph,
     sofa: Node,
 ) {
+    val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
     val node = Node(className = "cat", category = "Animals", id = CAT_ID, properties = listOf(), states = listOf())
     graph.nodes.add(node)
     println("ADDRESSBOOK: " + graph.nodes.filter { it.className == "book" })
-    graph.edges.add(Edge(fromId = CAT_ID, toId = sofa.id!!, relationType = "ON"))
+    graph.edges.add(Edge(fromId = CAT_ID, toId = sofaId, relationType = "ON"))
     println(sq.expandScene(graph))
     val graph2 = sq.environmentGraph()
     println(graph2.nodes.filter { it.id == CAT_ID })
     println("CAT: " + graph2.nodes.filter { it.className == "cat" })
-    println(graph2.edges.filter { it.toId == sofa.id })
+    println(graph2.edges.filter { it.toId == sofaId })
     println(graph2.nodes.size)
     println(sq.addCharacter())
     println(sq.cameraCount())
@@ -134,7 +138,10 @@ private suspend fun renderFinalScript(sq: VirtualHomeClient) {
 private suspend fun saveCameraImage(sq: VirtualHomeClient) {
     val res0 = sq.cameraImage(listOf(SAVE_CAMERA_ID))
     val image = res0[0]
-    // Files.write(Paths.get("bfo.png"), image)
+    val path = Path("bfo.png")
+    SystemFileSystem.sink(path).buffered().use { sink ->
+        sink.write(image)
+    }
 }
 
 class Main {
@@ -143,11 +150,12 @@ class Main {
 
     fun testScripts(script: List<String>): Boolean =
         runBlocking {
-            if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+            if (!client.reset(sceneNum).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             val sofas = initGraph.nodes.filter { it.className == "sofa" }
             println(sofas)
             val sofa = sofas.last()
+            val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
             println(sofa)
             initGraph.nodes.add(
                 Node(
@@ -158,8 +166,8 @@ class Main {
                     states = listOf(),
                 ),
             )
-            initGraph.edges.add(Edge(fromId = CAT_ID, toId = sofa.id!!, relationType = "ON"))
-            if (client.expandScene(initGraph)!!.success) {
+            initGraph.edges.add(Edge(fromId = CAT_ID, toId = sofaId, relationType = "ON"))
+            if (client.expandScene(initGraph).success) {
                 println("Sucess : Expend Scene")
                 val graph = client.environmentGraph()
                 val catId = graph.nodes.filter { it.className == "cat" }[CAT_NODE_ID]
@@ -167,7 +175,7 @@ class Main {
             } else {
                 println("Failed : Expend Scene")
             }
-            if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
+            if (!client.addCharacter().success) throw VHException("Add Character Error")
             println("Success : Add Character")
             val config =
                 RenderParams(
@@ -189,9 +197,10 @@ class Main {
 
     fun checkScripts(script: List<String>): Boolean =
         runBlocking {
-            if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
+            if (!client.reset(sceneNum).success) throw VHException("Reset Error")
             val initGraph = client.environmentGraph()
             val sofa = initGraph.nodes.filter { it.className == "sofa" }[SOFA_INDEX]
+            val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
             initGraph.nodes.add(
                 Node(
                     className = "cat",
@@ -201,9 +210,9 @@ class Main {
                     states = listOf(),
                 ),
             )
-            initGraph.edges.add(Edge(fromId = CAT_ID, toId = sofa.id!!, relationType = "ON"))
-            if (!client.expandScene(initGraph)!!.success) throw VHException("Expand Scene Error")
-            if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
+            initGraph.edges.add(Edge(fromId = CAT_ID, toId = sofaId, relationType = "ON"))
+            if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
+            if (!client.addCharacter().success) throw VHException("Add Character Error")
             val graph = client.environmentGraph()
             val catId = graph.nodes.filter { it.className == "cat" }[CAT_NODE_ID]
             val config =
@@ -216,14 +225,14 @@ class Main {
                     skipExecution = true,
                 )
 //        val scriptObj = Script(script)
-            if (!client.renderScript(script, config)!!.success) throw VHException("Error in Rendering")
+            if (!client.renderScript(script, config).success) throw VHException("Error in Rendering")
             return@runBlocking true
         }
 
     fun findNodes(name: String): List<Node> =
         runBlocking {
-            if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
-            if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
+            if (!client.reset(sceneNum).success) throw VHException("Reset Error")
+            if (!client.addCharacter().success) throw VHException("Add Character Error")
             val graph = client.environmentGraph()
             val regex = Regex(name)
             return@runBlocking graph.nodes.filter {
@@ -237,8 +246,8 @@ class Main {
 
     fun findNodesByProperty(property: String): List<Node> =
         runBlocking {
-            if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
-            if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
+            if (!client.reset(sceneNum).success) throw VHException("Reset Error")
+            if (!client.addCharacter().success) throw VHException("Add Character Error")
             val graph = client.environmentGraph()
             return@runBlocking graph.nodes.filter {
                 it.properties != null && it.properties.contains(property)
@@ -247,8 +256,8 @@ class Main {
 
     fun findNodesById(id: Int): List<Node> =
         runBlocking {
-            if (!client.reset(sceneNum)!!.success) throw VHException("Reset Error")
-            if (!client.addCharacter()!!.success) throw VHException("Add Character Error")
+            if (!client.reset(sceneNum).success) throw VHException("Reset Error")
+            if (!client.addCharacter().success) throw VHException("Add Character Error")
             val graph = client.environmentGraph()
             return@runBlocking graph.nodes.filter {
                 it.id != null && it.id == id
