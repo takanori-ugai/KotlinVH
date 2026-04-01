@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -15,7 +14,7 @@ plugins {
     id("com.github.jk1.dependency-license-report") version "3.1.1"
     id("com.github.spotbugs") version "6.4.8"
     id("com.diffplug.spotless") version "8.4.0"
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.35.0"
 }
 
 group = "io.github.ugaikit"
@@ -210,15 +209,12 @@ spotless {
 }
 
 mavenPublishing {
-    // Maven Central に公開する場合の設定
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
     signAllPublications()
 
-    // ライブラリの座標設定
     coordinates("io.github.ugaikit", "vh", "0.6.1")
 
-    // POM情報（Maven Centralには必須）
     pom {
         name = "KotlinVH"
         description = "Kotlin Multiplatform library for interacting with the Virtual Home API."
