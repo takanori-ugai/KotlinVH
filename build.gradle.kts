@@ -11,7 +11,7 @@ plugins {
     id("org.jetbrains.dokka-javadoc") version "2.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("com.github.jk1.dependency-license-report") version "3.1.1"
+    id("com.github.jk1.dependency-license-report") version "3.1.2"
     id("com.github.spotbugs") version "6.4.8"
     id("com.diffplug.spotless") version "8.4.0"
     id("com.vanniktech.maven.publish") version "0.36.0"
