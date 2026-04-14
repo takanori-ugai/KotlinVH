@@ -14,7 +14,7 @@ plugins {
     id("com.github.jk1.dependency-license-report") version "3.1.1"
     id("com.github.spotbugs") version "6.4.8"
     id("com.diffplug.spotless") version "8.4.0"
-    id("com.vanniktech.maven.publish") version "0.35.0"
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 group = "io.github.ugaikit"
