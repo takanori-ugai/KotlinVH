@@ -66,9 +66,9 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
-                implementation("io.ktor:ktor-client-core:3.4.3")
-                implementation("io.ktor:ktor-client-content-negotiation:3.4.3")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.3")
+                implementation("io.ktor:ktor-client-core:3.5.0")
+                implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.5.0")
                 implementation("io.github.oshai:kotlin-logging:8.0.02")
             }
         }
@@ -80,7 +80,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.4.3")
+                implementation("io.ktor:ktor-client-cio:3.5.0")
                 implementation("ch.qos.logback:logback-classic:1.5.32")
             }
         }
@@ -94,13 +94,13 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:3.4.3")
+                implementation("io.ktor:ktor-client-js:3.5.0")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
             }
         }
         val linuxX64Main by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.4.3")
+                implementation("io.ktor:ktor-client-cio:3.5.0")
             }
         }
     }
