@@ -5,7 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Java usage example for {@link JavaVirtualHomeClient}.
+ *
+ * <p>This sample demonstrates a basic end-to-end flow: connect to VirtualHome, inspect the
+ * environment graph, add camera and scene elements, and render a simple script.
+ */
 public class MainJava {
+  /** Sample constants used to keep this demo readable. */
   private static final int RESET_NUM = 4;
   private static final int POS_X = 10;
   private static final int POS_Y = 200;
@@ -21,6 +28,11 @@ public class MainJava {
   private static final int SOFA_ID_2 = 139;
   private static final int PROCESSING_TIME_LIMIT = 60;
 
+  /**
+   * Runs the Java example flow against a VirtualHome server on {@code localhost:8080}.
+   *
+   * @param args command-line arguments (unused)
+   */
   public static void main(String[] args) {
     JavaVirtualHomeClient client = new JavaVirtualHomeClient("localhost", 8080);
 
@@ -48,6 +60,11 @@ public class MainJava {
     }
   }
 
+  /**
+   * Adds a camera with fixed position/rotation and prints current camera state.
+   *
+   * @param client Java VirtualHome client
+   */
   private static void performCameraActions(JavaVirtualHomeClient client) {
     Position pos = new Position(POS_X, POS_Y, POS_Z);
     Position rot = new Position(ROT_X, ROT_Y, ROT_Z);
@@ -56,6 +73,13 @@ public class MainJava {
     System.out.println("Camera Data: " + client.cameraData(Arrays.asList(CAMERA_ID)));
   }
 
+  /**
+   * Adds a cat node to the graph on top of the given sofa and updates the scene.
+   *
+   * @param client Java VirtualHome client
+   * @param graph current environment graph
+   * @param sofa sofa node used as placement target
+   */
   private static void addCatToScene(JavaVirtualHomeClient client, Graph graph, Node sofa) {
     // Node constructor: id, category, className, prefabName, objTransform, boundingBox, properties,
     // states
@@ -86,6 +110,11 @@ public class MainJava {
     System.out.println("Camera Count after char: " + client.cameraCount());
   }
 
+  /**
+   * Builds render configuration and executes a short behavior script.
+   *
+   * @param client Java VirtualHome client
+   */
   private static void renderFinalScript(JavaVirtualHomeClient client) {
     RenderParams config =
         client.createRenderParams(
