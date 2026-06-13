@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class MainJava {
   /** Sample constants used to keep this demo readable. */
   private static final int RESET_NUM = 4;
+
   private static final int POS_X = 10;
   private static final int POS_Y = 200;
   private static final int POS_Z = 5;
