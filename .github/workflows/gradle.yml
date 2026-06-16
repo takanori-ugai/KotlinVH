@@ -34,6 +34,8 @@ jobs:
       - name: Build with Gradle (Java 25)
         if: matrix.java_version == 25
         run: ./gradlew build -x detekt
+      - name: Update kotlinUpgradeYarnLock
+        run: ./gradlew kotlinUpgradeYarnLock
       - name: Build with Gradle
         if: matrix.java_version != 25
         run: ./gradlew build

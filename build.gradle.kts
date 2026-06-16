@@ -4,7 +4,7 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     kotlin("multiplatform") version "2.4.0"
-    kotlin("plugin.serialization") version "2.3.21"
+    kotlin("plugin.serialization") version "2.4.0"
     id("com.gradleup.shadow") version "9.4.2"
     jacoco
     id("org.jetbrains.dokka") version "2.2.0"
@@ -26,8 +26,7 @@ repositories {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-Xenable-suspend-function-exporting")
-        freeCompilerArgs.add("-Xes-long-as-bigint")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
     jvm {
         compilations.all {
@@ -41,7 +40,7 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(IR) {
+    js {
         nodejs {
             testTask {
                 useMocha {
