@@ -8,9 +8,9 @@ import kotlin.js.JsExport
 class JsVirtualHomeClient(
     private val host: String = "localhost",
     private val port: Int = 8080,
-    private val timeout: Long = READ_TIMEOUT,
+    private val timeout: Int = READ_TIMEOUT.toInt(),
 ) {
-    private val delegate = VirtualHomeClient(host, port, timeout)
+    private val delegate = VirtualHomeClient(host, port, timeout.toLong())
 
     suspend fun cameraCount(): Int = delegate.cameraCount()
 

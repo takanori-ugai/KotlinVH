@@ -10,10 +10,11 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.util.decodeBase64Bytes
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 private val logger = KotlinLogging.logger {}
 
@@ -134,7 +135,7 @@ open class VirtualHomeClient(
                     ),
             )
 //        logger.info { format.encodeToString(data) }
-        return sendRequest(data).messageList?.map { it.decodeBase64Bytes() } ?: emptyList()
+        return sendRequest(data).messageList?.map { decodeBase64(it) } ?: emptyList()
     }
 
     /**
@@ -418,4 +419,7 @@ open class VirtualHomeClient(
             return VirtualHomeResponse(0, false, "$exception", 0, null)
         }
     }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    private fun decodeBase64(value: String): ByteArray = Base64.Default.decode(value)
 }

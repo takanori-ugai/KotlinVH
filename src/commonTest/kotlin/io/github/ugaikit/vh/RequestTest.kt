@@ -1,10 +1,11 @@
 package io.github.ugaikit.vh
 
-import io.ktor.util.encodeBase64
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +15,7 @@ import kotlin.test.assertTrue
 /**
  * This class contains tests for the VirtualHomeClient's request methods.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class, ExperimentalEncodingApi::class)
 class RequestTest {
     /**
      * Configuration of Json converter
@@ -341,7 +342,7 @@ class RequestTest {
             // messageList is listOf("Test"). "Test" decoded is some bytes.
             // We verify by encoding it back to string using Base64.
             val bytes = vh.cameraImage(listOf(1))[0]
-            assertEquals("Test", bytes.encodeBase64())
+            assertEquals("Test", Base64.Default.encode(bytes))
         }
 
     @Test

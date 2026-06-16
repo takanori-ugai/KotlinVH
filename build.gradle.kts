@@ -26,8 +26,7 @@ repositories {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-Xenable-suspend-function-exporting")
-        freeCompilerArgs.add("-Xes-long-as-bigint")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
     jvm {
         compilations.all {
@@ -41,7 +40,7 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(IR) {
+    js {
         nodejs {
             testTask {
                 useMocha {
