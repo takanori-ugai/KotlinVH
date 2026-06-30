@@ -63,7 +63,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
                 implementation("io.ktor:ktor-client-core:3.5.0")
                 implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
