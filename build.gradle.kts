@@ -61,7 +61,7 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        named("commonMain") {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
@@ -71,19 +71,19 @@ kotlin {
                 implementation("io.github.oshai:kotlin-logging:8.0.4")
             }
         }
-        val commonTest by getting {
+        named("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
             }
         }
-        val jvmMain by getting {
+        named("jvmMain") {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:3.5.0")
                 implementation("ch.qos.logback:logback-classic:1.5.34")
             }
         }
-        val jvmTest by getting {
+        named("jvmTest") {
             dependencies {
                 implementation("io.mockk:mockk:1.14.11")
 //                implementation("org.junit:junit-bom:5.12.0")
@@ -91,13 +91,13 @@ kotlin {
                 runtimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
             }
         }
-        val jsMain by getting {
+        named("jsMain") {
             dependencies {
                 implementation("io.ktor:ktor-client-js:3.5.0")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
             }
         }
-        val linuxX64Main by getting {
+        named("linuxX64Main") {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:3.5.0")
             }
