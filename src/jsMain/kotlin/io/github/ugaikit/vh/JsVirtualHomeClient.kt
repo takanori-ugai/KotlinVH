@@ -2,15 +2,22 @@ package io.github.ugaikit.vh
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import kotlin.js.JsName
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class JsVirtualHomeClient(
-    private val host: String = "localhost",
-    private val port: Int = 8080,
-    private val timeout: Int = READ_TIMEOUT.toInt(),
+class JsVirtualHomeClient private constructor(
+    private val delegate: VirtualHomeClient,
 ) {
-    private val delegate = VirtualHomeClient(host, port, timeout.toLong())
+    @JsName("create")
+    constructor(
+        host: String = "localhost",
+        port: Int = 8080,
+        timeout: Int = READ_TIMEOUT.toInt(),
+    ) : this(VirtualHomeClient(host, port, timeout.toLong()))
+
+    @JsName("fromDelegate")
+    internal constructor(delegate: Any) : this(delegate as VirtualHomeClient)
 
     suspend fun cameraCount(): Int = delegate.cameraCount()
 
