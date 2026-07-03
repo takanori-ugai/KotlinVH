@@ -23,6 +23,16 @@ object Commons {
     private var propertiesDataCache: Map<String, List<String>>? = null
 
     /**
+     * Clears in-memory caches for decoded resource data.
+     *
+     * Useful for long-running processes that want to reclaim memory after these maps are no longer needed.
+     */
+    fun clearCaches() {
+        objectStatesCache = null
+        propertiesDataCache = null
+    }
+
+    /**
      * Returns a map of object states.
      *
      * @return A map of object states.
