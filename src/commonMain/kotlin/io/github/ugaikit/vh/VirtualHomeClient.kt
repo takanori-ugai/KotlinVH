@@ -15,6 +15,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.coroutines.cancellation.CancellationException
 
 private val logger = KotlinLogging.logger {}
 
@@ -94,16 +95,10 @@ open class VirtualHomeClient(
     suspend fun getObjects(): List<Node> {
         val request = VirtualHomeRequest(action = "get_objects")
         val response = sendRequest(request)
-        return try {
-            if (!response.success || response.message == null) {
-                emptyList()
-            } else {
-                format.decodeFromString(response.message)
-            }
-        } catch (e: SerializationException) {
-            logger.error(e) { "Failed to parse getObjects response" }
-            emptyList()
+        if (!response.success) {
+            return emptyList()
         }
+        return decodeJsonOrEmpty(response.message, emptyList<Node>(), "getObjects response")
     }
 
     /**
@@ -132,10 +127,14 @@ open class VirtualHomeClient(
                                 imageHeight = imageHeight.toString(),
                             ),
                         ),
-                    ),
+                ),
             )
 //        logger.info { format.encodeToString(data) }
-        return sendRequest(data).messageList?.map { decodeBase64(it) } ?: emptyList()
+        val response = sendRequest(data)
+        if (!response.success) {
+            return emptyList()
+        }
+        return response.messageList?.mapNotNull { decodeBase64OrNull(it) } ?: emptyList()
     }
 
     /**
@@ -257,7 +256,10 @@ open class VirtualHomeClient(
     suspend fun environmentGraph(): Graph {
         val request = VirtualHomeRequest(action = "environment_graph")
         val response = sendRequest(request)
-        return response.message?.let { format.decodeFromString(it) } ?: Graph()
+        if (!response.success) {
+            return Graph()
+        }
+        return decodeJsonOrEmpty(response.message, Graph(), "environment graph")
     }
 
     /**
@@ -303,12 +305,11 @@ open class VirtualHomeClient(
      */
     suspend fun getVisibleObjects(cameraIndex: Int): List<Int> {
         val data = VirtualHomeRequest(action = "get_visible_objects", intParams = listOf(cameraIndex))
-        val res = sendRequest(data).message
-        if (res != null) {
-            return format.decodeFromString(res)
-        } else {
+        val response = sendRequest(data)
+        if (!response.success) {
             return emptyList()
         }
+        return decodeJsonOrEmpty(response.message, emptyList<Int>(), "visible object list")
     }
 
     /**
@@ -359,10 +360,10 @@ open class VirtualHomeClient(
     suspend fun visibleObjects(cameraIndex: Int = 0): Map<String, String> {
         val request = VirtualHomeRequest(action = "observation", intParams = listOf(cameraIndex))
         val response = sendRequest(request)
-        if (!response.success || response.message == null) {
+        if (!response.success) {
             return emptyMap()
         }
-        return format.decodeFromString(response.message)
+        return decodeJsonOrEmpty(response.message, emptyMap<String, String>(), "visible objects")
     }
 
     /**
@@ -386,11 +387,11 @@ open class VirtualHomeClient(
      *         "PERSON_FROM_BACK","PERSON_FROM_LEFT","PERSON_RIGHT","PERSON_LEFT","PERSON_BACK"]
      */
     suspend fun characterCameras(): List<String> =
-        sendRequest(VirtualHomeRequest(action = "character_cameras")).let { res ->
-            if (res.success) {
-                res.message?.let { format.decodeFromString<List<String>>(it) }.orEmpty()
-            } else {
+        sendRequest(VirtualHomeRequest(action = "character_cameras")).let { response ->
+            if (!response.success) {
                 emptyList()
+            } else {
+                decodeJsonOrEmpty(response.message, emptyList<String>(), "character cameras")
             }
         }
 
@@ -414,12 +415,35 @@ open class VirtualHomeClient(
                     contentType(ContentType.Application.Json)
                     setBody(data)
                 }.body()
+        } catch (exception: CancellationException) {
+            throw exception
         } catch (exception: Exception) {
-            println("Error: $exception")
-            return VirtualHomeResponse(0, false, "$exception", 0, null)
+            logger.error(exception) { "VirtualHome request failed" }
+            return VirtualHomeResponse(0, false, "Request failed", 0, null)
         }
     }
 
     @OptIn(ExperimentalEncodingApi::class)
     private fun decodeBase64(value: String): ByteArray = Base64.Default.decode(value)
+
+    private fun decodeBase64OrNull(value: String): ByteArray? =
+        runCatching { decodeBase64(value) }
+            .onFailure { logger.error(it) { "Failed to decode camera image payload" } }
+            .getOrNull()
+
+    private inline fun <reified T> decodeJsonOrEmpty(
+        raw: String?,
+        fallback: T,
+        context: String,
+    ): T =
+        if (raw == null) {
+            fallback
+        } else {
+            try {
+                format.decodeFromString<T>(raw)
+            } catch (exception: SerializationException) {
+                logger.error(exception) { "Failed to parse $context" }
+                fallback
+            }
+        }
 }

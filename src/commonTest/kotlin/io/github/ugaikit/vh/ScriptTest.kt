@@ -53,12 +53,10 @@ class ScriptTest {
     }
 
     @Test
-    fun `parses lines with trailing text because parser uses partial matches`() {
-        val script = Script(listOf("<char0> [WALK] <cat> (366) trailing"))
-
-        assertTrue(script.lines.size == 1)
-        assertTrue(script.lines[0].character == "char0")
-        assertTrue(script.lines[0].action == "WALK")
+    fun `rejects lines with trailing text`() {
+        assertFailsWith<IllegalArgumentException> {
+            Script(listOf("<char0> [WALK] <cat> (366) trailing"))
+        }
     }
 
     @Test
