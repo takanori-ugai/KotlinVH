@@ -52,16 +52,16 @@ public class MainJava {
               .filter(node -> "sofa".equals(node.getClassName()))
               .collect(Collectors.toList());
 
-      if (sofas.size() > SOFA_INDEX) {
+//      if (sofas.size() > SOFA_INDEX) {
         Node sofa = sofas.get(SOFA_INDEX);
         System.out.println("Sofa: " + sofa);
 
         performCameraActions(client);
         addCatToScene(client, graph, sofa);
         renderFinalScript(client);
-      } else {
-        System.out.println("Sofa not found at index " + SOFA_INDEX);
-      }
+//      } else {
+//        System.out.println("Sofa not found at index " + SOFA_INDEX);
+//      }
     }
   }
 

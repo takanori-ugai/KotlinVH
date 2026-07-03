@@ -366,10 +366,17 @@ class RequestTest {
     fun `renderScript sends correct request and returns response`() =
         runTest {
             val script = listOf("action1", "action2")
-            val config = RenderParams()
+            val config = RenderParams(skipAnimation = false)
             val expectedResponse = VirtualHomeResponse(0, true, "ok", 0, listOf("result"))
             vh.handler = { req ->
-                if (req.action == "render_script") expectedResponse else VirtualHomeResponse(0, false, "Wrong action", 0, null)
+                if (req.action == "render_script") {
+                    val payload = req.stringParams?.firstOrNull() ?: ""
+                    assertTrue(payload.contains("\"skip_animation\":false"))
+                    assertTrue(payload.contains("\"save_scene_states\":false"))
+                    expectedResponse
+                } else {
+                    VirtualHomeResponse(0, false, "Wrong action", 0, null)
+                }
             }
 
             val response = vh.renderScript(script, config)

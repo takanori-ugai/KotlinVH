@@ -48,6 +48,13 @@ open class VirtualHomeClient(
             explicitNulls = false
         }
 
+    private val renderFormat =
+        Json {
+            encodeDefaults = true
+            @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
+            explicitNulls = false
+        }
+
     private val url = "http://$host:$port"
 
     private val client = httpClient ?: buildHttpClient(timeout)
@@ -166,7 +173,7 @@ open class VirtualHomeClient(
         script: List<String>,
         config: RenderParams = RenderParams(),
     ): VirtualHomeResponse {
-        val stringParams = mutableListOf(format.encodeToString(config))
+        val stringParams = mutableListOf(renderFormat.encodeToString(config))
         stringParams.addAll(script)
         val data = VirtualHomeRequest(action = "render_script", stringParams = stringParams)
         return sendRequest(data)

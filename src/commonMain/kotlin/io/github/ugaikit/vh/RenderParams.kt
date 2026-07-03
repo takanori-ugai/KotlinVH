@@ -18,7 +18,7 @@ import kotlin.js.JsExport
  * @property image_synthesis The list of image synthesis modes, default is ["normal"].
  * @property find_solution Boolean flag to find a solution, default is false.
  * @property save_pose_data Boolean flag to save pose data, default is false.
- * @property save_scene_status Boolean flag to save scene status, default is false.
+ * @property save_scene_states Boolean flag to save scene states, default is false.
  * @property camera_mode The list of camera modes, default is ["AUTO"].
  * @property recording Boolean flag to enable recording, default is false.
  * @property image_width The width of the image, default is 640.
@@ -63,7 +63,7 @@ data class RenderParams(
     val findSolution: Boolean = false,
     @SerialName("save_pose_data")
     val savePoseData: Boolean = false,
-    @SerialName("save_scene_status")
+    @SerialName("save_scene_states")
     val saveSceneStatus: Boolean = false,
     @SerialName("camera_mode")
     val cameraMode: List<String> = listOf("AUTO"),
