@@ -24,6 +24,9 @@ class JsVirtualHomeClientTest {
             JsVirtualHomeClient(host = "bad host")
         }
         assertFailsWith<IllegalArgumentException> {
+            JsVirtualHomeClient(host = "localhost:9000")
+        }
+        assertFailsWith<IllegalArgumentException> {
             JsVirtualHomeClient(host = "localhost", port = 0)
         }
         assertFailsWith<IllegalArgumentException> {

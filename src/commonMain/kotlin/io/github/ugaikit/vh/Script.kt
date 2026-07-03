@@ -43,8 +43,10 @@ data class ScriptLine(
 class Script(
     scriptList: List<String>,
 ) {
+    private val objectMap = mutableMapOf<Pair<String, Int>, Obj>()
+
     // Pool of objects used in the script.
-    val objectPool: MutableMap<Pair<String, Int>, Obj> = mutableMapOf()
+    val objectPool: MutableSet<Obj> = ScriptObjectPool(objectMap)
 
     // List of lines in the script
     var lines: List<ScriptLine> = parseScript(scriptList)
@@ -60,7 +62,7 @@ class Script(
     fun findObj(
         name: String,
         id: Int,
-    ): Obj = objectPool.getOrPut(name to id) { Obj(name, id) }
+    ): Obj = objectMap.getOrPut(name to id) { Obj(name, id) }
 
     /**
      * Parses the script into a list of script lines.
@@ -70,9 +72,11 @@ class Script(
      */
     private fun parseScript(script: List<String>): List<ScriptLine> =
         script.map { line ->
-            val matchResult = SCRIPT_LINE_REGEX.matchEntire(line)
-            val groups = matchResult?.groups
-            val value = groups?.get(OBJECTS_GROUP_IDX)?.value.toString()
+            val matchResult =
+                SCRIPT_LINE_REGEX.matchEntire(line)
+                    ?: throw IllegalArgumentException("Malformed script line: $line")
+            val groups = matchResult.groups
+            val value = groups[OBJECTS_GROUP_IDX]?.value.orEmpty()
             val objects =
                 SCRIPT_OBJECT_REGEX
                     .findAll(value)
@@ -85,8 +89,8 @@ class Script(
 
             val scriptLine =
                 ScriptLine(
-                    groups?.get(CHAR_GROUP_IDX)?.value,
-                    groups?.get(ACTION_GROUP_IDX)?.value.toString(),
+                    groups[CHAR_GROUP_IDX]?.value,
+                    groups[ACTION_GROUP_IDX]?.value.toString(),
                     objects,
                 )
 
@@ -124,5 +128,29 @@ class Script(
             }
         }
         return true
+    }
+}
+
+private class ScriptObjectPool(
+    private val objectMap: MutableMap<Pair<String, Int>, Obj>,
+) : AbstractMutableSet<Obj>() {
+    override val size: Int
+        get() = objectMap.size
+
+    override fun add(element: Obj): Boolean {
+        val key = element.name to element.id
+        val existed = objectMap.containsKey(key)
+        objectMap[key] = element
+        return !existed
+    }
+
+    override fun iterator(): MutableIterator<Obj> = objectMap.values.iterator()
+
+    override fun contains(element: Obj): Boolean = objectMap[element.name to element.id] == element
+
+    override fun remove(element: Obj): Boolean = objectMap.remove(element.name to element.id) != null
+
+    override fun clear() {
+        objectMap.clear()
     }
 }

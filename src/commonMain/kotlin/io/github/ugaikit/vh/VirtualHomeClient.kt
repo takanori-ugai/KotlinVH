@@ -454,10 +454,16 @@ private class LazyDecodedByteArrayList(
     private val encodedValues: List<String>,
     private val decode: (String) -> ByteArray?,
 ) : AbstractList<ByteArray>() {
-    private val decodedValues by lazy { encodedValues.mapNotNull(decode) }
+    private val cache = arrayOfNulls<ByteArray>(encodedValues.size)
 
     override val size: Int
-        get() = decodedValues.size
+        get() = encodedValues.size
 
-    override fun get(index: Int): ByteArray = decodedValues[index]
+    override fun get(index: Int): ByteArray {
+        cache[index]?.let { return it }
+
+        val decoded = decode(encodedValues[index]) ?: ByteArray(0)
+        cache[index] = decoded
+        return decoded
+    }
 }
