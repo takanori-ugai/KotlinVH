@@ -1,8 +1,8 @@
 package io.github.ugaikit.vh
 
-import io.mockk.mockk
-import io.mockk.just
 import io.mockk.Runs
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import java.nio.file.Files
 import java.nio.file.Path
