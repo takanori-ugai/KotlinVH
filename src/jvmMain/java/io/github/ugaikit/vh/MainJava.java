@@ -40,7 +40,11 @@ public class MainJava {
       System.out.println("Reset: " + client.reset(RESET_NUM).getSuccess());
 
       Graph graph = client.environmentGraph();
-      System.out.println("Node at MAIN_CAMERA_ID: " + graph.getNodes().get(MAIN_CAMERA_ID));
+      System.out.println(
+          "Node at MAIN_CAMERA_ID: "
+              + (graph.getNodes().size() > MAIN_CAMERA_ID
+                  ? graph.getNodes().get(MAIN_CAMERA_ID)
+                  : "N/A"));
       System.out.println("Total nodes: " + graph.getNodes().size());
 
       List<Node> sofas =

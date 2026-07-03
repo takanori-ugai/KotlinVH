@@ -62,10 +62,12 @@ suspend fun runMainDemo(writeImage: suspend (ByteArray) -> Unit) {
             executeResetAndEnvironmentGraphRequests(sq)
 
             val graph = sq.environmentGraph()
-            println(graph.nodes[MAIN_CAMERA_ID])
+            println(graph.nodes.getOrNull(MAIN_CAMERA_ID))
             println(graph.nodes.size)
 
-            val sofa = graph.nodes.filter { it.className == "sofa" }[SOFA_INDEX]
+            val sofa =
+                graph.nodes.filter { it.className == "sofa" }.getOrNull(SOFA_INDEX)
+                    ?: throw VHException("Sofa not found at index $SOFA_INDEX")
             println(sofa)
 
             performCameraActions(sq)
@@ -148,7 +150,7 @@ private suspend fun saveCameraImage(
     writeImage: suspend (ByteArray) -> Unit,
 ) {
     val res0 = sq.cameraImage(listOf(SAVE_CAMERA_ID))
-    val image = res0[0]
+    val image = res0.firstOrNull() ?: throw VHException("No camera image returned")
     writeImage(image)
 }
 
@@ -165,7 +167,7 @@ class Main : CloseableResource {
         val initGraph = client.environmentGraph()
         val sofas = initGraph.nodes.filter { it.className == "sofa" }
         println(sofas)
-        val sofa = sofas.last()
+        val sofa = sofas.lastOrNull() ?: throw VHException("No sofa found in the scene")
         val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
         println(sofa)
         initGraph.nodes.add(
@@ -181,8 +183,10 @@ class Main : CloseableResource {
         if (client.expandScene(initGraph).success) {
             println("Sucess : Expend Scene")
             val graph = client.environmentGraph()
-            val catId = graph.nodes.filter { it.className == "cat" }[CAT_NODE_ID]
-            println("CATID: $catId")
+            val cat =
+                graph.nodes.firstOrNull { it.className == "cat" }
+                    ?: throw VHException("Cat node not found")
+            println("CATID: $cat")
         } else {
             println("Failed : Expend Scene")
         }
@@ -204,7 +208,9 @@ class Main : CloseableResource {
     suspend fun checkScripts(script: List<String>): Boolean {
         if (!client.reset(sceneNum).success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofa = initGraph.nodes.filter { it.className == "sofa" }[SOFA_INDEX]
+        val sofa =
+            initGraph.nodes.filter { it.className == "sofa" }.getOrNull(SOFA_INDEX)
+                ?: throw VHException("Sofa not found at index $SOFA_INDEX")
         val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
         initGraph.nodes.add(
             Node(
@@ -219,7 +225,10 @@ class Main : CloseableResource {
         if (!client.expandScene(initGraph).success) throw VHException("Expand Scene Error")
         if (!client.addCharacter().success) throw VHException("Add Character Error")
         val graph = client.environmentGraph()
-        val catId = graph.nodes.filter { it.className == "cat" }[CAT_NODE_ID]
+        val cat =
+            graph.nodes.firstOrNull { it.className == "cat" }
+                ?: throw VHException("Cat node not found")
+        println("CAT: $cat")
         val config =
             RenderParams(
                 processingTimeLimit = TEST_PROCESSING_TIME_LIMIT,
@@ -234,9 +243,7 @@ class Main : CloseableResource {
     }
 
     suspend fun findNodes(name: String): List<Node> {
-        if (!client.reset(sceneNum).success) throw VHException("Reset Error")
-        if (!client.addCharacter().success) throw VHException("Add Character Error")
-        val graph = client.environmentGraph()
+        val graph = bootstrapGraph()
         val regex = Regex(name)
         return graph.nodes.filter {
             if (it.className != null) {
@@ -248,20 +255,22 @@ class Main : CloseableResource {
     }
 
     suspend fun findNodesByProperty(property: String): List<Node> {
-        if (!client.reset(sceneNum).success) throw VHException("Reset Error")
-        if (!client.addCharacter().success) throw VHException("Add Character Error")
-        val graph = client.environmentGraph()
+        val graph = bootstrapGraph()
         return graph.nodes.filter {
             it.properties != null && it.properties.contains(property)
         }
     }
 
     suspend fun findNodesById(id: Int): List<Node> {
-        if (!client.reset(sceneNum).success) throw VHException("Reset Error")
-        if (!client.addCharacter().success) throw VHException("Add Character Error")
-        val graph = client.environmentGraph()
+        val graph = bootstrapGraph()
         return graph.nodes.filter {
             it.id != null && it.id == id
         }
+    }
+
+    private suspend fun bootstrapGraph(): Graph {
+        if (!client.reset(sceneNum).success) throw VHException("Reset Error")
+        if (!client.addCharacter().success) throw VHException("Add Character Error")
+        return client.environmentGraph()
     }
 }

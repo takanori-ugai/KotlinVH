@@ -98,6 +98,32 @@ This file now lists only findings that are still supported by the current source
 - **Impact:** If applications feed untrusted user input into this constructor, it can become an SSRF-style outbound request primitive.
 - **Recommendation:** Treat host/port as trusted config only, or enforce allowlists/validation at integration boundaries.
 
+## Test Coverage Findings
+
+### 1) High: JS wrapper has zero test coverage
+- **Location:** `src/jsMain/kotlin/io/github/ugaikit/vh/JsVirtualHomeClient.kt:6-29`
+- **Finding:** JaCoCo reports 0% line coverage for the entire `JsVirtualHomeClient` class, including constructor, forwarding methods, and `close()`.
+- **Impact:** The JS-facing API can regress without any unit test signal, especially around delegation and lifecycle behavior.
+- **Recommendation:** Add direct JS-target tests for constructor defaults, request forwarding, and `close()` behavior.
+
+### 2) High: Java wrapper has zero test coverage
+- **Location:** `src/jvmMain/kotlin/io/github/ugaikit/vh/JavaVirtualHomeClient.kt:8-164`
+- **Finding:** JaCoCo reports 0% line coverage for `JavaVirtualHomeClient`, so none of the Java-facing wrapper methods are exercised by unit tests.
+- **Impact:** Regressions in the synchronous Java surface, including `runBlocking` bridging and `close()` delegation, can ship unnoticed.
+- **Recommendation:** Add JVM tests for the wrapper methods and verify delegation to an injected `VirtualHomeClient`.
+
+### 3) Medium: Core `VirtualHomeClient` is only sparsely covered
+- **Location:** `src/commonMain/kotlin/io/github/ugaikit/vh/VirtualHomeClient.kt:29-424`
+- **Finding:** JaCoCo reports only 6.4% line coverage for `VirtualHomeClient`, with missed branches in `sendRequest`, `cameraImage`, `environmentGraph`, `visibleObjects`, and `characterCameras`.
+- **Impact:** The highest-risk behavior in the main client, especially failure handling and response decoding, is not protected by tests.
+- **Recommendation:** Add tests for success and failure paths, including cancellation handling, malformed JSON/Base64, and empty/failed responses.
+
+### 4) Medium: Demo and sample entrypoints are effectively untested
+- **Location:** `src/jvmMain/kotlin/io/github/ugaikit/vh/Main.kt:1-266`, `src/jvmMain/kotlin/io/github/ugaikit/vh/GetObjects.kt:12-53`
+- **Finding:** JaCoCo reports 0% line coverage for `Main.kt` and only 14.29% line coverage for `GetObjects.kt`, leaving the entrypoint flows and most helper methods unexercised.
+- **Impact:** The sample/runtime code contains real logic for scene queries, file output, and demo orchestration, so regressions there will not be caught by the current test suite.
+- **Recommendation:** Either add focused tests for the helper methods and file-writing logic or move sample-only code out of the production support surface.
+
 ## Optimization Findings (`./src`)
 
 ### 1) High: `Script.findObj` is O(n) per lookup, making parse path O(n^2)
