@@ -69,8 +69,7 @@ suspend fun runMainDemo(writeImage: suspend (ByteArray) -> Unit) {
                 graph.nodes
                     .asSequence()
                     .filter { it.className == "sofa" }
-                    .drop(SOFA_INDEX)
-                    .firstOrNull()
+                    .elementAtOrNull(SOFA_INDEX)
                     ?: throw VHException("Sofa not found at index $SOFA_INDEX")
             println(sofa)
 
@@ -169,7 +168,7 @@ class Main : CloseableResource {
     suspend fun testScripts(script: List<String>): Boolean {
         if (!client.reset(sceneNum).success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofas = initGraph.nodes.filter { it.className == "sofa" }
+        val sofas = initGraph.nodes.asSequence().filter { it.className == "sofa" }
         println(sofas)
         val sofa = sofas.lastOrNull() ?: throw VHException("No sofa found in the scene")
         val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
@@ -213,7 +212,10 @@ class Main : CloseableResource {
         if (!client.reset(sceneNum).success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
         val sofa =
-            initGraph.nodes.filter { it.className == "sofa" }.getOrNull(SOFA_INDEX)
+            initGraph.nodes
+                .asSequence()
+                .filter { it.className == "sofa" }
+                .elementAtOrNull(SOFA_INDEX)
                 ?: throw VHException("Sofa not found at index $SOFA_INDEX")
         val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")
         initGraph.nodes.add(
