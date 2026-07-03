@@ -168,7 +168,7 @@ class Main : CloseableResource {
     suspend fun testScripts(script: List<String>): Boolean {
         if (!client.reset(sceneNum).success) throw VHException("Reset Error")
         val initGraph = client.environmentGraph()
-        val sofas = initGraph.nodes.asSequence().filter { it.className == "sofa" }
+        val sofas = initGraph.nodes.filter { it.className == "sofa" }
         println(sofas)
         val sofa = sofas.lastOrNull() ?: throw VHException("No sofa found in the scene")
         val sofaId = sofa.id ?: throw VHException("Sofa node does not have an id")

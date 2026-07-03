@@ -77,13 +77,15 @@ class JsVirtualHomeClient private constructor(
     }
 
     companion object {
+        private val DISALLOWED_HOST_CHARS = setOf('/', '\\', '?', '#', '@', ':', '[', ']')
+
         private fun createDelegate(
             host: String,
             port: Int,
             timeout: Int,
         ): VirtualHomeClient {
             require(host.isNotBlank()) { "host must not be blank" }
-            require(host.none { it.isWhitespace() || it == '/' || it == '\\' || it == '?' || it == '#' }) {
+            require(host.none { it.isWhitespace() || it in DISALLOWED_HOST_CHARS }) {
                 "host must be a plain host name"
             }
             require(port in 1..65535) { "port must be between 1 and 65535" }

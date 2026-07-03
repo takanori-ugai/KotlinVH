@@ -183,13 +183,19 @@ class JavaVirtualHomeClient
             check(!closed) { "JavaVirtualHomeClient is closed" }
 
             val latch = CountDownLatch(1)
-            val result = AtomicReference<Result<T>?>(null)
-            scope.launch {
-                try {
-                    result.set(Result.success(block()))
-                } catch (exception: Throwable) {
-                    result.set(Result.failure(exception))
-                } finally {
+            val result = AtomicReference<BlockingCallResult<T>?>(null)
+            val job =
+                scope.launch {
+                    try {
+                        result.set(BlockingCallResult.Success(block()))
+                    } catch (exception: Throwable) {
+                        result.set(BlockingCallResult.Failure(exception))
+                    } finally {
+                        latch.countDown()
+                    }
+                }
+            job.invokeOnCompletion { cause ->
+                if (cause != null && result.compareAndSet(null, BlockingCallResult.Failure(cause))) {
                     latch.countDown()
                 }
             }
@@ -197,11 +203,25 @@ class JavaVirtualHomeClient
             try {
                 latch.await()
             } catch (exception: InterruptedException) {
+                job.cancel()
                 Thread.currentThread().interrupt()
                 throw IllegalStateException("Interrupted while waiting for VirtualHome request", exception)
             }
 
-            return result.get()?.getOrThrow()
-                ?: throw IllegalStateException("VirtualHome request did not complete")
+            return when (val outcome = result.get()) {
+                is BlockingCallResult.Success -> outcome.value
+                is BlockingCallResult.Failure -> throw outcome.cause
+                null -> throw IllegalStateException("VirtualHome request did not complete")
+            }
         }
     }
+
+private sealed class BlockingCallResult<out T> {
+    data class Success<T>(
+        val value: T,
+    ) : BlockingCallResult<T>()
+
+    data class Failure(
+        val cause: Throwable,
+    ) : BlockingCallResult<Nothing>()
+}

@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 
 class VirtualHomeClientDecodeFailureTest {
     @Test
-    fun `cameraImage skips malformed base64 payloads`() =
+    fun `cameraImage preserves image positions for malformed base64 payloads`() =
         runTest {
             val client = spyk(VirtualHomeClient())
             coEvery { client.sendRequest(any()) } returns
@@ -24,7 +24,10 @@ class VirtualHomeClientDecodeFailureTest {
                     messageList = listOf("not-base64", Base64.Default.encode("ok".encodeToByteArray())),
                 )
 
-            assertTrue(client.cameraImage(listOf(0)).single().contentEquals("ok".encodeToByteArray()))
+            val images = client.cameraImage(listOf(0, 1))
+            assertEquals(2, images.size)
+            assertTrue(images[0].isEmpty())
+            assertTrue(images[1].contentEquals("ok".encodeToByteArray()))
         }
 
     @Test
