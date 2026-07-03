@@ -1,9 +1,9 @@
 package io.github.ugaikit.vh
 
-import io.mockk.coEvery
-import io.mockk.spyk
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
+import io.mockk.coEvery
+import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.SerializationException
 import kotlin.test.Test
