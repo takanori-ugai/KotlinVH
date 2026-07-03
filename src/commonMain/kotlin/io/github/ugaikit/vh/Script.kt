@@ -113,10 +113,14 @@ class Script(
     fun checkLine(line: ScriptLine): Boolean {
         val actions = Commons.actionList
         val action = actions[line.action]
-        logger.info { "Action Properties : $action.properties" }
         if (action == null) {
             return false
         }
+        if (line.objects.size > action.properties.size) {
+            return false
+        }
+
+        logger.info { "Action Properties : ${action.properties}" }
 
         val properties = Commons.propertiesData()
         line.objects.forEachIndexed { index, obj ->
@@ -125,7 +129,8 @@ class Script(
             if (objProperties == null) {
                 return false
             }
-            action.properties[index].forEach {
+            val requiredProperties = action.properties.getOrNull(index) ?: return false
+            requiredProperties.forEach {
                 if (!objProperties.contains(it)) {
                     return false
                 }

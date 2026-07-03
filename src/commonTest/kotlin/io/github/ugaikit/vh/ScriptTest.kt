@@ -117,17 +117,17 @@ class ScriptTest {
     }
 
     @Test
-    fun `checkLine throws when a line has more objects than the action arity`() {
+    fun `checkLine returns false when a line has more objects than the action arity`() {
         val script = Script(listOf("<char0> [WALK]"))
 
-        assertFailsWith<IndexOutOfBoundsException> {
+        assertFalse(
             script.checkLine(
                 ScriptLine(
                     "char0",
                     "STANDUP",
                     listOf(Obj("table", 1), Obj("cat", 2)),
                 ),
-            )
-        }
+            ),
+        )
     }
 }
