@@ -54,7 +54,7 @@ suspend fun runMainDemo(writeImage: suspend (ByteArray) -> Unit) {
         try {
             val data =
                 VirtualHomeRequest(
-                    Random.nextInt(),
+                    Random.nextInt(1, Int.MAX_VALUE),
                     "idle",
                 )
             val res = sq.sendRequest(data)
@@ -66,7 +66,11 @@ suspend fun runMainDemo(writeImage: suspend (ByteArray) -> Unit) {
             println(graph.nodes.size)
 
             val sofa =
-                graph.nodes.filter { it.className == "sofa" }.getOrNull(SOFA_INDEX)
+                graph.nodes
+                    .asSequence()
+                    .filter { it.className == "sofa" }
+                    .drop(SOFA_INDEX)
+                    .firstOrNull()
                     ?: throw VHException("Sofa not found at index $SOFA_INDEX")
             println(sofa)
 
@@ -243,34 +247,19 @@ class Main : CloseableResource {
     }
 
     suspend fun findNodes(name: String): List<Node> {
-        val graph = bootstrapGraph()
-        val regex = Regex(name)
-        return graph.nodes.filter {
-            if (it.className != null) {
-                regex.containsMatchIn(it.className)
-            } else {
-                false
-            }
-        }
+        val graph = currentGraph()
+        return graph.nodes.filter { it.className?.contains(name) == true }
     }
 
     suspend fun findNodesByProperty(property: String): List<Node> {
-        val graph = bootstrapGraph()
-        return graph.nodes.filter {
-            it.properties != null && it.properties.contains(property)
-        }
+        val graph = currentGraph()
+        return graph.nodes.filter { it.properties?.contains(property) == true }
     }
 
     suspend fun findNodesById(id: Int): List<Node> {
-        val graph = bootstrapGraph()
-        return graph.nodes.filter {
-            it.id != null && it.id == id
-        }
+        val graph = currentGraph()
+        return graph.nodes.filter { it.id == id }
     }
 
-    private suspend fun bootstrapGraph(): Graph {
-        if (!client.reset(sceneNum).success) throw VHException("Reset Error")
-        if (!client.addCharacter().success) throw VHException("Add Character Error")
-        return client.environmentGraph()
-    }
+    private suspend fun currentGraph(): Graph = client.environmentGraph()
 }
