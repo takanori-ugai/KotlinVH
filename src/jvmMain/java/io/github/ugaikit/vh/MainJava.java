@@ -35,29 +35,29 @@ public class MainJava {
    * @param args command-line arguments (unused)
    */
   public static void main(String[] args) {
-    JavaVirtualHomeClient client = new JavaVirtualHomeClient("localhost", 8080);
+    try (JavaVirtualHomeClient client = new JavaVirtualHomeClient("localhost", 8080)) {
+      System.out.println("Check: " + client.check().getSuccess());
+      System.out.println("Reset: " + client.reset(RESET_NUM).getSuccess());
 
-    System.out.println("Check: " + client.check().getSuccess());
-    System.out.println("Reset: " + client.reset(RESET_NUM).getSuccess());
+      Graph graph = client.environmentGraph();
+      System.out.println("Node at MAIN_CAMERA_ID: " + graph.getNodes().get(MAIN_CAMERA_ID));
+      System.out.println("Total nodes: " + graph.getNodes().size());
 
-    Graph graph = client.environmentGraph();
-    System.out.println("Node at MAIN_CAMERA_ID: " + graph.getNodes().get(MAIN_CAMERA_ID));
-    System.out.println("Total nodes: " + graph.getNodes().size());
+      List<Node> sofas =
+          graph.getNodes().stream()
+              .filter(node -> "sofa".equals(node.getClassName()))
+              .collect(Collectors.toList());
 
-    List<Node> sofas =
-        graph.getNodes().stream()
-            .filter(node -> "sofa".equals(node.getClassName()))
-            .collect(Collectors.toList());
+      if (sofas.size() > SOFA_INDEX) {
+        Node sofa = sofas.get(SOFA_INDEX);
+        System.out.println("Sofa: " + sofa);
 
-    if (sofas.size() > SOFA_INDEX) {
-      Node sofa = sofas.get(SOFA_INDEX);
-      System.out.println("Sofa: " + sofa);
-
-      performCameraActions(client);
-      addCatToScene(client, graph, sofa);
-      renderFinalScript(client);
-    } else {
-      System.out.println("Sofa not found at index " + SOFA_INDEX);
+        performCameraActions(client);
+        addCatToScene(client, graph, sofa);
+        renderFinalScript(client);
+      } else {
+        System.out.println("Sofa not found at index " + SOFA_INDEX);
+      }
     }
   }
 

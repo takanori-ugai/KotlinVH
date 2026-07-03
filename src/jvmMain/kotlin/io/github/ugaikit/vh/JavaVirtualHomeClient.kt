@@ -12,7 +12,7 @@ class JavaVirtualHomeClient
         host: String = "localhost",
         port: Int = 8080,
         private val client: VirtualHomeClient = VirtualHomeClient(host, port),
-    ) {
+    ) : CloseableResource {
         /**
          * Performs a health check of the VirtualHome server.
          *
@@ -159,4 +159,8 @@ class JavaVirtualHomeClient
                 savePoseData = savePoseData,
                 skipExecution = skipExecution,
             )
+
+        override fun close() {
+            client.close()
+        }
     }

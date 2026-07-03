@@ -14,10 +14,14 @@ private const val SCENE_INDEX = 6
 
 fun main() {
     val client = VirtualHomeClient(host = "localhost")
-    runBlocking {
-        client.reset(SCENE_INDEX)
-        val graph = client.environmentGraph()
-        writeNodesToCSV(graph.nodes, "scene${SCENE_INDEX + 1}.csv")
+    try {
+        runBlocking {
+            client.reset(SCENE_INDEX)
+            val graph = client.environmentGraph()
+            writeNodesToCSV(graph.nodes, "scene${SCENE_INDEX + 1}.csv")
+        }
+    } finally {
+        client.close()
     }
 }
 
