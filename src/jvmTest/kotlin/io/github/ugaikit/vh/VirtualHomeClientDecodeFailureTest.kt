@@ -5,14 +5,14 @@ import io.ktor.client.engine.mock.MockEngine
 import io.mockk.coEvery
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.SerializationException
+import kotlin.io.encoding.Base64
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class VirtualHomeClientDecodeFailureTest {
     @Test
-    fun `cameraImage throws on malformed base64 payload`() =
+    fun `cameraImage skips malformed base64 payloads`() =
         runTest {
             val client = spyk(VirtualHomeClient())
             coEvery { client.sendRequest(any()) } returns
@@ -21,16 +21,14 @@ class VirtualHomeClientDecodeFailureTest {
                     success = true,
                     message = null,
                     value = 0,
-                    messageList = listOf("not-base64"),
+                    messageList = listOf("not-base64", Base64.Default.encode("ok".encodeToByteArray())),
                 )
 
-            assertFailsWith<IllegalArgumentException> {
-                client.cameraImage(listOf(0))
-            }
+            assertTrue(client.cameraImage(listOf(0)).single().contentEquals("ok".encodeToByteArray()))
         }
 
     @Test
-    fun `environmentGraph throws on malformed json`() =
+    fun `environmentGraph falls back to empty graph on malformed json`() =
         runTest {
             val client = spyk(VirtualHomeClient())
             coEvery { client.sendRequest(any()) } returns
@@ -42,9 +40,7 @@ class VirtualHomeClientDecodeFailureTest {
                     messageList = null,
                 )
 
-            assertFailsWith<SerializationException> {
-                client.environmentGraph()
-            }
+            assertEquals(Graph(), client.environmentGraph())
         }
 
     @Test
@@ -64,7 +60,7 @@ class VirtualHomeClientDecodeFailureTest {
         }
 
     @Test
-    fun `visibleObjects throws on malformed json`() =
+    fun `getVisibleObjects falls back to empty list on malformed json`() =
         runTest {
             val client = spyk(VirtualHomeClient())
             coEvery { client.sendRequest(any()) } returns
@@ -76,13 +72,11 @@ class VirtualHomeClientDecodeFailureTest {
                     messageList = null,
                 )
 
-            assertFailsWith<SerializationException> {
-                client.visibleObjects(0)
-            }
+            assertEquals(emptyList<Int>(), client.getVisibleObjects(0))
         }
 
     @Test
-    fun `characterCameras throws on malformed json`() =
+    fun `visibleObjects falls back to empty map on malformed json`() =
         runTest {
             val client = spyk(VirtualHomeClient())
             coEvery { client.sendRequest(any()) } returns
@@ -94,13 +88,27 @@ class VirtualHomeClientDecodeFailureTest {
                     messageList = null,
                 )
 
-            assertFailsWith<SerializationException> {
-                client.characterCameras()
-            }
+            assertEquals(emptyMap<String, String>(), client.visibleObjects(0))
         }
 
     @Test
-    fun `sendRequest returns failure response when transport throws`() =
+    fun `characterCameras falls back to empty list on malformed json`() =
+        runTest {
+            val client = spyk(VirtualHomeClient())
+            coEvery { client.sendRequest(any()) } returns
+                VirtualHomeResponse(
+                    id = 1,
+                    success = true,
+                    message = "not-json",
+                    value = 0,
+                    messageList = null,
+                )
+
+            assertEquals(emptyList<String>(), client.characterCameras())
+        }
+
+    @Test
+    fun `sendRequest returns a generic failure response when transport throws`() =
         runTest {
             val client =
                 VirtualHomeClient(
@@ -115,6 +123,7 @@ class VirtualHomeClientDecodeFailureTest {
             val response = client.check()
 
             assertTrue(!response.success)
-            assertTrue(response.message.orEmpty().contains("Fail to prepare request body"))
+            assertEquals("Request failed", response.message)
         }
+
 }

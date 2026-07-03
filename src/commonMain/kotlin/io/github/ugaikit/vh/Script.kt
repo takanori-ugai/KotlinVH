@@ -48,7 +48,7 @@ class Script(
     scriptList: List<String>,
 ) {
     // Regular expressions for parsing the script
-    val regex = Regex("""\s*(<(\w+)>)?\s*\[(\w+)\]((\s*<\w+>\s*\(\d+\))*)""")
+    val regex = Regex("""\s*(<(\w+)>)?\s*\[(\w+)\]((\s*<\w+>\s*\(\d+\))*)\s*""")
     val regex2 = Regex("""<(\w+)>\s*\((\d+)\)""")
 
     // Pool of objects used in the script
@@ -80,7 +80,7 @@ class Script(
      */
     private fun parseScript(script: List<String>): List<ScriptLine> =
         script.map { line ->
-            val matchResult = regex.find(line)
+            val matchResult = regex.matchEntire(line)
             val groups = matchResult?.groups
             val value = groups?.get(OBJECTS_GROUP_IDX)?.value.toString()
             val objects =
