@@ -12,13 +12,22 @@ import kotlinx.io.writeString
  */
 private const val SCENE_INDEX = 6
 
+internal var createGetObjectsClient: () -> VirtualHomeClient = { VirtualHomeClient(host = "localhost") }
+
+internal suspend fun exportScene(
+    client: VirtualHomeClient,
+    fileName: String,
+) {
+    client.reset(SCENE_INDEX)
+    val graph = client.environmentGraph()
+    writeNodesToCSV(graph.nodes, fileName)
+}
+
 fun main() {
-    val client = VirtualHomeClient(host = "localhost")
+    val client = createGetObjectsClient()
     try {
         runBlocking {
-            client.reset(SCENE_INDEX)
-            val graph = client.environmentGraph()
-            writeNodesToCSV(graph.nodes, "scene${SCENE_INDEX + 1}.csv")
+            exportScene(client, "scene${SCENE_INDEX + 1}.csv")
         }
     } finally {
         client.close()

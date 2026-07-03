@@ -87,6 +87,7 @@ kotlin {
             dependencies {
                 implementation("io.mockk:mockk:1.14.11")
 //                implementation("org.junit:junit-bom:5.12.0")
+                implementation("io.ktor:ktor-client-mock:3.5.0")
                 implementation("org.junit.jupiter:junit-jupiter:6.1.0")
                 runtimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
             }
@@ -95,6 +96,11 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-js:3.5.0")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
+            }
+        }
+        named("jsTest") {
+            dependencies {
+                implementation("io.ktor:ktor-client-mock:3.5.0")
             }
         }
         named("linuxX64Main") {
