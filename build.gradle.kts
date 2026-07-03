@@ -65,9 +65,9 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
-                implementation("io.ktor:ktor-client-core:3.5.0")
-                implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.5.0")
+                implementation("io.ktor:ktor-client-core:3.5.1")
+                implementation("io.ktor:ktor-client-content-negotiation:3.5.1")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.5.1")
                 implementation("io.github.oshai:kotlin-logging:8.0.4")
             }
         }
@@ -79,7 +79,7 @@ kotlin {
         }
         named("jvmMain") {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.5.0")
+                implementation("io.ktor:ktor-client-cio:3.5.1")
                 implementation("ch.qos.logback:logback-classic:1.5.37")
             }
         }
@@ -87,25 +87,25 @@ kotlin {
             dependencies {
                 implementation("io.mockk:mockk:1.14.11")
 //                implementation("org.junit:junit-bom:5.12.0")
-                implementation("io.ktor:ktor-client-mock:3.5.0")
+                implementation("io.ktor:ktor-client-mock:3.5.1")
                 implementation("org.junit.jupiter:junit-jupiter:6.1.0")
                 runtimeOnly("org.junit.platform:junit-platform-launcher:6.1.1")
             }
         }
         named("jsMain") {
             dependencies {
-                implementation("io.ktor:ktor-client-js:3.5.0")
+                implementation("io.ktor:ktor-client-js:3.5.1")
                 // implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
             }
         }
         named("jsTest") {
             dependencies {
-                implementation("io.ktor:ktor-client-mock:3.5.0")
+                implementation("io.ktor:ktor-client-mock:3.5.1")
             }
         }
         named("linuxX64Main") {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:3.5.0")
+                implementation("io.ktor:ktor-client-cio:3.5.1")
             }
         }
     }
