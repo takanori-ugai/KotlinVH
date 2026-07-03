@@ -13,9 +13,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlin.coroutines.cancellation.CancellationException
 
 private val logger = KotlinLogging.logger {}
 
@@ -43,7 +43,7 @@ open class VirtualHomeClient(
      */
     private val format =
         Json {
-            encodeDefaults = true
+            encodeDefaults = false
             @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
             explicitNulls = false
         }
@@ -127,14 +127,16 @@ open class VirtualHomeClient(
                                 imageHeight = imageHeight.toString(),
                             ),
                         ),
-                ),
+                    ),
             )
 //        logger.info { format.encodeToString(data) }
         val response = sendRequest(data)
         if (!response.success) {
             return emptyList()
         }
-        return response.messageList?.mapNotNull { decodeBase64OrNull(it) } ?: emptyList()
+        return response.messageList
+            ?.let { LazyDecodedByteArrayList(it, ::decodeBase64OrNull) }
+            ?: emptyList()
     }
 
     /**
@@ -446,4 +448,16 @@ open class VirtualHomeClient(
                 fallback
             }
         }
+}
+
+private class LazyDecodedByteArrayList(
+    private val encodedValues: List<String>,
+    private val decode: (String) -> ByteArray?,
+) : AbstractList<ByteArray>() {
+    private val decodedValues by lazy { encodedValues.mapNotNull(decode) }
+
+    override val size: Int
+        get() = decodedValues.size
+
+    override fun get(index: Int): ByteArray = decodedValues[index]
 }

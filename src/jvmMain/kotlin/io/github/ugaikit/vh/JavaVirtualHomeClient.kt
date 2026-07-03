@@ -1,6 +1,12 @@
 package io.github.ugaikit.vh
 
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * A Java-friendly wrapper for VirtualHomeClient that executes requests synchronously.
@@ -13,12 +19,17 @@ class JavaVirtualHomeClient
         port: Int = 8080,
         private val client: VirtualHomeClient = VirtualHomeClient(host, port),
     ) : CloseableResource {
+        private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+        @Volatile
+        private var closed = false
+
         /**
          * Performs a health check of the VirtualHome server.
          *
          * @return The server's response as a [VirtualHomeResponse].
          */
-        fun check(): VirtualHomeResponse = runBlocking { client.check() }
+        fun check(): VirtualHomeResponse = blockingCall { client.check() }
 
         /**
          * Reset the virtual environment to the scene specified by index.
@@ -26,14 +37,14 @@ class JavaVirtualHomeClient
          * @param sceneIndex The index of the scene to reset.
          * @return The VirtualHomeResponse describing the outcome of the reset operation.
          */
-        fun reset(sceneIndex: Int): VirtualHomeResponse = runBlocking { client.reset(sceneIndex) }
+        fun reset(sceneIndex: Int): VirtualHomeResponse = blockingCall { client.reset(sceneIndex) }
 
         /**
          * Fetches the client's current environment graph.
          *
          * @return The environment graph representing the current rooms, objects, and their relationships.
          */
-        fun environmentGraph(): Graph = runBlocking { client.environmentGraph() }
+        fun environmentGraph(): Graph = blockingCall { client.environmentGraph() }
 
         /**
          * Expands the provided scene graph according to the given configuration.
@@ -46,7 +57,7 @@ class JavaVirtualHomeClient
         fun expandScene(
             graph: Graph,
             config: ExpandSceneConfig = ExpandSceneConfig(),
-        ): VirtualHomeResponse = runBlocking { client.expandScene(graph, config) }
+        ): VirtualHomeResponse = blockingCall { client.expandScene(graph, config) }
 
         /**
          * Adds a character to the scene.
@@ -61,7 +72,7 @@ class JavaVirtualHomeClient
             characterResource: String = "Chars/Male1",
             position: Position? = null,
             initialRoom: String = "",
-        ): VirtualHomeResponse = runBlocking { client.addCharacter(characterResource, position, initialRoom) }
+        ): VirtualHomeResponse = blockingCall { client.addCharacter(characterResource, position, initialRoom) }
 
         /**
          * Renders a sequence of scene commands and returns the rendering result.
@@ -74,7 +85,7 @@ class JavaVirtualHomeClient
         fun renderScript(
             script: List<String>,
             config: RenderParams = RenderParams(),
-        ): VirtualHomeResponse = runBlocking { client.renderScript(script, config) }
+        ): VirtualHomeResponse = blockingCall { client.renderScript(script, config) }
 
         /**
          * Adds a camera to the scene at the specified position and rotation.
@@ -89,14 +100,14 @@ class JavaVirtualHomeClient
             position: Position,
             rotation: Position,
             fieldView: Int = 40,
-        ): VirtualHomeResponse = runBlocking { client.addCamera(position, rotation, fieldView) }
+        ): VirtualHomeResponse = blockingCall { client.addCamera(position, rotation, fieldView) }
 
         /**
          * Retrieves the number of cameras currently configured in the virtual environment.
          *
          * @return The number of configured cameras.
          */
-        fun cameraCount(): Int = runBlocking { client.cameraCount() }
+        fun cameraCount(): Int = blockingCall { client.cameraCount() }
 
         /**
          * Retrieve camera data for the specified camera indices.
@@ -104,7 +115,7 @@ class JavaVirtualHomeClient
          * @param cameraIndexes The list of camera indices to retrieve data for.
          * @return A [VirtualHomeResponse] containing camera metadata and state for the requested cameras.
          */
-        fun cameraData(cameraIndexes: List<Int>): VirtualHomeResponse = runBlocking { client.cameraData(cameraIndexes) }
+        fun cameraData(cameraIndexes: List<Int>): VirtualHomeResponse = blockingCall { client.cameraData(cameraIndexes) }
 
         /**
          * Retrieve the objects visible to a specific camera.
@@ -112,7 +123,7 @@ class JavaVirtualHomeClient
          * @param cameraIndex Index of the camera whose visible objects to query (zero-based).
          * @return A map from object identifier to its label for all objects visible to the specified camera.
          */
-        fun visibleObjects(cameraIndex: Int): Map<String, String> = runBlocking { client.visibleObjects(cameraIndex) }
+        fun visibleObjects(cameraIndex: Int): Map<String, String> = blockingCall { client.visibleObjects(cameraIndex) }
 
         /**
          * Capture images from the specified cameras and return their raw byte data.
@@ -129,7 +140,7 @@ class JavaVirtualHomeClient
             mode: String = "normal",
             imageWidth: Int = 640,
             imageHeight: Int = 320,
-        ): List<ByteArray> = runBlocking { client.cameraImage(cameraIndexes, mode, imageWidth, imageHeight) }
+        ): List<ByteArray> = blockingCall { client.cameraImage(cameraIndexes, mode, imageWidth, imageHeight) }
 
         /**
          * Create a RenderParams configured with the given rendering options.
@@ -161,6 +172,36 @@ class JavaVirtualHomeClient
             )
 
         override fun close() {
-            client.close()
+            if (!closed) {
+                closed = true
+                scope.cancel()
+                client.close()
+            }
+        }
+
+        private fun <T> blockingCall(block: suspend () -> T): T {
+            check(!closed) { "JavaVirtualHomeClient is closed" }
+
+            val latch = CountDownLatch(1)
+            val result = AtomicReference<Result<T>?>(null)
+            scope.launch {
+                try {
+                    result.set(Result.success(block()))
+                } catch (exception: Throwable) {
+                    result.set(Result.failure(exception))
+                } finally {
+                    latch.countDown()
+                }
+            }
+
+            try {
+                latch.await()
+            } catch (exception: InterruptedException) {
+                Thread.currentThread().interrupt()
+                throw IllegalStateException("Interrupted while waiting for VirtualHome request", exception)
+            }
+
+            return result.get()?.getOrThrow()
+                ?: throw IllegalStateException("VirtualHome request did not complete")
         }
     }

@@ -1,14 +1,12 @@
 package io.github.ugaikit.vh
 
-import io.github.oshai.kotlinlogging.KotlinLogging
-
-private val logger = KotlinLogging.logger {}
-
 private const val OBJECTS_GROUP_IDX = 4
 private const val NAME_GROUP_IDX = 1
 private const val ID_GROUP_IDX = 2
 private const val CHAR_GROUP_IDX = 2
 private const val ACTION_GROUP_IDX = 3
+private val SCRIPT_LINE_REGEX = Regex("""\s*(<(\w+)>)?\s*\[(\w+)\]((\s*<\w+>\s*\(\d+\))*)\s*""")
+private val SCRIPT_OBJECT_REGEX = Regex("""<(\w+)>\s*\((\d+)\)""")
 
 /**
  * Data class representing an object.
@@ -39,20 +37,14 @@ data class ScriptLine(
 /**
  * Class representing a script.
  *
- * @property regex Regular expression used to parse the script.
- * @property regex2 Another regular expression used to parse the script.
- * @property objectPool A set of objects used in the script.
+ * @property objectPool A pool of objects used in the script.
  * @property lines The list of script lines parsed from the script.
  */
 class Script(
     scriptList: List<String>,
 ) {
-    // Regular expressions for parsing the script
-    val regex = Regex("""\s*(<(\w+)>)?\s*\[(\w+)\]((\s*<\w+>\s*\(\d+\))*)\s*""")
-    val regex2 = Regex("""<(\w+)>\s*\((\d+)\)""")
-
-    // Pool of objects used in the script
-    val objectPool: MutableSet<Obj> = mutableSetOf()
+    // Pool of objects used in the script.
+    val objectPool: MutableMap<Pair<String, Int>, Obj> = mutableMapOf()
 
     // List of lines in the script
     var lines: List<ScriptLine> = parseScript(scriptList)
@@ -68,9 +60,7 @@ class Script(
     fun findObj(
         name: String,
         id: Int,
-    ): Obj =
-        objectPool.firstOrNull { it.name == name && it.id == id }
-            ?: Obj(name, id).also { objectPool.add(it) }
+    ): Obj = objectPool.getOrPut(name to id) { Obj(name, id) }
 
     /**
      * Parses the script into a list of script lines.
@@ -80,11 +70,11 @@ class Script(
      */
     private fun parseScript(script: List<String>): List<ScriptLine> =
         script.map { line ->
-            val matchResult = regex.matchEntire(line)
+            val matchResult = SCRIPT_LINE_REGEX.matchEntire(line)
             val groups = matchResult?.groups
             val value = groups?.get(OBJECTS_GROUP_IDX)?.value.toString()
             val objects =
-                regex2
+                SCRIPT_OBJECT_REGEX
                     .findAll(value)
                     .map {
                         findObj(
@@ -120,12 +110,9 @@ class Script(
             return false
         }
 
-        logger.info { "Action Properties : ${action.properties}" }
-
         val properties = Commons.propertiesData()
         line.objects.forEachIndexed { index, obj ->
             val objProperties = properties[obj.name]
-            logger.info { "Object Properties: $objProperties" }
             if (objProperties == null) {
                 return false
             }

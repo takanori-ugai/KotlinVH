@@ -13,24 +13,20 @@ data class ActionScript(
     val objects: List<Pair<String, Int>>,
 )
 
+private val ACTION_SCRIPT_REGEX = Regex("""\s*(?:<([^>]+)>)?\s*\[([^\]]+)\]\s*(.*)""")
+private val OBJECT_TIME_REGEX = Regex("""<([^>]+)>\s*\((\d+)\)""")
+
 /**
  * Parses a list of action script lines into a list of ActionScript objects.
  *
  * @param script the list of action script lines
  * @return the list of ActionScript objects
  */
-fun parseActionScript(script: List<String>): List<ActionScript> {
-    // JS Regex engine might behave differently or be less lenient.
-    // Simplifying the regex for broader compatibility.
-    // The previous regex: """\s*(?:<([^>]+)>)?\s*\[([^]]+)\]\s*(.*)"""
-    // The previous object regex: """<([^>]+)>\s*\((\d+)\)"""
-    val regex = Regex("""\s*(?:<([^>]+)>)?\s*\[([^\]]+)\]\s*(.*)""")
-    val objectTimeRegex = Regex("""<([^>]+)>\s*\((\d+)\)""")
-
-    return script.mapNotNull { line ->
-        regex.matchEntire(line)?.destructured?.let { (character, action, rest) ->
+fun parseActionScript(script: List<String>): List<ActionScript> =
+    script.mapNotNull { line ->
+        ACTION_SCRIPT_REGEX.matchEntire(line)?.destructured?.let { (character, action, rest) ->
             val objects =
-                objectTimeRegex
+                OBJECT_TIME_REGEX
                     .findAll(rest)
                     .map { match ->
                         val (obj, time) = match.destructured
@@ -39,7 +35,6 @@ fun parseActionScript(script: List<String>): List<ActionScript> {
             ActionScript(character.ifEmpty { null }, action, objects)
         }
     }
-}
 
 // Example usage
 // fun main() {

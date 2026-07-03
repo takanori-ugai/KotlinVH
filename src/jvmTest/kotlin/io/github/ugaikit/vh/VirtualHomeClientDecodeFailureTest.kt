@@ -125,5 +125,4 @@ class VirtualHomeClientDecodeFailureTest {
             assertTrue(!response.success)
             assertEquals("Request failed", response.message)
         }
-
 }
