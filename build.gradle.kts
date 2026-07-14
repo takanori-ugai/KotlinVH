@@ -80,7 +80,7 @@ kotlin {
         named("jvmMain") {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:3.5.1")
-                implementation("ch.qos.logback:logback-classic:1.5.37")
+                implementation("ch.qos.logback:logback-classic:1.5.38")
             }
         }
         named("jvmTest") {
