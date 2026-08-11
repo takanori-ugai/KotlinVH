@@ -89,7 +89,7 @@ kotlin {
 //                implementation("org.junit:junit-bom:5.12.0")
                 implementation("io.ktor:ktor-client-mock:3.5.2")
                 implementation("org.junit.jupiter:junit-jupiter:6.1.2")
-                runtimeOnly("org.junit.platform:junit-platform-launcher:6.1.2")
+                runtimeOnly("org.junit.platform:junit-platform-launcher:6.1.3")
             }
         }
         named("jsMain") {
