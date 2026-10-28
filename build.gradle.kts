@@ -64,7 +64,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
                 implementation("io.ktor:ktor-client-core:3.6.0")
                 implementation("io.ktor:ktor-client-content-negotiation:3.6.0")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.6.0")
@@ -74,7 +74,7 @@ kotlin {
         named("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.12.0")
             }
         }
         named("jvmMain") {
