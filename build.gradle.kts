@@ -207,8 +207,8 @@ spotless {
         importOrder()
         removeUnusedImports()
 
-        // Choose one of these formatters.
-        googleJavaFormat("1.28.0")
+        // Spotless runs on Gradle's JVM, independently of the compilation target.
+        googleJavaFormat(if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)) "1.30.0" else "1.28.0")
         formatAnnotations()
     }
 }
