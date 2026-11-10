@@ -68,7 +68,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:3.6.1")
                 implementation("io.ktor:ktor-client-content-negotiation:3.6.1")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.6.1")
-                implementation("io.github.oshai:kotlin-logging:8.0.4")
+                implementation("io.github.oshai:kotlin-logging:8.0.6")
             }
         }
         named("commonTest") {
