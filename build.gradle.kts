@@ -113,8 +113,11 @@ kotlin {
 
 tasks {
     withType<JavaCompile>().configureEach {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        options.release.set(17)
+        options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:removal"))
+        if (providers.gradleProperty("javaWarningsAsErrors").map(String::toBoolean).getOrElse(false)) {
+            options.compilerArgs.add("-Werror")
+        }
     }
 
     withType<Detekt>().configureEach {

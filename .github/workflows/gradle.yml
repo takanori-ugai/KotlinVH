@@ -21,6 +21,9 @@ jobs:
         matrix:
           java_version: [17, 21, 25]
     runs-on: ubuntu-latest
+    env:
+      # Fail on javac warnings only in the JDK 17 matrix job.
+      ORG_GRADLE_PROJECT_javaWarningsAsErrors: ${{ matrix.java_version == 17 }}
 
     steps:
       - uses: actions/checkout@v7.0.1
