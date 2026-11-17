@@ -85,7 +85,7 @@ kotlin {
         }
         named("jvmTest") {
             dependencies {
-                implementation("io.mockk:mockk:1.14.11")
+                implementation("io.mockk:mockk:1.14.12")
 //                implementation("org.junit:junit-bom:5.12.0")
                 implementation("io.ktor:ktor-client-mock:3.6.1")
                 implementation("org.junit.jupiter:junit-jupiter:6.1.3")
