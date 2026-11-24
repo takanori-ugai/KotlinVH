@@ -64,7 +64,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.9.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
                 implementation("io.ktor:ktor-client-core:3.6.1")
                 implementation("io.ktor:ktor-client-content-negotiation:3.6.1")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.6.1")
